@@ -1,22 +1,20 @@
 import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 import { Footer } from './components/footer/footer';
+import { Controls } from './components/controls/controls';
+import { Results } from './components/results/results';
 
 function App() {
   return (
     <div className="wrapper">
-      <h1>React App</h1>
-
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
+      <header className="header">
+        <h1>Ny React App</h1>
         <a href="https://react.dev" target="_blank" rel="noreferrer">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
-      </div>
-
+      </header>
+      <Controls />
+      <Results />
       <Footer />
     </div>
   );

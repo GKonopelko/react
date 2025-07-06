@@ -1,0 +1,40 @@
+.footer {
+  background-color: var(--g-color-base-background);
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--g-color-line-generic);
+  margin-top: auto;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-link {
+  color: var(--g-color-text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--g-color-text-link);
+}
+
+.rss-logo {
+  height: 30px;
+  width: auto;
+}
+
+@media (width <= 768px) {
+  .footer {
+    padding: 1rem;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
