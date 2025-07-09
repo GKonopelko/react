@@ -1,7 +1,11 @@
 import React from 'react';
 import styles from './styles.module.css';
 
-export class Search extends React.Component {
+export interface SearchProps {
+  onSearch: (query: string) => void;
+}
+
+export class Search extends React.Component<SearchProps> {
   state = {
     queryContent: '',
   };
@@ -28,6 +32,7 @@ export class Search extends React.Component {
   handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log(event, 'queryContent  ', this.state.queryContent);
+    this.props.onSearch(this.state.queryContent);
   };
 
   render() {
@@ -38,7 +43,7 @@ export class Search extends React.Component {
       >
         <input
           type="text"
-          id="id{value}"
+          id="search-input"
           placeholder="Search"
           value={this.state.queryContent}
           onChange={this.handleFormInput}
