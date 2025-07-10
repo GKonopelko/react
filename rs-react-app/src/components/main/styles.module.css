@@ -1,27 +1,19 @@
-.results-content {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.results {
-  margin: 2rem 0;
-}
-
 .card {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 0.5rem;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 16px;
+  margin: 8px;
   text-align: center;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   transition: transform 0.2s;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
+  transform: translateY(-3px);
 }
 
 .image {
@@ -32,13 +24,19 @@
 
 .name {
   font-size: 1.2rem;
-  margin: 0.5rem 0;
+  margin: 0;
   text-transform: capitalize;
+  color: #333;
 }
 
-.id,
-.detail {
-  font-size: 0.9rem;
-  margin: 0.25rem 0;
+.id {
   color: #666;
+  font-size: 0.9rem;
+  margin: 4px 0;
+}
+
+.detail {
+  color: #444;
+  font-size: 0.9rem;
+  margin: 4px 0;
 }

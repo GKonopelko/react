@@ -43,7 +43,7 @@ export class Search extends Component<SearchProps> {
         <input
           type="text"
           id="search-input"
-          placeholder="Enter pokemon name"
+          placeholder="Enter pokemon name or id"
           value={this.state.queryContent}
           onChange={this.handleFormInput}
         />

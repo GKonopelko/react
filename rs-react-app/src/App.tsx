@@ -1,10 +1,7 @@
-import reactLogo from './assets/react.svg';
 import './App.css';
-import { Footer } from './components/footer/footer';
-import { Controls } from './components/controls/controls';
-import { Results } from './components/results/results';
 import { Component } from 'react';
 import type { PokemonDetails, PokemonListItem } from './pokemonTypes';
+import { Main } from './components/main/main-logic';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
@@ -37,7 +34,7 @@ export class App extends Component<object, AppState> {
 
   handleSearch = async (query: string) => {
     try {
-      this.setState({ loading: true, error: null });
+      this.setState({ loading: true, error: null, hasError: false });
       let response;
 
       if (query.trim() === '') {
@@ -83,44 +80,30 @@ export class App extends Component<object, AppState> {
   };
 
   makeTestError = () => {
-    this.setState({ hasError: true });
+    this.setState({
+      hasError: true,
+      error: "You broke the app! Don't do it again!",
+    });
+  };
+
+  handleDismissError = () => {
+    this.setState({ error: null });
   };
 
   render() {
     if (this.state.hasError) {
-      throw new Error("You broke the app! Don't do it again!");
+      throw new Error(this.state.error || 'Something went wrong!');
     }
-    const { searchResults, loading, error } = this.state;
-    return (
-      <div className="wrapper">
-        <header className="header">
-          <a href="https://react.dev" target="_blank" rel="noreferrer">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-          <h1>Poke-monReact</h1>
-        </header>
-        <Controls onSearch={this.handleSearch} />
-        {loading && (
-          <div className="spinner-container">
-            <div className="spinner"></div>
-            <div className="loading-text">Pokemons coming soon...</div>
-          </div>
-        )}
-        {error && (
-          <div className="error-message">
-            {error}
-            <button onClick={() => this.setState({ error: null })}>
-              Hide error
-            </button>
-          </div>
-        )}
-        <Results resultPokemons={searchResults} />
 
-        <button onClick={this.makeTestError} className="global-button">
-          Don&apos;t press the red button
-        </button>
-        <Footer />
-      </div>
+    return (
+      <Main
+        searchResults={this.state.searchResults}
+        loading={this.state.loading}
+        error={this.state.error}
+        onSearch={this.handleSearch}
+        onMakeTestError={this.makeTestError}
+        onDismissError={this.handleDismissError}
+      />
     );
   }
 }
