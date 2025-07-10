@@ -31,7 +31,6 @@ export class Search extends React.Component<SearchProps> {
 
   handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(event, 'queryContent  ', this.state.queryContent);
     this.props.onSearch(this.state.queryContent);
   };
 

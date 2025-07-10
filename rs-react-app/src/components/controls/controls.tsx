@@ -1,8 +1,12 @@
 import React from 'react';
-import { Search, type SearchProps } from './search-class';
+import { Search } from './search-class';
 import styles from './styles.module.css';
 
-export class Controls extends React.Component<SearchProps> {
+interface ControlsProps {
+  onSearch: (query: string) => void;
+}
+
+export class Controls extends React.Component<ControlsProps> {
   render() {
     return (
       <div className={styles.controls}>

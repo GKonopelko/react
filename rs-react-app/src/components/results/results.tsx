@@ -1,27 +1,36 @@
 import React from 'react';
 import styles from './styles.module.css';
+import type { PokemonTypes } from '../../pokemonTypes';
 
 interface ResultsProps {
-  resultArray?: string[];
+  resultPokemons: PokemonTypes | null;
 }
 
 export class Results extends React.Component<ResultsProps> {
   render() {
-    const { resultArray = [] } = this.props;
+    const { resultPokemons } = this.props;
+    if (!resultPokemons) {
+      return <div className={styles.results}>No Pokemons :(</div>;
+    }
     return (
       <div className={styles.results}>
         <div className={styles['results-content']}>
-          {resultArray.length > 0 ? (
-            <ul>
-              {resultArray.map((item, index) => (
-                <li key={index}>
-                  <div>{item}</div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div>No results found</div>
-          )}
+          <img
+            src="resultPokemons.sprites.front_default"
+            alt="{resultPokemons.name}"
+          />
+          <p>{resultPokemons.name}</p>
+          <p>{resultPokemons.id}</p>
+          <p>{resultPokemons.height}</p>
+          <p>{resultPokemons.weight}</p>
+
+          {/* <ul>
+            {resultPokemons.stats.map((item, index) => (
+              <li key={index}>
+                {item.stat.name}: {item.base_stat}
+              </li>
+            ))}
+          </ul> */}
         </div>
       </div>
     );

@@ -4,18 +4,19 @@ import { Footer } from './components/footer/footer';
 import { Controls } from './components/controls/controls';
 import { Results } from './components/results/results';
 import React from 'react';
+import type { PokemonTypes } from './pokemonTypes';
 
 interface AppState {
-  searchResults: string[];
+  searchResults: PokemonTypes | null;
   loading: boolean;
   error: string | null;
 }
 
 export class App extends React.Component<object, AppState> {
-  state = {
-    searchResults: [] as string[],
+  state: AppState = {
+    searchResults: null,
     loading: false,
-    error: null as string | null,
+    error: null,
   };
 
   handleSearch = async (query: string) => {
@@ -28,19 +29,20 @@ export class App extends React.Component<object, AppState> {
       if (!response.ok) {
         throw new Error('Not found');
       }
-      const data = await response.json();
+      const data: PokemonTypes = await response.json();
       this.setState({
-        searchResults: [data.name],
+        searchResults: data,
         loading: false,
       });
     } catch (err) {
       this.setState({
         error: err instanceof Error ? err.message : 'Error',
-        searchResults: [],
+        searchResults: null,
         loading: false,
       });
     }
   };
+
   render() {
     const { searchResults, loading, error } = this.state;
     return (
@@ -54,7 +56,7 @@ export class App extends React.Component<object, AppState> {
         <Controls onSearch={this.handleSearch} />
         {loading && <div>Loading...</div>}
         {error && <div>Error: {error}</div>}
-        <Results resultArray={searchResults} />
+        <Results resultPokemons={searchResults} />
         <Footer />
       </div>
     );
