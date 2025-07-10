@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { Search } from './search-class';
 import styles from './styles.module.css';
 
@@ -6,7 +6,7 @@ interface ControlsProps {
   onSearch: (query: string) => void;
 }
 
-export class Controls extends React.Component<ControlsProps> {
+export class Controls extends Component<ControlsProps> {
   render() {
     return (
       <div className={styles.controls}>

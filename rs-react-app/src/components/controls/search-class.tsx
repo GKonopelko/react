@@ -1,11 +1,11 @@
-import React from 'react';
+import { Component } from 'react';
 import styles from './styles.module.css';
 
 export interface SearchProps {
   onSearch: (query: string) => void;
 }
 
-export class Search extends React.Component<SearchProps> {
+export class Search extends Component<SearchProps> {
   state = {
     queryContent: '',
   };
@@ -24,14 +24,14 @@ export class Search extends React.Component<SearchProps> {
   }
 
   handleFormInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const targetValue = event.target.value;
+    const targetValue = event.target.value.trim();
     this.setState({ queryContent: targetValue });
     this.writeToLS(targetValue);
   };
 
   handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    this.props.onSearch(this.state.queryContent);
+    this.props.onSearch(this.state.queryContent.trim());
   };
 
   render() {
@@ -43,11 +43,11 @@ export class Search extends React.Component<SearchProps> {
         <input
           type="text"
           id="search-input"
-          placeholder="Search"
+          placeholder="Enter pokemon name"
           value={this.state.queryContent}
           onChange={this.handleFormInput}
         />
-        <button type="submit">Search</button>
+        <button type="submit">Search pokemon</button>
       </form>
     );
   }

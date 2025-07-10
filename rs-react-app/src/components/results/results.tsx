@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import styles from './styles.module.css';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
 
@@ -6,7 +6,7 @@ interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
 }
 
-export class Results extends React.Component<ResultsProps> {
+export class Results extends Component<ResultsProps> {
   render() {
     const { resultPokemons } = this.props;
 

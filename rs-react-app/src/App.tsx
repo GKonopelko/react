@@ -3,57 +3,93 @@ import './App.css';
 import { Footer } from './components/footer/footer';
 import { Controls } from './components/controls/controls';
 import { Results } from './components/results/results';
-import React from 'react';
-import type {
-  PokemonDetails,
-  PokemonListItem,
-  PokemonListResponse,
-} from './pokemonTypes';
+import { Component } from 'react';
+import type { PokemonDetails, PokemonListItem } from './pokemonTypes';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
   loading: boolean;
   error: string | null;
+  hasError: boolean;
 }
 
-export class App extends React.Component<object, AppState> {
+export class App extends Component<object, AppState> {
   state: AppState = {
     searchResults: null,
     loading: false,
     error: null,
+    hasError: false,
+  };
+
+  fetchAllPokemons = async () => {
+    let allPokemons: PokemonListItem[] = [];
+    let nextUrl: string | null = 'https://pokeapi.co/api/v2/pokemon?limit=500';
+
+    while (nextUrl) {
+      const response = await fetch(nextUrl);
+      if (!response.ok) throw new Error('Failed to fetch pokemons');
+      const data = await response.json();
+      allPokemons = [...allPokemons, ...data.results];
+      nextUrl = data.next;
+    }
+    return allPokemons;
   };
 
   handleSearch = async (query: string) => {
     try {
       this.setState({ loading: true, error: null });
+      let response;
 
-      if (query === '') {
-        const response = await fetch('https://pokeapi.co/api/v2/pokemon');
-        const data: PokemonListResponse = await response.json();
+      if (query.trim() === '') {
+        const allPokemons = await this.fetchAllPokemons();
         this.setState({
-          searchResults: data.results,
+          searchResults: allPokemons,
           loading: false,
         });
+        return;
       } else {
-        const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`
+        response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`
         );
-        const data: PokemonDetails = await response.json();
-        this.setState({
-          searchResults: data,
-          loading: false,
-        });
       }
+
+      if (!response.ok) {
+        let errorMessage = 'Error';
+        if (response.status === 404) {
+          errorMessage = `Pokemon "${query}" not found`;
+        } else if (response.status >= 500) {
+          errorMessage = 'Server error';
+        } else if (response.status === 401) {
+          errorMessage = 'Authentication required';
+        } else {
+          errorMessage = `Request failed ${response.status}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+
+      this.setState({
+        searchResults: data,
+        loading: false,
+      });
     } catch (err) {
       this.setState({
-        error: err instanceof Error ? err.message : 'Error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         searchResults: null,
         loading: false,
       });
     }
   };
 
+  makeTestError = () => {
+    this.setState({ hasError: true });
+  };
+
   render() {
+    if (this.state.hasError) {
+      throw new Error("You broke the app! Don't do it again!");
+    }
     const { searchResults, loading, error } = this.state;
     return (
       <div className="wrapper">
@@ -64,9 +100,25 @@ export class App extends React.Component<object, AppState> {
           <h1>Poke-monReact</h1>
         </header>
         <Controls onSearch={this.handleSearch} />
-        {loading && <div>Loading...</div>}
-        {error && <div>Error: {error}</div>}
+        {loading && (
+          <div className="spinner-container">
+            <div className="spinner"></div>
+            <div className="loading-text">Pokemons coming soon...</div>
+          </div>
+        )}
+        {error && (
+          <div className="error-message">
+            {error}
+            <button onClick={() => this.setState({ error: null })}>
+              Hide error
+            </button>
+          </div>
+        )}
         <Results resultPokemons={searchResults} />
+
+        <button onClick={this.makeTestError} className="global-button">
+          Don&apos;t press the red button
+        </button>
         <Footer />
       </div>
     );
