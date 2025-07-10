@@ -1,36 +1,44 @@
 import React from 'react';
 import styles from './styles.module.css';
-import type { PokemonTypes } from '../../pokemonTypes';
+import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
 
 interface ResultsProps {
-  resultPokemons: PokemonTypes | null;
+  resultPokemons: PokemonDetails | PokemonListItem[] | null;
 }
 
 export class Results extends React.Component<ResultsProps> {
   render() {
     const { resultPokemons } = this.props;
+
     if (!resultPokemons) {
       return <div className={styles.results}>No Pokemons :(</div>;
     }
+
+    if (Array.isArray(resultPokemons)) {
+      return (
+        <div className={styles.results}>
+          <div className={styles['results-content']}>
+            <ul>
+              {resultPokemons.map((item, index) => (
+                <li key={index}>{item.name}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={styles.results}>
         <div className={styles['results-content']}>
           <img
-            src="resultPokemons.sprites.front_default"
-            alt="{resultPokemons.name}"
+            src={resultPokemons.sprites.front_default}
+            alt={resultPokemons.name}
           />
           <p>{resultPokemons.name}</p>
-          <p>{resultPokemons.id}</p>
-          <p>{resultPokemons.height}</p>
-          <p>{resultPokemons.weight}</p>
-
-          {/* <ul>
-            {resultPokemons.stats.map((item, index) => (
-              <li key={index}>
-                {item.stat.name}: {item.base_stat}
-              </li>
-            ))}
-          </ul> */}
+          <p>ID: {resultPokemons.id}</p>
+          <p>Height: {resultPokemons.height}</p>
+          <p>Weight: {resultPokemons.weight}</p>
         </div>
       </div>
     );

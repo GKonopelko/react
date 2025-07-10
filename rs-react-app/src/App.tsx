@@ -4,10 +4,14 @@ import { Footer } from './components/footer/footer';
 import { Controls } from './components/controls/controls';
 import { Results } from './components/results/results';
 import React from 'react';
-import type { PokemonTypes } from './pokemonTypes';
+import type {
+  PokemonDetails,
+  PokemonListItem,
+  PokemonListResponse,
+} from './pokemonTypes';
 
 interface AppState {
-  searchResults: PokemonTypes | null;
+  searchResults: PokemonDetails | PokemonListItem[] | null;
   loading: boolean;
   error: string | null;
 }
@@ -22,18 +26,24 @@ export class App extends React.Component<object, AppState> {
   handleSearch = async (query: string) => {
     try {
       this.setState({ loading: true, error: null });
-      const response = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`
-      );
 
-      if (!response.ok) {
-        throw new Error('Not found');
+      if (query === '') {
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon');
+        const data: PokemonListResponse = await response.json();
+        this.setState({
+          searchResults: data.results,
+          loading: false,
+        });
+      } else {
+        const response = await fetch(
+          `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`
+        );
+        const data: PokemonDetails = await response.json();
+        this.setState({
+          searchResults: data,
+          loading: false,
+        });
       }
-      const data: PokemonTypes = await response.json();
-      this.setState({
-        searchResults: data,
-        loading: false,
-      });
     } catch (err) {
       this.setState({
         error: err instanceof Error ? err.message : 'Error',
