@@ -46,7 +46,7 @@ export class ErrorBoundary extends Component<
             onClick={this.handleReset}
             className={styles['back-button']}
           >
-            Fix the app
+            Back to app
           </button>
         </div>
       );
