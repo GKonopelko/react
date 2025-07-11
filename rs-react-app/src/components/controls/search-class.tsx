@@ -1,12 +1,16 @@
-import { Component } from 'react';
+import { Component, type ChangeEvent, type FormEvent } from 'react';
 import styles from './styles.module.css';
 
 export interface SearchProps {
   onSearch: (query: string) => void;
 }
 
-export class Search extends Component<SearchProps> {
-  state = {
+interface SearchState {
+  queryContent: string;
+}
+
+export class Search extends Component<SearchProps, SearchState> {
+  state: SearchState = {
     queryContent: '',
   };
 
@@ -20,18 +24,22 @@ export class Search extends Component<SearchProps> {
 
   componentDidMount(): void {
     const savedQuery = this.readFromLS();
-    this.setState({ queryContent: savedQuery });
+    if (savedQuery) {
+      this.setState({ queryContent: savedQuery });
+      this.props.onSearch(savedQuery);
+    }
   }
 
-  handleFormInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const targetValue = event.target.value.trim();
+  handleFormInput = (event: ChangeEvent<HTMLInputElement>) => {
+    const targetValue = event.target.value;
     this.setState({ queryContent: targetValue });
-    this.writeToLS(targetValue);
   };
 
-  handleFormSubmit = (event: React.FormEvent) => {
+  handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
-    this.props.onSearch(this.state.queryContent.trim());
+    const trimmedQuery = this.state.queryContent.trim();
+    this.writeToLS(trimmedQuery);
+    this.props.onSearch(trimmedQuery);
   };
 
   render() {

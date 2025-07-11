@@ -1,4 +1,3 @@
-// components/main/main-logic.tsx
 import { Component } from 'react';
 import { Header } from '../header/header';
 import { Controls } from '../controls/controls';
