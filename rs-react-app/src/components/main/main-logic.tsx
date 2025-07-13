@@ -33,7 +33,7 @@ export class Main extends Component<MainProps> {
         <Controls onSearch={onSearch} />
         {loading && <Loader />}
         {error && <ErrorMessage error={error} onDismiss={onDismissError} />}
-        <Results resultPokemons={searchResults} />
+        {!loading && !error && <Results resultPokemons={searchResults} />}
         <button onClick={onMakeTestError} className="global-button">
           Don&apos;t press the red button
         </button>

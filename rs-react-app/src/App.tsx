@@ -63,7 +63,6 @@ export class App extends Component<object, AppState> {
         }
         throw new Error(errorMessage);
       }
-
       const data = await response.json();
 
       this.setState({
@@ -78,6 +77,11 @@ export class App extends Component<object, AppState> {
       });
     }
   };
+
+  componentDidMount() {
+    const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
+    this.handleSearch(savedQuery);
+  }
 
   makeTestError = () => {
     this.setState({

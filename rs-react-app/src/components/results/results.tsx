@@ -19,7 +19,9 @@ export class Results extends Component<ResultsProps, ResultsState> {
   };
 
   componentDidMount() {
-    this.loadInitialData();
+    if (this.props.resultPokemons) {
+      this.loadInitialData();
+    }
   }
 
   componentDidUpdate(prevProps: ResultsProps) {
@@ -29,8 +31,12 @@ export class Results extends Component<ResultsProps, ResultsState> {
   }
 
   loadInitialData = () => {
+    if (!this.props.resultPokemons) return;
+
     if (Array.isArray(this.props.resultPokemons)) {
       this.loadPokemonDetails(this.props.resultPokemons.slice(0, 100));
+    } else {
+      this.setState({ pokemonDetails: [this.props.resultPokemons] });
     }
   };
 
@@ -65,22 +71,12 @@ export class Results extends Component<ResultsProps, ResultsState> {
       return <div className={styles.results}>Loading pokemon details...</div>;
     }
 
-    if (Array.isArray(resultPokemons)) {
-      return (
-        <div className={styles.results}>
-          <div className={styles['results-grid']}>
-            {pokemonDetails.map((pokemon) => (
-              <PokemonCard key={pokemon.id} pokemon={pokemon} />
-            ))}
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className={styles.results}>
-        <div className={styles['results-content']}>
-          <PokemonCard pokemon={resultPokemons} />
+        <div className={styles['results-grid']}>
+          {pokemonDetails.map((pokemon) => (
+            <PokemonCard key={pokemon.id} pokemon={pokemon} />
+          ))}
         </div>
       </div>
     );

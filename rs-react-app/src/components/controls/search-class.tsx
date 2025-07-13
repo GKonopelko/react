@@ -10,23 +10,22 @@ interface SearchState {
 }
 
 export class Search extends Component<SearchProps, SearchState> {
-  state: SearchState = {
-    queryContent: '',
-  };
-
   writeToLS = (query: string) => {
-    localStorage.setItem('queryContent', query);
+    localStorage.setItem('poke-monReactQueryContent', query);
   };
 
   readFromLS = (): string => {
-    return localStorage.getItem('queryContent') || '';
+    return localStorage.getItem('poke-monReactQueryContent') || '';
+  };
+
+  state: SearchState = {
+    queryContent: this.readFromLS() || '',
   };
 
   componentDidMount(): void {
     const savedQuery = this.readFromLS();
     if (savedQuery) {
       this.setState({ queryContent: savedQuery });
-      this.props.onSearch(savedQuery);
     }
   }
 
