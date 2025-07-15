@@ -710,13 +710,13 @@
       "2": 1,
       "8": 1,
       "9": 1,
-      "10": 2,
-      "11": 2,
-      "12": 2,
-      "13": 2,
-      "14": 2,
-      "15": 2,
-      "17": 2,
+      "10": 5,
+      "11": 5,
+      "12": 5,
+      "13": 5,
+      "14": 5,
+      "15": 5,
+      "17": 5,
       "18": 1
     },
     "branchMap": {
@@ -735,7 +735,7 @@
         ]
       }
     },
-    "b": { "0": [2] },
+    "b": { "0": [5] },
     "fnMap": {
       "0": {
         "name": "render",
@@ -750,7 +750,7 @@
         "line": 10
       }
     },
-    "f": { "0": 2 }
+    "f": { "0": 5 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\controls\\search-class.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\controls\\search-class.tsx",
@@ -937,47 +937,47 @@
       "0": 1,
       "1": 1,
       "11": 1,
-      "12": 4,
+      "12": 7,
       "13": 1,
       "14": 1,
-      "16": 4,
-      "17": 8,
-      "18": 8,
-      "20": 4,
-      "21": 4,
-      "22": 4,
-      "24": 4,
-      "25": 4,
-      "26": 4,
+      "16": 7,
+      "17": 14,
+      "18": 14,
+      "20": 7,
+      "21": 7,
+      "22": 7,
+      "24": 7,
+      "25": 7,
+      "26": 7,
       "27": 1,
       "28": 1,
-      "29": 4,
-      "31": 4,
+      "29": 7,
+      "31": 7,
       "32": 1,
       "33": 1,
       "34": 1,
-      "36": 4,
+      "36": 7,
       "37": 1,
       "38": 1,
       "39": 1,
       "40": 1,
       "41": 1,
-      "43": 4,
-      "44": 6,
-      "45": 6,
-      "46": 6,
-      "47": 6,
-      "49": 6,
-      "50": 6,
-      "51": 6,
-      "52": 6,
-      "53": 6,
-      "54": 6,
-      "55": 6,
-      "56": 6,
-      "57": 6,
-      "59": 6,
-      "60": 4
+      "43": 7,
+      "44": 9,
+      "45": 9,
+      "46": 9,
+      "47": 9,
+      "49": 9,
+      "50": 9,
+      "51": 9,
+      "52": 9,
+      "53": 9,
+      "54": 9,
+      "55": 9,
+      "56": 9,
+      "57": 9,
+      "59": 9,
+      "60": 7
     },
     "branchMap": {
       "0": {
@@ -1122,16 +1122,16 @@
       }
     },
     "b": {
-      "0": [4],
-      "1": [3],
+      "0": [7],
+      "1": [6],
       "2": [1],
-      "3": [8],
-      "4": [6],
-      "5": [4],
+      "3": [14],
+      "4": [12],
+      "5": [7],
       "6": [1],
       "7": [1],
       "8": [1],
-      "9": [6]
+      "9": [9]
     },
     "fnMap": {
       "0": {
@@ -1219,11 +1219,11 @@
         "line": 44
       }
     },
-    "f": { "0": 4, "1": 1, "2": 8, "3": 4, "4": 1, "5": 1, "6": 6 }
+    "f": { "0": 7, "1": 1, "2": 14, "3": 7, "4": 1, "5": 1, "6": 9 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\error-boundary\\errorBoundary.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\error-boundary\\errorBoundary.tsx",
-    "all": true,
+    "all": false,
     "statementMap": {
       "0": {
         "start": { "line": 1, "column": 0 },
@@ -1371,79 +1371,234 @@
       }
     },
     "s": {
-      "0": 0,
-      "2": 0,
-      "14": 0,
-      "17": 0,
-      "18": 0,
-      "19": 0,
-      "20": 0,
-      "21": 0,
-      "22": 0,
-      "24": 0,
-      "25": 0,
-      "26": 0,
-      "28": 0,
-      "29": 0,
-      "30": 0,
-      "31": 0,
-      "33": 0,
-      "34": 0,
-      "35": 0,
-      "37": 0,
-      "38": 0,
-      "39": 0,
-      "40": 0,
-      "41": 0,
-      "42": 0,
-      "43": 0,
-      "44": 0,
-      "45": 0,
-      "46": 0,
-      "47": 0,
-      "49": 0,
-      "50": 0,
-      "52": 0,
-      "54": 0,
-      "55": 0,
-      "56": 0
+      "0": 1,
+      "2": 1,
+      "14": 1,
+      "17": 1,
+      "18": 3,
+      "19": 3,
+      "20": 3,
+      "21": 3,
+      "22": 3,
+      "24": 3,
+      "25": 4,
+      "26": 4,
+      "28": 3,
+      "29": 2,
+      "30": 2,
+      "31": 2,
+      "33": 3,
+      "34": 1,
+      "35": 1,
+      "37": 3,
+      "38": 11,
+      "39": 6,
+      "40": 6,
+      "41": 6,
+      "42": 6,
+      "43": 6,
+      "44": 6,
+      "45": 6,
+      "46": 6,
+      "47": 6,
+      "49": 6,
+      "50": 6,
+      "52": 6,
+      "54": 5,
+      "55": 11,
+      "56": 3
     },
     "branchMap": {
       "0": {
         "type": "branch",
-        "line": 1,
+        "line": 18,
         "loc": {
-          "start": { "line": 1, "column": 1346 },
+          "start": { "line": 18, "column": 2 },
           "end": { "line": 57, "column": 1 }
         },
         "locations": [
           {
-            "start": { "line": 1, "column": 1346 },
+            "start": { "line": 18, "column": 2 },
             "end": { "line": 57, "column": 1 }
+          }
+        ]
+      },
+      "1": {
+        "type": "branch",
+        "line": 25,
+        "loc": {
+          "start": { "line": 25, "column": 9 },
+          "end": { "line": 27, "column": 3 }
+        },
+        "locations": [
+          {
+            "start": { "line": 25, "column": 9 },
+            "end": { "line": 27, "column": 3 }
+          }
+        ]
+      },
+      "2": {
+        "type": "branch",
+        "line": 29,
+        "loc": {
+          "start": { "line": 29, "column": 2 },
+          "end": { "line": 32, "column": 3 }
+        },
+        "locations": [
+          {
+            "start": { "line": 29, "column": 2 },
+            "end": { "line": 32, "column": 3 }
+          }
+        ]
+      },
+      "3": {
+        "type": "branch",
+        "line": 34,
+        "loc": {
+          "start": { "line": 34, "column": 16 },
+          "end": { "line": 36, "column": 4 }
+        },
+        "locations": [
+          {
+            "start": { "line": 34, "column": 16 },
+            "end": { "line": 36, "column": 4 }
+          }
+        ]
+      },
+      "4": {
+        "type": "branch",
+        "line": 38,
+        "loc": {
+          "start": { "line": 38, "column": 2 },
+          "end": { "line": 56, "column": 3 }
+        },
+        "locations": [
+          {
+            "start": { "line": 38, "column": 2 },
+            "end": { "line": 56, "column": 3 }
+          }
+        ]
+      },
+      "5": {
+        "type": "branch",
+        "line": 39,
+        "loc": {
+          "start": { "line": 39, "column": 29 },
+          "end": { "line": 53, "column": 5 }
+        },
+        "locations": [
+          {
+            "start": { "line": 39, "column": 29 },
+            "end": { "line": 53, "column": 5 }
+          }
+        ]
+      },
+      "6": {
+        "type": "branch",
+        "line": 43,
+        "loc": {
+          "start": { "line": 43, "column": 25 },
+          "end": { "line": 43, "column": 51 }
+        },
+        "locations": [
+          {
+            "start": { "line": 43, "column": 25 },
+            "end": { "line": 43, "column": 51 }
+          }
+        ]
+      },
+      "7": {
+        "type": "branch",
+        "line": 53,
+        "loc": {
+          "start": { "line": 53, "column": 4 },
+          "end": { "line": 55, "column": 31 }
+        },
+        "locations": [
+          {
+            "start": { "line": 53, "column": 4 },
+            "end": { "line": 55, "column": 31 }
           }
         ]
       }
     },
-    "b": { "0": [0] },
+    "b": {
+      "0": [3],
+      "1": [4],
+      "2": [2],
+      "3": [1],
+      "4": [11],
+      "5": [6],
+      "6": [2],
+      "7": [5]
+    },
     "fnMap": {
       "0": {
-        "name": "(empty-report)",
+        "name": "<instance_members_initializer>",
         "decl": {
-          "start": { "line": 1, "column": 1346 },
+          "start": { "line": 18, "column": 2 },
           "end": { "line": 57, "column": 1 }
         },
         "loc": {
-          "start": { "line": 1, "column": 1346 },
+          "start": { "line": 18, "column": 2 },
           "end": { "line": 57, "column": 1 }
         },
-        "line": 1
+        "line": 18
+      },
+      "1": {
+        "name": "getDerivedStateFromError",
+        "decl": {
+          "start": { "line": 25, "column": 9 },
+          "end": { "line": 27, "column": 3 }
+        },
+        "loc": {
+          "start": { "line": 25, "column": 9 },
+          "end": { "line": 27, "column": 3 }
+        },
+        "line": 25
+      },
+      "2": {
+        "name": "componentDidCatch",
+        "decl": {
+          "start": { "line": 29, "column": 2 },
+          "end": { "line": 32, "column": 3 }
+        },
+        "loc": {
+          "start": { "line": 29, "column": 2 },
+          "end": { "line": 32, "column": 3 }
+        },
+        "line": 29
+      },
+      "3": {
+        "name": "handleReset",
+        "decl": {
+          "start": { "line": 34, "column": 16 },
+          "end": { "line": 36, "column": 4 }
+        },
+        "loc": {
+          "start": { "line": 34, "column": 16 },
+          "end": { "line": 36, "column": 4 }
+        },
+        "line": 34
+      },
+      "4": {
+        "name": "render",
+        "decl": {
+          "start": { "line": 38, "column": 2 },
+          "end": { "line": 56, "column": 3 }
+        },
+        "loc": {
+          "start": { "line": 38, "column": 2 },
+          "end": { "line": 56, "column": 3 }
+        },
+        "line": 38
       }
     },
-    "f": { "0": 0 }
+    "f": { "0": 3, "1": 4, "2": 2, "3": 1, "4": 11 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\error-message\\error-message.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\error-message\\error-message.tsx",
-    "all": true,
+    "all": false,
     "statementMap": {
       "0": {
         "start": { "line": 1, "column": 0 },
@@ -1491,50 +1646,50 @@
       }
     },
     "s": {
-      "0": 0,
-      "1": 0,
-      "8": 0,
-      "9": 0,
-      "10": 0,
-      "11": 0,
-      "12": 0,
-      "13": 0,
-      "14": 0,
-      "16": 0,
-      "17": 0
+      "0": 1,
+      "1": 1,
+      "8": 1,
+      "9": 1,
+      "10": 2,
+      "11": 2,
+      "12": 2,
+      "13": 2,
+      "14": 2,
+      "16": 2,
+      "17": 1
     },
     "branchMap": {
       "0": {
         "type": "branch",
-        "line": 1,
+        "line": 10,
         "loc": {
-          "start": { "line": 1, "column": 411 },
-          "end": { "line": 18, "column": 1 }
+          "start": { "line": 10, "column": 2 },
+          "end": { "line": 17, "column": 3 }
         },
         "locations": [
           {
-            "start": { "line": 1, "column": 411 },
-            "end": { "line": 18, "column": 1 }
+            "start": { "line": 10, "column": 2 },
+            "end": { "line": 17, "column": 3 }
           }
         ]
       }
     },
-    "b": { "0": [0] },
+    "b": { "0": [2] },
     "fnMap": {
       "0": {
-        "name": "(empty-report)",
+        "name": "render",
         "decl": {
-          "start": { "line": 1, "column": 411 },
-          "end": { "line": 18, "column": 1 }
+          "start": { "line": 10, "column": 2 },
+          "end": { "line": 17, "column": 3 }
         },
         "loc": {
-          "start": { "line": 1, "column": 411 },
-          "end": { "line": 18, "column": 1 }
+          "start": { "line": 10, "column": 2 },
+          "end": { "line": 17, "column": 3 }
         },
-        "line": 1
+        "line": 10
       }
     },
-    "f": { "0": 0 }
+    "f": { "0": 2 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\footer\\footer.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\footer\\footer.tsx",
@@ -1641,27 +1796,27 @@
       "0": 1,
       "1": 1,
       "3": 1,
-      "4": 1,
-      "5": 1,
-      "6": 1,
-      "7": 1,
-      "8": 1,
-      "9": 1,
-      "10": 1,
-      "11": 1,
-      "12": 1,
-      "14": 1,
-      "15": 1,
-      "17": 1,
-      "18": 1,
-      "19": 1,
-      "20": 1,
-      "21": 1,
-      "23": 1,
-      "24": 1,
-      "25": 1,
-      "26": 1,
-      "28": 1
+      "4": 4,
+      "5": 4,
+      "6": 4,
+      "7": 4,
+      "8": 4,
+      "9": 4,
+      "10": 4,
+      "11": 4,
+      "12": 4,
+      "14": 4,
+      "15": 4,
+      "17": 4,
+      "18": 4,
+      "19": 4,
+      "20": 4,
+      "21": 4,
+      "23": 4,
+      "24": 4,
+      "25": 4,
+      "26": 4,
+      "28": 4
     },
     "branchMap": {
       "0": {
@@ -1679,7 +1834,7 @@
         ]
       }
     },
-    "b": { "0": [1] },
+    "b": { "0": [4] },
     "fnMap": {
       "0": {
         "name": "Footer",
@@ -1694,7 +1849,7 @@
         "line": 4
       }
     },
-    "f": { "0": 1 }
+    "f": { "0": 4 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\header\\header.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\header\\header.tsx",
@@ -1763,14 +1918,14 @@
       "2": 1,
       "4": 1,
       "5": 1,
-      "6": 2,
-      "7": 2,
-      "8": 2,
-      "9": 2,
-      "10": 2,
-      "11": 2,
-      "12": 2,
-      "14": 2,
+      "6": 5,
+      "7": 5,
+      "8": 5,
+      "9": 5,
+      "10": 5,
+      "11": 5,
+      "12": 5,
+      "14": 5,
       "15": 1
     },
     "branchMap": {
@@ -1789,7 +1944,7 @@
         ]
       }
     },
-    "b": { "0": [2] },
+    "b": { "0": [5] },
     "fnMap": {
       "0": {
         "name": "render",
@@ -1804,11 +1959,11 @@
         "line": 6
       }
     },
-    "f": { "0": 2 }
+    "f": { "0": 5 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\loader\\loader.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\loader\\loader.tsx",
-    "all": true,
+    "all": false,
     "statementMap": {
       "0": {
         "start": { "line": 1, "column": 0 },
@@ -1856,54 +2011,54 @@
       }
     },
     "s": {
-      "0": 0,
-      "1": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "6": 0,
-      "7": 0,
-      "8": 0,
-      "9": 0,
-      "11": 0,
-      "12": 0
+      "0": 1,
+      "1": 1,
+      "3": 1,
+      "4": 1,
+      "5": 2,
+      "6": 2,
+      "7": 2,
+      "8": 2,
+      "9": 2,
+      "11": 2,
+      "12": 1
     },
     "branchMap": {
       "0": {
         "type": "branch",
-        "line": 1,
+        "line": 5,
         "loc": {
-          "start": { "line": 1, "column": 346 },
-          "end": { "line": 13, "column": 1 }
+          "start": { "line": 5, "column": 2 },
+          "end": { "line": 12, "column": 3 }
         },
         "locations": [
           {
-            "start": { "line": 1, "column": 346 },
-            "end": { "line": 13, "column": 1 }
+            "start": { "line": 5, "column": 2 },
+            "end": { "line": 12, "column": 3 }
           }
         ]
       }
     },
-    "b": { "0": [0] },
+    "b": { "0": [2] },
     "fnMap": {
       "0": {
-        "name": "(empty-report)",
+        "name": "render",
         "decl": {
-          "start": { "line": 1, "column": 346 },
-          "end": { "line": 13, "column": 1 }
+          "start": { "line": 5, "column": 2 },
+          "end": { "line": 12, "column": 3 }
         },
         "loc": {
-          "start": { "line": 1, "column": 346 },
-          "end": { "line": 13, "column": 1 }
+          "start": { "line": 5, "column": 2 },
+          "end": { "line": 12, "column": 3 }
         },
-        "line": 1
+        "line": 5
       }
     },
-    "f": { "0": 0 }
+    "f": { "0": 2 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\main\\main-logic.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\main\\main-logic.tsx",
-    "all": true,
+    "all": false,
     "statementMap": {
       "0": {
         "start": { "line": 1, "column": 0 },
@@ -2027,73 +2182,129 @@
       }
     },
     "s": {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "6": 0,
-      "18": 0,
-      "19": 0,
-      "20": 0,
-      "21": 0,
-      "22": 0,
-      "23": 0,
-      "24": 0,
-      "25": 0,
-      "26": 0,
-      "27": 0,
-      "29": 0,
-      "30": 0,
-      "31": 0,
-      "32": 0,
-      "33": 0,
-      "34": 0,
-      "35": 0,
-      "36": 0,
-      "38": 0,
-      "39": 0,
-      "40": 0,
-      "42": 0,
-      "43": 0
+      "0": 1,
+      "1": 1,
+      "2": 1,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 1,
+      "18": 1,
+      "19": 1,
+      "20": 3,
+      "21": 3,
+      "22": 3,
+      "23": 3,
+      "24": 3,
+      "25": 3,
+      "26": 3,
+      "27": 3,
+      "29": 3,
+      "30": 3,
+      "31": 3,
+      "32": 3,
+      "33": 3,
+      "34": 3,
+      "35": 3,
+      "36": 3,
+      "38": 3,
+      "39": 3,
+      "40": 3,
+      "42": 3,
+      "43": 1
     },
     "branchMap": {
       "0": {
         "type": "branch",
-        "line": 1,
+        "line": 20,
         "loc": {
-          "start": { "line": 1, "column": 1292 },
-          "end": { "line": 44, "column": 1 }
+          "start": { "line": 20, "column": 2 },
+          "end": { "line": 43, "column": 3 }
         },
         "locations": [
           {
-            "start": { "line": 1, "column": 1292 },
-            "end": { "line": 44, "column": 1 }
+            "start": { "line": 20, "column": 2 },
+            "end": { "line": 43, "column": 3 }
+          }
+        ]
+      },
+      "1": {
+        "type": "branch",
+        "line": 34,
+        "loc": {
+          "start": { "line": 34, "column": 9 },
+          "end": { "line": 34, "column": 31 }
+        },
+        "locations": [
+          {
+            "start": { "line": 34, "column": 9 },
+            "end": { "line": 34, "column": 31 }
+          }
+        ]
+      },
+      "2": {
+        "type": "branch",
+        "line": 35,
+        "loc": {
+          "start": { "line": 35, "column": 9 },
+          "end": { "line": 35, "column": 76 }
+        },
+        "locations": [
+          {
+            "start": { "line": 35, "column": 9 },
+            "end": { "line": 35, "column": 76 }
+          }
+        ]
+      },
+      "3": {
+        "type": "branch",
+        "line": 36,
+        "loc": {
+          "start": { "line": 36, "column": 10 },
+          "end": { "line": 36, "column": 31 }
+        },
+        "locations": [
+          {
+            "start": { "line": 36, "column": 10 },
+            "end": { "line": 36, "column": 31 }
+          }
+        ]
+      },
+      "4": {
+        "type": "branch",
+        "line": 36,
+        "loc": {
+          "start": { "line": 36, "column": 22 },
+          "end": { "line": 36, "column": 74 }
+        },
+        "locations": [
+          {
+            "start": { "line": 36, "column": 22 },
+            "end": { "line": 36, "column": 74 }
           }
         ]
       }
     },
-    "b": { "0": [0] },
+    "b": { "0": [3], "1": [1], "2": [1], "3": [2], "4": [1] },
     "fnMap": {
       "0": {
-        "name": "(empty-report)",
+        "name": "render",
         "decl": {
-          "start": { "line": 1, "column": 1292 },
-          "end": { "line": 44, "column": 1 }
+          "start": { "line": 20, "column": 2 },
+          "end": { "line": 43, "column": 3 }
         },
         "loc": {
-          "start": { "line": 1, "column": 1292 },
-          "end": { "line": 44, "column": 1 }
+          "start": { "line": 20, "column": 2 },
+          "end": { "line": 43, "column": 3 }
         },
-        "line": 1
+        "line": 20
       }
     },
-    "f": { "0": 0 }
+    "f": { "0": 3 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\pokemon-card\\pokemonCard.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\pokemon-card\\pokemonCard.tsx",
-    "all": true,
+    "all": false,
     "statementMap": {
       "0": {
         "start": { "line": 1, "column": 0 },
@@ -2181,10 +2392,10 @@
       }
     },
     "s": {
-      "0": 0,
-      "1": 0,
-      "8": 0,
-      "9": 0,
+      "0": 1,
+      "1": 1,
+      "8": 1,
+      "9": 1,
       "10": 0,
       "11": 0,
       "12": 0,
@@ -2201,44 +2412,29 @@
       "23": 0,
       "24": 0,
       "26": 0,
-      "27": 0
+      "27": 1
     },
-    "branchMap": {
-      "0": {
-        "type": "branch",
-        "line": 1,
-        "loc": {
-          "start": { "line": 1, "column": 838 },
-          "end": { "line": 28, "column": 1 }
-        },
-        "locations": [
-          {
-            "start": { "line": 1, "column": 838 },
-            "end": { "line": 28, "column": 1 }
-          }
-        ]
-      }
-    },
-    "b": { "0": [0] },
+    "branchMap": {},
+    "b": {},
     "fnMap": {
       "0": {
-        "name": "(empty-report)",
+        "name": "render",
         "decl": {
-          "start": { "line": 1, "column": 838 },
-          "end": { "line": 28, "column": 1 }
+          "start": { "line": 10, "column": 2 },
+          "end": { "line": 27, "column": 3 }
         },
         "loc": {
-          "start": { "line": 1, "column": 838 },
-          "end": { "line": 28, "column": 1 }
+          "start": { "line": 10, "column": 2 },
+          "end": { "line": 27, "column": 3 }
         },
-        "line": 1
+        "line": 10
       }
     },
     "f": { "0": 0 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\results\\results.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\results\\results.tsx",
-    "all": true,
+    "all": false,
     "statementMap": {
       "0": {
         "start": { "line": 1, "column": 0 },
@@ -2486,25 +2682,25 @@
       }
     },
     "s": {
-      "0": 0,
-      "1": 0,
-      "3": 0,
-      "14": 0,
-      "15": 0,
-      "16": 0,
-      "17": 0,
-      "18": 0,
-      "20": 0,
-      "21": 0,
+      "0": 1,
+      "1": 1,
+      "3": 1,
+      "14": 1,
+      "15": 1,
+      "16": 1,
+      "17": 1,
+      "18": 1,
+      "20": 1,
+      "21": 1,
       "22": 0,
       "23": 0,
-      "24": 0,
-      "26": 0,
+      "24": 1,
+      "26": 1,
       "27": 0,
       "28": 0,
       "29": 0,
       "30": 0,
-      "32": 0,
+      "32": 1,
       "33": 0,
       "35": 0,
       "36": 0,
@@ -2512,7 +2708,7 @@
       "38": 0,
       "39": 0,
       "40": 0,
-      "42": 0,
+      "42": 1,
       "43": 0,
       "45": 0,
       "46": 0,
@@ -2528,12 +2724,12 @@
       "57": 0,
       "58": 0,
       "59": 0,
-      "61": 0,
-      "62": 0,
-      "63": 0,
-      "65": 0,
-      "66": 0,
-      "67": 0,
+      "61": 1,
+      "62": 1,
+      "63": 1,
+      "65": 1,
+      "66": 1,
+      "67": 1,
       "69": 0,
       "70": 0,
       "71": 0,
@@ -2545,40 +2741,156 @@
       "78": 0,
       "79": 0,
       "80": 0,
-      "82": 0,
-      "83": 0
+      "82": 1,
+      "83": 1
     },
     "branchMap": {
       "0": {
         "type": "branch",
-        "line": 1,
+        "line": 15,
         "loc": {
-          "start": { "line": 1, "column": 2176 },
+          "start": { "line": 15, "column": 67 },
           "end": { "line": 84, "column": 1 }
         },
         "locations": [
           {
-            "start": { "line": 1, "column": 2176 },
+            "start": { "line": 15, "column": 67 },
             "end": { "line": 84, "column": 1 }
+          }
+        ]
+      },
+      "1": {
+        "type": "branch",
+        "line": 21,
+        "loc": {
+          "start": { "line": 21, "column": 2 },
+          "end": { "line": 25, "column": 3 }
+        },
+        "locations": [
+          {
+            "start": { "line": 21, "column": 2 },
+            "end": { "line": 25, "column": 3 }
+          }
+        ]
+      },
+      "2": {
+        "type": "branch",
+        "line": 22,
+        "loc": {
+          "start": { "line": 22, "column": 35 },
+          "end": { "line": 24, "column": 5 }
+        },
+        "locations": [
+          {
+            "start": { "line": 22, "column": 35 },
+            "end": { "line": 24, "column": 5 }
+          }
+        ]
+      },
+      "3": {
+        "type": "branch",
+        "line": 62,
+        "loc": {
+          "start": { "line": 62, "column": 2 },
+          "end": { "line": 83, "column": 3 }
+        },
+        "locations": [
+          {
+            "start": { "line": 62, "column": 2 },
+            "end": { "line": 83, "column": 3 }
+          }
+        ]
+      },
+      "4": {
+        "type": "branch",
+        "line": 68,
+        "loc": {
+          "start": { "line": 68, "column": 4 },
+          "end": { "line": 81, "column": 12 }
+        },
+        "locations": [
+          {
+            "start": { "line": 68, "column": 4 },
+            "end": { "line": 81, "column": 12 }
           }
         ]
       }
     },
-    "b": { "0": [0] },
+    "b": { "0": [1], "1": [1], "2": [0], "3": [1], "4": [0] },
     "fnMap": {
       "0": {
-        "name": "(empty-report)",
+        "name": "<instance_members_initializer>",
         "decl": {
-          "start": { "line": 1, "column": 2176 },
+          "start": { "line": 15, "column": 67 },
           "end": { "line": 84, "column": 1 }
         },
         "loc": {
-          "start": { "line": 1, "column": 2176 },
+          "start": { "line": 15, "column": 67 },
           "end": { "line": 84, "column": 1 }
         },
-        "line": 1
+        "line": 15
+      },
+      "1": {
+        "name": "componentDidMount",
+        "decl": {
+          "start": { "line": 21, "column": 2 },
+          "end": { "line": 25, "column": 3 }
+        },
+        "loc": {
+          "start": { "line": 21, "column": 2 },
+          "end": { "line": 25, "column": 3 }
+        },
+        "line": 21
+      },
+      "2": {
+        "name": "componentDidUpdate",
+        "decl": {
+          "start": { "line": 27, "column": 2 },
+          "end": { "line": 31, "column": 3 }
+        },
+        "loc": {
+          "start": { "line": 27, "column": 2 },
+          "end": { "line": 31, "column": 3 }
+        },
+        "line": 27
+      },
+      "3": {
+        "name": "loadInitialData",
+        "decl": {
+          "start": { "line": 33, "column": 20 },
+          "end": { "line": 41, "column": 4 }
+        },
+        "loc": {
+          "start": { "line": 33, "column": 20 },
+          "end": { "line": 41, "column": 4 }
+        },
+        "line": 33
+      },
+      "4": {
+        "name": "loadPokemonDetails",
+        "decl": {
+          "start": { "line": 43, "column": 23 },
+          "end": { "line": 60, "column": 4 }
+        },
+        "loc": {
+          "start": { "line": 43, "column": 23 },
+          "end": { "line": 60, "column": 4 }
+        },
+        "line": 43
+      },
+      "5": {
+        "name": "render",
+        "decl": {
+          "start": { "line": 62, "column": 2 },
+          "end": { "line": 83, "column": 3 }
+        },
+        "loc": {
+          "start": { "line": 62, "column": 2 },
+          "end": { "line": 83, "column": 3 }
+        },
+        "line": 62
       }
     },
-    "f": { "0": 0 }
+    "f": { "0": 1, "1": 1, "2": 0, "3": 0, "4": 0, "5": 1 }
   }
 }

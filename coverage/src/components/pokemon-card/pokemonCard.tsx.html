@@ -25,15 +25,15 @@
         </h1>
         <div class="clearfix">
           <div class="fl pad1y space-right2">
-            <span class="strong">0% </span>
+            <span class="strong">23.8% </span>
             <span class="quiet">Statements</span>
-            <span class="fraction">0/21</span>
+            <span class="fraction">5/21</span>
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">0% </span>
+            <span class="strong">100% </span>
             <span class="quiet">Branches</span>
-            <span class="fraction">0/1</span>
+            <span class="fraction">0/0</span>
           </div>
 
           <div class="fl pad1y space-right2">
@@ -43,9 +43,9 @@
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">0% </span>
+            <span class="strong">23.8% </span>
             <span class="quiet">Lines</span>
-            <span class="fraction">0/21</span>
+            <span class="fraction">5/21</span>
           </div>
         </div>
         <p class="quiet">
@@ -89,16 +89,16 @@
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -116,17 +116,17 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { Component } from 'react';<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >import styles from './styles.module.css';</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Component } from 'react';
+import styles from './styles.module.css';
 import type { PokemonDetails } from '../../pokemonTypes';
 &nbsp;
 interface PokemonCardProps {
   pokemon: PokemonDetails;
 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export class PokemonCard extends Component&lt;PokemonCardProps&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  render() {</span>
+export class PokemonCard extends Component&lt;PokemonCardProps&gt; {
+<span class="fstat-no" title="function not covered" >  render() {</span>
 <span class="cstat-no" title="statement not covered" >    const { pokemon } = this.props;</span>
 <span class="cstat-no" title="statement not covered" >    return (</span>
 <span class="cstat-no" title="statement not covered" >      &lt;div className={styles.card}&gt;</span>
@@ -144,7 +144,7 @@ interface PokemonCardProps {
 <span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
     );
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+}
 &nbsp;</pre></td></tr></table></pre>
 
       <div class="push"></div>
@@ -159,7 +159,7 @@ interface PokemonCardProps {
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-07-15T19:33:58.279Z
+      at 2025-07-15T21:06:04.489Z
     </div>
     <script src="../../../prettify.js"></script>
     <script>
