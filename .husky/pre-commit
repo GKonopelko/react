@@ -1,3 +1,1 @@
-cd rs-react-app || exit 1
-export PATH="./node_modules/.bin:$PATH"
 npx lint-staged
