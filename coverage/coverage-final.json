@@ -649,7 +649,7 @@
   },
   "D:\\repos\\rs-react-app\\src\\components\\controls\\controls.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\controls\\controls.tsx",
-    "all": true,
+    "all": false,
     "statementMap": {
       "0": {
         "start": { "line": 1, "column": 0 },
@@ -705,56 +705,56 @@
       }
     },
     "s": {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "8": 0,
-      "9": 0,
-      "10": 0,
-      "11": 0,
-      "12": 0,
-      "13": 0,
-      "14": 0,
-      "15": 0,
-      "17": 0,
-      "18": 0
+      "0": 1,
+      "1": 1,
+      "2": 1,
+      "8": 1,
+      "9": 1,
+      "10": 2,
+      "11": 2,
+      "12": 2,
+      "13": 2,
+      "14": 2,
+      "15": 2,
+      "17": 2,
+      "18": 1
     },
     "branchMap": {
       "0": {
         "type": "branch",
-        "line": 1,
+        "line": 10,
         "loc": {
-          "start": { "line": 1, "column": 453 },
-          "end": { "line": 19, "column": 1 }
+          "start": { "line": 10, "column": 2 },
+          "end": { "line": 18, "column": 3 }
         },
         "locations": [
           {
-            "start": { "line": 1, "column": 453 },
-            "end": { "line": 19, "column": 1 }
+            "start": { "line": 10, "column": 2 },
+            "end": { "line": 18, "column": 3 }
           }
         ]
       }
     },
-    "b": { "0": [0] },
+    "b": { "0": [2] },
     "fnMap": {
       "0": {
-        "name": "(empty-report)",
+        "name": "render",
         "decl": {
-          "start": { "line": 1, "column": 453 },
-          "end": { "line": 19, "column": 1 }
+          "start": { "line": 10, "column": 2 },
+          "end": { "line": 18, "column": 3 }
         },
         "loc": {
-          "start": { "line": 1, "column": 453 },
-          "end": { "line": 19, "column": 1 }
+          "start": { "line": 10, "column": 2 },
+          "end": { "line": 18, "column": 3 }
         },
-        "line": 1
+        "line": 10
       }
     },
-    "f": { "0": 0 }
+    "f": { "0": 2 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\controls\\search-class.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\controls\\search-class.tsx",
-    "all": true,
+    "all": false,
     "statementMap": {
       "0": {
         "start": { "line": 1, "column": 0 },
@@ -934,83 +934,292 @@
       }
     },
     "s": {
-      "0": 0,
-      "1": 0,
-      "11": 0,
-      "12": 0,
-      "13": 0,
-      "14": 0,
-      "16": 0,
-      "17": 0,
-      "18": 0,
-      "20": 0,
-      "21": 0,
-      "22": 0,
-      "24": 0,
-      "25": 0,
-      "26": 0,
-      "27": 0,
-      "28": 0,
-      "29": 0,
-      "31": 0,
-      "32": 0,
-      "33": 0,
-      "34": 0,
-      "36": 0,
-      "37": 0,
-      "38": 0,
-      "39": 0,
-      "40": 0,
-      "41": 0,
-      "43": 0,
-      "44": 0,
-      "45": 0,
-      "46": 0,
-      "47": 0,
-      "49": 0,
-      "50": 0,
-      "51": 0,
-      "52": 0,
-      "53": 0,
-      "54": 0,
-      "55": 0,
-      "56": 0,
-      "57": 0,
-      "59": 0,
-      "60": 0
+      "0": 1,
+      "1": 1,
+      "11": 1,
+      "12": 4,
+      "13": 1,
+      "14": 1,
+      "16": 4,
+      "17": 8,
+      "18": 8,
+      "20": 4,
+      "21": 4,
+      "22": 4,
+      "24": 4,
+      "25": 4,
+      "26": 4,
+      "27": 1,
+      "28": 1,
+      "29": 4,
+      "31": 4,
+      "32": 1,
+      "33": 1,
+      "34": 1,
+      "36": 4,
+      "37": 1,
+      "38": 1,
+      "39": 1,
+      "40": 1,
+      "41": 1,
+      "43": 4,
+      "44": 6,
+      "45": 6,
+      "46": 6,
+      "47": 6,
+      "49": 6,
+      "50": 6,
+      "51": 6,
+      "52": 6,
+      "53": 6,
+      "54": 6,
+      "55": 6,
+      "56": 6,
+      "57": 6,
+      "59": 6,
+      "60": 4
     },
     "branchMap": {
       "0": {
         "type": "branch",
-        "line": 1,
+        "line": 12,
         "loc": {
-          "start": { "line": 1, "column": 1534 },
+          "start": { "line": 12, "column": 64 },
           "end": { "line": 61, "column": 1 }
         },
         "locations": [
           {
-            "start": { "line": 1, "column": 1534 },
+            "start": { "line": 12, "column": 64 },
             "end": { "line": 61, "column": 1 }
+          }
+        ]
+      },
+      "1": {
+        "type": "branch",
+        "line": 22,
+        "loc": {
+          "start": { "line": 22, "column": 34 },
+          "end": { "line": 22, "column": 42 }
+        },
+        "locations": [
+          {
+            "start": { "line": 22, "column": 34 },
+            "end": { "line": 22, "column": 42 }
+          }
+        ]
+      },
+      "2": {
+        "type": "branch",
+        "line": 13,
+        "loc": {
+          "start": { "line": 13, "column": 14 },
+          "end": { "line": 15, "column": 4 }
+        },
+        "locations": [
+          {
+            "start": { "line": 13, "column": 14 },
+            "end": { "line": 15, "column": 4 }
+          }
+        ]
+      },
+      "3": {
+        "type": "branch",
+        "line": 17,
+        "loc": {
+          "start": { "line": 17, "column": 15 },
+          "end": { "line": 19, "column": 4 }
+        },
+        "locations": [
+          {
+            "start": { "line": 17, "column": 15 },
+            "end": { "line": 19, "column": 4 }
+          }
+        ]
+      },
+      "4": {
+        "type": "branch",
+        "line": 18,
+        "loc": {
+          "start": { "line": 18, "column": 59 },
+          "end": { "line": 18, "column": 67 }
+        },
+        "locations": [
+          {
+            "start": { "line": 18, "column": 59 },
+            "end": { "line": 18, "column": 67 }
+          }
+        ]
+      },
+      "5": {
+        "type": "branch",
+        "line": 25,
+        "loc": {
+          "start": { "line": 25, "column": 2 },
+          "end": { "line": 30, "column": 3 }
+        },
+        "locations": [
+          {
+            "start": { "line": 25, "column": 2 },
+            "end": { "line": 30, "column": 3 }
+          }
+        ]
+      },
+      "6": {
+        "type": "branch",
+        "line": 27,
+        "loc": {
+          "start": { "line": 27, "column": 20 },
+          "end": { "line": 29, "column": 5 }
+        },
+        "locations": [
+          {
+            "start": { "line": 27, "column": 20 },
+            "end": { "line": 29, "column": 5 }
+          }
+        ]
+      },
+      "7": {
+        "type": "branch",
+        "line": 32,
+        "loc": {
+          "start": { "line": 32, "column": 20 },
+          "end": { "line": 35, "column": 4 }
+        },
+        "locations": [
+          {
+            "start": { "line": 32, "column": 20 },
+            "end": { "line": 35, "column": 4 }
+          }
+        ]
+      },
+      "8": {
+        "type": "branch",
+        "line": 37,
+        "loc": {
+          "start": { "line": 37, "column": 21 },
+          "end": { "line": 42, "column": 4 }
+        },
+        "locations": [
+          {
+            "start": { "line": 37, "column": 21 },
+            "end": { "line": 42, "column": 4 }
+          }
+        ]
+      },
+      "9": {
+        "type": "branch",
+        "line": 44,
+        "loc": {
+          "start": { "line": 44, "column": 2 },
+          "end": { "line": 60, "column": 3 }
+        },
+        "locations": [
+          {
+            "start": { "line": 44, "column": 2 },
+            "end": { "line": 60, "column": 3 }
           }
         ]
       }
     },
-    "b": { "0": [0] },
+    "b": {
+      "0": [4],
+      "1": [3],
+      "2": [1],
+      "3": [8],
+      "4": [6],
+      "5": [4],
+      "6": [1],
+      "7": [1],
+      "8": [1],
+      "9": [6]
+    },
     "fnMap": {
       "0": {
-        "name": "(empty-report)",
+        "name": "<instance_members_initializer>",
         "decl": {
-          "start": { "line": 1, "column": 1534 },
+          "start": { "line": 12, "column": 64 },
           "end": { "line": 61, "column": 1 }
         },
         "loc": {
-          "start": { "line": 1, "column": 1534 },
+          "start": { "line": 12, "column": 64 },
           "end": { "line": 61, "column": 1 }
         },
-        "line": 1
+        "line": 12
+      },
+      "1": {
+        "name": "writeToLS",
+        "decl": {
+          "start": { "line": 13, "column": 14 },
+          "end": { "line": 15, "column": 4 }
+        },
+        "loc": {
+          "start": { "line": 13, "column": 14 },
+          "end": { "line": 15, "column": 4 }
+        },
+        "line": 13
+      },
+      "2": {
+        "name": "readFromLS",
+        "decl": {
+          "start": { "line": 17, "column": 15 },
+          "end": { "line": 19, "column": 4 }
+        },
+        "loc": {
+          "start": { "line": 17, "column": 15 },
+          "end": { "line": 19, "column": 4 }
+        },
+        "line": 17
+      },
+      "3": {
+        "name": "componentDidMount",
+        "decl": {
+          "start": { "line": 25, "column": 2 },
+          "end": { "line": 30, "column": 3 }
+        },
+        "loc": {
+          "start": { "line": 25, "column": 2 },
+          "end": { "line": 30, "column": 3 }
+        },
+        "line": 25
+      },
+      "4": {
+        "name": "handleFormInput",
+        "decl": {
+          "start": { "line": 32, "column": 20 },
+          "end": { "line": 35, "column": 4 }
+        },
+        "loc": {
+          "start": { "line": 32, "column": 20 },
+          "end": { "line": 35, "column": 4 }
+        },
+        "line": 32
+      },
+      "5": {
+        "name": "handleFormSubmit",
+        "decl": {
+          "start": { "line": 37, "column": 21 },
+          "end": { "line": 42, "column": 4 }
+        },
+        "loc": {
+          "start": { "line": 37, "column": 21 },
+          "end": { "line": 42, "column": 4 }
+        },
+        "line": 37
+      },
+      "6": {
+        "name": "render",
+        "decl": {
+          "start": { "line": 44, "column": 2 },
+          "end": { "line": 60, "column": 3 }
+        },
+        "loc": {
+          "start": { "line": 44, "column": 2 },
+          "end": { "line": 60, "column": 3 }
+        },
+        "line": 44
       }
     },
-    "f": { "0": 0 }
+    "f": { "0": 4, "1": 1, "2": 8, "3": 4, "4": 1, "5": 1, "6": 6 }
   },
   "D:\\repos\\rs-react-app\\src\\components\\error-boundary\\errorBoundary.tsx": {
     "path": "D:\\repos\\rs-react-app\\src\\components\\error-boundary\\errorBoundary.tsx",
