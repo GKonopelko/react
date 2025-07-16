@@ -25,27 +25,27 @@
         </h1>
         <div class="clearfix">
           <div class="fl pad1y space-right2">
-            <span class="strong">23.8% </span>
+            <span class="strong">100% </span>
             <span class="quiet">Statements</span>
-            <span class="fraction">5/21</span>
+            <span class="fraction">21/21</span>
           </div>
 
           <div class="fl pad1y space-right2">
             <span class="strong">100% </span>
             <span class="quiet">Branches</span>
-            <span class="fraction">0/0</span>
+            <span class="fraction">1/1</span>
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">0% </span>
+            <span class="strong">100% </span>
             <span class="quiet">Functions</span>
-            <span class="fraction">0/1</span>
+            <span class="fraction">1/1</span>
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">23.8% </span>
+            <span class="strong">100% </span>
             <span class="quiet">Lines</span>
-            <span class="fraction">5/21</span>
+            <span class="fraction">21/21</span>
           </div>
         </div>
         <p class="quiet">
@@ -59,7 +59,7 @@
           </div>
         </template>
       </div>
-      <div class="status-line low"></div>
+      <div class="status-line high"></div>
       <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -99,23 +99,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Component } from 'react';
 import styles from './styles.module.css';
@@ -126,24 +126,24 @@ interface PokemonCardProps {
 }
 &nbsp;
 export class PokemonCard extends Component&lt;PokemonCardProps&gt; {
-<span class="fstat-no" title="function not covered" >  render() {</span>
-<span class="cstat-no" title="statement not covered" >    const { pokemon } = this.props;</span>
-<span class="cstat-no" title="statement not covered" >    return (</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className={styles.card}&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;img</span>
-<span class="cstat-no" title="statement not covered" >          src={pokemon.sprites.front_default}</span>
-<span class="cstat-no" title="statement not covered" >          alt={pokemon.name}</span>
-<span class="cstat-no" title="statement not covered" >          className={styles.image}</span>
-<span class="cstat-no" title="statement not covered" >        /&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;h3 className={styles.name}&gt;{pokemon.name}&lt;/h3&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;div className={styles.description}&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;p className={styles.id}&gt;ID: {pokemon.id}&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;p className={styles.detail}&gt;Height: {pokemon.height / 10} m&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >          &lt;p className={styles.detail}&gt;Weight: {pokemon.weight / 10} kg&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
+  render() {
+    const { pokemon } = this.props;
+    return (
+      &lt;div className={styles.card}&gt;
+        &lt;img
+          src={pokemon.sprites.front_default}
+          alt={pokemon.name}
+          className={styles.image}
+        /&gt;
+        &lt;h3 className={styles.name}&gt;{pokemon.name}&lt;/h3&gt;
+        &lt;div className={styles.description}&gt;
+          &lt;p className={styles.id}&gt;ID: {pokemon.id}&lt;/p&gt;
+          &lt;p className={styles.detail}&gt;Height: {pokemon.height / 10} m&lt;/p&gt;
+          &lt;p className={styles.detail}&gt;Weight: {pokemon.weight / 10} kg&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
     );
-<span class="cstat-no" title="statement not covered" >  }</span>
+  }
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -159,7 +159,7 @@ export class PokemonCard extends Component&lt;PokemonCardProps&gt; {
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-07-15T21:06:04.489Z
+      at 2025-07-16T09:23:27.875Z
     </div>
     <script src="../../../prettify.js"></script>
     <script>
