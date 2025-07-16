@@ -830,23 +830,8 @@
       "13": 1,
       "14": 1
     },
-    "branchMap": {
-      "0": {
-        "type": "branch",
-        "line": 8,
-        "loc": {
-          "start": { "line": 8, "column": 18 },
-          "end": { "line": 8, "column": 60 }
-        },
-        "locations": [
-          {
-            "start": { "line": 8, "column": 18 },
-            "end": { "line": 8, "column": 60 }
-          }
-        ]
-      }
-    },
-    "b": { "0": [0] },
+    "branchMap": {},
+    "b": {},
     "fnMap": {},
     "f": {}
   },
