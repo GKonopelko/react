@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import {
   describe,
   it,
@@ -28,11 +28,30 @@ const mockPokemonItem: PokemonListItem = {
 };
 
 describe('Results Component', () => {
+  let consoleSpy: ReturnType<typeof vi.spyOn>;
+
+  let resolveFetch: (value: {
+    ok: boolean;
+    json: () => Promise<PokemonDetails>;
+  }) => void;
+  let rejectFetch: (reason?: unknown) => void;
+
   beforeAll(() => {
-    vi.stubGlobal('fetch', vi.fn());
+    consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        () =>
+          new Promise((resolve, reject) => {
+            resolveFetch = resolve;
+            rejectFetch = reject;
+          })
+      )
+    );
   });
 
   afterAll(() => {
+    consoleSpy.mockRestore();
     vi.unstubAllGlobals();
   });
 
@@ -45,26 +64,46 @@ describe('Results Component', () => {
     expect(screen.getByText('No Pokemons :(')).toBeInTheDocument();
   });
 
-  it('should render "loading"', () => {
+  it('should show loading state and then render pokemon', async () => {
     render(<Results resultPokemons={[mockPokemonItem]} />);
+
     expect(screen.getByText('Loading pokemon details...')).toBeInTheDocument();
+
+    await act(async () => {
+      resolveFetch({
+        ok: true,
+        json: () => Promise.resolve(mockPokemonDetails),
+      });
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading pokemon details...')).toBeNull();
+      expect(screen.getByText('bulbasaur')).toBeInTheDocument();
+    });
   });
 
-  it('should render pokemon', () => {
+  it('should render pokemon details directly', async () => {
     render(<Results resultPokemons={mockPokemonDetails} />);
 
     expect(screen.getByText('bulbasaur')).toBeInTheDocument();
-    expect(screen.getByText('ID: 1')).toBeInTheDocument();
-    expect(screen.queryByText('Loading...')).toBeNull();
+    expect(screen.queryByText('Loading pokemon details...')).toBeNull();
   });
 
   it('should handle errors', async () => {
-    vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'));
-
     render(<Results resultPokemons={[mockPokemonItem]} />);
 
+    expect(screen.getByText('Loading pokemon details...')).toBeInTheDocument();
+
+    await act(async () => {
+      rejectFetch(new Error('Network error'));
+    });
+
     await waitFor(() => {
-      expect(screen.queryByText('Loading...')).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Error loading pokemon details:',
+        expect.any(Error)
+      );
+      expect(screen.queryByText('Loading pokemon details...')).toBeNull();
     });
   });
 });

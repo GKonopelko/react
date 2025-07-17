@@ -41,48 +41,51 @@ vi.mock('./components/main/main-logic', () => ({
 }));
 
 describe('App Component', () => {
+  let consoleSpy: ReturnType<typeof vi.spyOn>;
   beforeEach(() => {
+    consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('pikachu');
     vi.stubGlobal('fetch', vi.fn());
   });
 
   afterEach(() => {
+    consoleSpy.mockRestore();
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });
 
-  it('should render without errors', () => {
-    render(<App />);
+  it('should render without errors', async () => {
+    await act(async () => {
+      render(<App />);
+    });
     expect(screen.getByText('test Main')).toBeInTheDocument();
   });
 
-  it('should read localStorage', () => {
-    render(<App />);
+  it('should read localStorage', async () => {
+    await act(async () => {
+      render(<App />);
+    });
     expect(localStorage.getItem).toHaveBeenCalledWith(
       'poke-monReactQueryContent'
     );
   });
-
   it('should handle pokemon fetch', async () => {
-    const mockPokemon = {
-      id: 1,
-      name: 'pikachu',
-      sprites: { front_default: 'test-url' },
-    };
-
     vi.mocked(fetch).mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve(mockPokemon),
+      json: () => Promise.resolve({ id: 1, name: 'pikachu' }),
     } as Response);
 
     render(<App />);
+
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalled();
+      expect(fetch).toHaveBeenCalledWith(
+        'https://pokeapi.co/api/v2/pokemon/pikachu'
+      );
     });
   });
 
   it('should trigger error boundary on test', async () => {
-    render(
+    const { container } = render(
       <ErrorBoundary>
         <App />
       </ErrorBoundary>
@@ -91,7 +94,7 @@ describe('App Component', () => {
     fireEvent.click(screen.getByText('Test Error'));
 
     await waitFor(() => {
-      expect(screen.getByText(/You broke the app/i)).toBeInTheDocument();
+      expect(container).toHaveTextContent('You broke the app');
     });
   });
   it('should show loading state', async () => {

@@ -17,6 +17,7 @@ export default defineConfig({
         'src/index.{ts,tsx}',
         'src/setupTests.ts',
         'src/**/*.d.ts',
+        'src/assets/**/*',
       ],
       thresholds: {
         statements: 80,
