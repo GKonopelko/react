@@ -1,11 +1,5 @@
 echo "🚀 Running pre-push checks..."
 
-echo "🔍 Running tests..."
-if ! npm run test -- --run; then
-  echo "❌ Tests failed!"
-  exit 1
-fi
-
 echo "📊 Checking coverage..."
 if ! npm run test:coverage -- --run; then
   echo "❌ Coverage check failed!"
