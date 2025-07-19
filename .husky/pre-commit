@@ -1,3 +1,2 @@
-cd rs-react-app || exit 1
-export PATH="./node_modules/.bin:$PATH"
+echo "Running pre-commit hook"
 npx lint-staged
