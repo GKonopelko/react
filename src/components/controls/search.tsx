@@ -1,7 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import styles from './styles.module.css';
 
-interface SearchProps {
+export interface SearchProps {
   onSearch: (query: string) => void;
 }
 

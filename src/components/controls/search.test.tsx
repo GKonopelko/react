@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { Search } from './search-class';
+import { Search } from './search';
+import '@testing-library/jest-dom';
 
 describe('Search Component', () => {
   const mockSearch = vi.fn();

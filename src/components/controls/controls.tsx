@@ -1,4 +1,4 @@
-import { Search } from './search-functional';
+import { Search } from './search';
 import styles from './styles.module.css';
 
 interface ControlsProps {
