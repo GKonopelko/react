@@ -9,7 +9,6 @@ describe('Main Component', () => {
       loading: false,
       error: null,
       onSearch: () => {},
-      onMakeTestError: () => {},
       onDismissError: () => {},
     };
     return render(<Main {...defaultProps} {...props} />);
@@ -17,10 +16,6 @@ describe('Main Component', () => {
 
   it('should render layout', () => {
     renderMain();
-
-    expect(
-      screen.getByRole('button', { name: /don't press the red button/i })
-    ).toBeInTheDocument();
 
     expect(screen.getByAltText(/RS School/i)).toBeInTheDocument();
   });

@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { Header } from '../header/header';
 import { Controls } from '../controls/controls';
 import { Results } from '../results/results';
@@ -12,33 +11,24 @@ interface MainProps {
   loading: boolean;
   error: string | null;
   onSearch: (query: string) => void;
-  onMakeTestError: () => void;
   onDismissError: () => void;
 }
 
-export class Main extends Component<MainProps> {
-  render() {
-    const {
-      searchResults,
-      loading,
-      error,
-      onSearch,
-      onMakeTestError,
-      onDismissError,
-    } = this.props;
-
-    return (
-      <div className="wrapper">
-        <Header />
-        <Controls onSearch={onSearch} />
-        {loading && <Loader />}
-        {error && <ErrorMessage error={error} onDismiss={onDismissError} />}
-        {!loading && !error && <Results resultPokemons={searchResults} />}
-        <button onClick={onMakeTestError} className="global-button">
-          Don&apos;t press the red button
-        </button>
-        <Footer />
-      </div>
-    );
-  }
-}
+export const Main = ({
+  searchResults,
+  loading,
+  error,
+  onSearch,
+  onDismissError,
+}: MainProps) => {
+  return (
+    <div className="wrapper">
+      <Header />
+      <Controls onSearch={onSearch} />
+      {loading && <Loader />}
+      {error && <ErrorMessage error={error} onDismiss={onDismissError} />}
+      {!loading && !error && <Results resultPokemons={searchResults} />}
+      <Footer />
+    </div>
+  );
+};
