@@ -9,14 +9,12 @@ export const Search = ({ onSearch }: SearchProps) => {
   const [queryContent, setQueryContent] = useState<string>(
     localStorage.getItem('poke-monReactQueryContent') || ''
   );
-  console.log(queryContent);
 
   useEffect(() => {
     const savedQuery = localStorage.getItem('poke-monReactQueryContent');
     if (savedQuery) {
       setQueryContent(savedQuery);
     }
-    console.log(savedQuery);
   }, []);
 
   const handleFormInput = (event: ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +27,6 @@ export const Search = ({ onSearch }: SearchProps) => {
     const trimmedQuery = queryContent.trim();
     localStorage.setItem('poke-monReactQueryContent', trimmedQuery);
     onSearch(trimmedQuery);
-    console.log(trimmedQuery);
   };
 
   return (
