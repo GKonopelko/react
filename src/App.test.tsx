@@ -7,7 +7,6 @@ import {
 } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { App } from './App';
-import { ErrorBoundary } from './components/error-boundary/errorBoundary';
 import type { PokemonListItem, PokemonDetails } from './pokemonTypes';
 
 vi.mock('./components/main/main-logic', () => ({
@@ -15,13 +14,11 @@ vi.mock('./components/main/main-logic', () => ({
     error,
     loading,
     onSearch,
-    onMakeTestError,
     searchResults,
   }: {
     error?: string;
     loading?: boolean;
     onSearch?: (query: string) => void;
-    onMakeTestError?: () => void;
     searchResults?: PokemonListItem[] | PokemonDetails | null;
   }) => (
     <div>
@@ -35,7 +32,6 @@ vi.mock('./components/main/main-logic', () => ({
         ))}
 
       <button onClick={() => onSearch?.('')}>Search</button>
-      <button onClick={onMakeTestError}>Test Error</button>
     </div>
   ),
 }));
@@ -81,20 +77,6 @@ describe('App Component', () => {
       expect(fetch).toHaveBeenCalledWith(
         'https://pokeapi.co/api/v2/pokemon/pikachu'
       );
-    });
-  });
-
-  it('should trigger error boundary on test', async () => {
-    const { container } = render(
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    );
-
-    fireEvent.click(screen.getByText('Test Error'));
-
-    await waitFor(() => {
-      expect(container).toHaveTextContent('You broke the app');
     });
   });
   it('should show loading state', async () => {
