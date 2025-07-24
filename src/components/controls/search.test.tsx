@@ -2,11 +2,16 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Search } from './search';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Search Component', () => {
   const mockSearch = vi.fn();
   it('should render input and button', () => {
-    const { container } = render(<Search onSearch={mockSearch} />);
+    const { container } = render(
+      <MemoryRouter>
+        <Search onSearch={mockSearch} />
+      </MemoryRouter>
+    );
 
     const form = container.querySelector('form');
     expect(form).not.toBeNull();
@@ -31,7 +36,11 @@ describe('Search Component', () => {
   it('shoult write and read to/from state', () => {
     localStorage.setItem('poke-monReactQueryContent', 'test state');
 
-    render(<Search onSearch={() => {}} />);
+    render(
+      <MemoryRouter>
+        <Search onSearch={() => {}} />
+      </MemoryRouter>
+    );
 
     expect(screen.getByDisplayValue('test state')).toBeInTheDocument();
   });

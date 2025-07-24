@@ -1,31 +1,46 @@
+import { useState, useEffect, useCallback } from 'react';
 import styles from './styles.module.css';
 import { PokemonCard } from '../pokemon-card/pokemonCard';
-import { useEffect, useState, useCallback } from 'react';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
+import { useSearchParams } from 'react-router-dom';
 
 interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
 }
 
+const CARDS_PER_PAGE = 10;
+
 export const Results = ({ resultPokemons }: ResultsProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [allPokemonList, setAllPokemonList] = useState<PokemonListItem[]>([]);
 
-  const loadPokemonDetails = useCallback(
-    async (pokemonList: PokemonListItem[]) => {
+  const loadPageData = useCallback(
+    async (pokemonList: PokemonListItem[], page: number) => {
       setLoading(true);
-
       try {
+        const start = (page - 1) * CARDS_PER_PAGE;
+        const end = start + CARDS_PER_PAGE;
+        const pagePokemons = pokemonList.slice(start, end);
+
         const details = await Promise.all(
-          pokemonList.map(async (pokemon) => {
-            const response = await fetch(pokemon.url);
-            return await response.json();
+          pagePokemons.map(async (pokemon) => {
+            try {
+              const response = await fetch(pokemon.url);
+              if (!response.ok) return null;
+              return await response.json();
+            } catch (error) {
+              console.error(`Error fetching ${pokemon.url}:`, error);
+              return null;
+            }
           })
         );
 
-        setPokemonDetails(details);
+        setPokemonDetails(details.filter(Boolean));
       } catch (error) {
-        console.error('Error loading pokemon details:', error);
+        console.error('Error loading page data:', error);
       } finally {
         setLoading(false);
       }
@@ -37,17 +52,26 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
     if (!resultPokemons) return;
 
     if (Array.isArray(resultPokemons)) {
-      loadPokemonDetails(resultPokemons.slice(0, 100));
+      setAllPokemonList(resultPokemons);
+      loadPageData(resultPokemons, currentPage);
     } else {
       setPokemonDetails([resultPokemons]);
+      setAllPokemonList([]);
     }
-  }, [resultPokemons, loadPokemonDetails]);
+  }, [resultPokemons, currentPage, loadPageData]);
 
   useEffect(() => {
-    if (resultPokemons) {
-      loadInitialData();
-    }
-  }, [resultPokemons, loadInitialData]);
+    loadInitialData();
+  }, [loadInitialData, currentPage]);
+
+  const handlePageChange = (page: number) => {
+    if (!Array.isArray(resultPokemons)) return;
+
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('page', String(page));
+    setSearchParams(newSearchParams);
+    window.scrollTo(0, 0);
+  };
 
   if (!resultPokemons) {
     return <div className={styles.results}>No Pokemons :(</div>;
@@ -57,6 +81,18 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
     return <div className={styles.results}>Loading pokemon details...</div>;
   }
 
+  if (!Array.isArray(resultPokemons)) {
+    return (
+      <div className={styles.results}>
+        <div className={styles['results-grid']}>
+          <PokemonCard pokemon={resultPokemons} />
+        </div>
+      </div>
+    );
+  }
+
+  const totalPages = Math.ceil(allPokemonList.length / CARDS_PER_PAGE);
+
   return (
     <div className={styles.results}>
       <div className={styles['results-grid']}>
@@ -64,6 +100,28 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
           <PokemonCard key={pokemon.id} pokemon={pokemon} />
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Previous
+          </button>
+
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

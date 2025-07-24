@@ -86,6 +86,25 @@ export const App = () => {
     [fetchAllPokemons]
   );
 
+  const loadInitialData = useCallback(async () => {
+    const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
+    if (savedQuery.trim() === '') {
+      setState((prev) => ({ ...prev, loading: true }));
+      const allPokemons = await fetchAllPokemons();
+      setState((prev) => ({
+        ...prev,
+        searchResults: allPokemons,
+        loading: false,
+      }));
+    } else {
+      await handleSearch(savedQuery);
+    }
+  }, [fetchAllPokemons, handleSearch]);
+
+  useEffect(() => {
+    loadInitialData();
+  }, [loadInitialData]);
+
   useEffect(() => {
     const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
     handleSearch(savedQuery);

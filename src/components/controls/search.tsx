@@ -1,12 +1,14 @@
 import { type ChangeEvent, type FormEvent } from 'react';
 import styles from './styles.module.css';
 import { useLocalStorage } from '../ls-hook/ls-hook';
+import { useSearchParams } from 'react-router-dom';
 
 export interface SearchProps {
   onSearch: (query: string) => void;
 }
 
 export const Search = ({ onSearch }: SearchProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [queryContent, setQueryContent] = useLocalStorage(
     'poke-monReactQueryContent',
     ''
@@ -18,6 +20,9 @@ export const Search = ({ onSearch }: SearchProps) => {
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('page', '1');
+    setSearchParams(searchParams);
     onSearch(queryContent.trim());
   };
 

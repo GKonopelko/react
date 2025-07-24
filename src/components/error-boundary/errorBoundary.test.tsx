@@ -9,14 +9,12 @@ const TestError = () => {
 const WorkingComponent = () => <div>Working component</div>;
 
 describe('errorBoundary Component', () => {
-  // It is recommended to suppress console errors - they say it is good practice
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
   });
   afterEach(() => {
     vi.restoreAllMocks();
   });
-  //
   it('should render reset button', () => {
     render(
       <ErrorBoundary>

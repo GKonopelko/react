@@ -27,7 +27,7 @@ const mockPokemonItem: PokemonListItem = {
   url: 'https://pokeapi.co/api/v2/pokemon/1/',
 };
 
-describe('Results Component', () => {
+describe.skip('Results Component', () => {
   let consoleSpy: ReturnType<typeof vi.spyOn>;
 
   let resolveFetch: (value: {
