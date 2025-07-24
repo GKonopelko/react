@@ -1,21 +1,16 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
+import { type ChangeEvent, type FormEvent } from 'react';
 import styles from './styles.module.css';
+import { useLocalStorage } from '../ls-hook/ls-hook';
 
 export interface SearchProps {
   onSearch: (query: string) => void;
 }
 
 export const Search = ({ onSearch }: SearchProps) => {
-  const [queryContent, setQueryContent] = useState<string>(
-    localStorage.getItem('poke-monReactQueryContent') || ''
+  const [queryContent, setQueryContent] = useLocalStorage(
+    'poke-monReactQueryContent',
+    ''
   );
-
-  useEffect(() => {
-    const savedQuery = localStorage.getItem('poke-monReactQueryContent');
-    if (savedQuery) {
-      setQueryContent(savedQuery);
-    }
-  }, []);
 
   const handleFormInput = (event: ChangeEvent<HTMLInputElement>) => {
     setQueryContent(event.target.value);
@@ -23,10 +18,7 @@ export const Search = ({ onSearch }: SearchProps) => {
 
   const handleFormSubmit = (event: FormEvent) => {
     event.preventDefault();
-
-    const trimmedQuery = queryContent.trim();
-    localStorage.setItem('poke-monReactQueryContent', trimmedQuery);
-    onSearch(trimmedQuery);
+    onSearch(queryContent.trim());
   };
 
   return (
