@@ -1,0 +1,15 @@
+.pokemon-big-img {
+  width: 100%;
+}
+
+.details-card {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.details-card button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}

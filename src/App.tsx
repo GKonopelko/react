@@ -115,12 +115,14 @@ export const App = () => {
   }, []);
 
   return (
-    <Main
-      searchResults={state.searchResults}
-      loading={state.loading}
-      error={state.error}
-      onSearch={handleSearch}
-      onDismissError={handleDismissError}
-    />
+    <>
+      <Main
+        searchResults={state.searchResults}
+        loading={state.loading}
+        error={state.error}
+        onSearch={handleSearch}
+        onDismissError={handleDismissError}
+      />
+    </>
   );
 };

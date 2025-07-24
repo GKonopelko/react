@@ -6,6 +6,7 @@ import { App } from './App';
 import { ErrorBoundary } from './components/error-boundary/errorBoundary';
 import { NotFound } from './components/404-page/404-page';
 import { About } from './components/about-page/about';
+import { PokemonDetailsPage } from './components/details-page/details-page';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,16 @@ const router = createBrowserRouter([
         <NotFound />
       </ErrorBoundary>
     ),
+    children: [
+      {
+        path: '',
+        element: <App />,
+      },
+      {
+        path: 'details/:id',
+        element: <PokemonDetailsPage />,
+      },
+    ],
   },
   {
     path: '/about',

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import styles from './styles.module.css';
 import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
-import { useSearchParams } from 'react-router-dom';
+import { Link, Outlet, useParams, useSearchParams } from 'react-router-dom';
 
 interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
@@ -12,6 +12,7 @@ const CARDS_PER_PAGE = 10;
 
 export const Results = ({ resultPokemons }: ResultsProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { id: detailsId } = useParams();
   const currentPage = Number(searchParams.get('page')) || 1;
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -94,13 +95,7 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
   const totalPages = Math.ceil(allPokemonList.length / CARDS_PER_PAGE);
 
   return (
-    <div className={styles.results}>
-      <div className={styles['results-grid']}>
-        {pokemonDetails.map((pokemon) => (
-          <PokemonCard key={pokemon.id} pokemon={pokemon} />
-        ))}
-      </div>
-
+    <>
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
@@ -109,11 +104,9 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
           >
             Previous
           </button>
-
           <span>
             Page {currentPage} of {totalPages}
           </span>
-
           <button
             disabled={currentPage === totalPages}
             onClick={() => handlePageChange(currentPage + 1)}
@@ -122,6 +115,25 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
           </button>
         </div>
       )}
-    </div>
+      <div className={styles['results-container']}>
+        <div className={styles['results-grid']}>
+          {pokemonDetails.map((pokemon) => (
+            <Link
+              to={`?page=${currentPage}&details=${pokemon.id}`}
+              key={pokemon.id}
+              className={styles['card-link']}
+            >
+              <PokemonCard pokemon={pokemon} />
+            </Link>
+          ))}
+        </div>
+
+        {detailsId && (
+          <div className={styles['details-panel']}>
+            <Outlet />
+          </div>
+        )}
+      </div>
+    </>
   );
 };
