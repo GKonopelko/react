@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { Main } from './main-logic';
 import { describe, it, expect } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Main Component', () => {
   const renderMain = (props = {}) => {
@@ -11,15 +12,19 @@ describe('Main Component', () => {
       onSearch: () => {},
       onDismissError: () => {},
     };
-    return render(<Main {...defaultProps} {...props} />);
+    return render(
+      <MemoryRouter>
+        <Main {...defaultProps} {...props} />
+      </MemoryRouter>
+    );
   };
 
   it('should render layout', () => {
     renderMain();
-
     expect(screen.getByAltText(/RS School/i)).toBeInTheDocument();
   });
-  it('should render Loader ', () => {
+
+  it('should render Loader', () => {
     renderMain({ loading: true });
     expect(screen.getByText(/Pokemons coming soon.../i)).toBeInTheDocument();
   });

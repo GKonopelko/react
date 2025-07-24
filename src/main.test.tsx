@@ -17,7 +17,9 @@ describe('main', () => {
       createRoot: vi.fn(),
     }));
 
-    await expect(import('./main')).rejects.toThrow('Root element not found');
+    await expect(import('./main')).rejects.toThrow(
+      'Failed to find the root element'
+    );
   });
 
   it('should render when root exists', async () => {
