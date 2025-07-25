@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
+  margin: 2rem 0;
   padding: 1rem;
 }
 
@@ -22,16 +22,4 @@
 
 .pagination span {
   font-size: 0.9rem;
-}
-
-.results-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-}
-
-.wrapper {
-  flex: 1;
 }

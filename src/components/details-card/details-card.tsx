@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
 import styles from './styles.module.css';
 import type { PokemonDetails } from '../../pokemonTypes';
-import { useSearchParams } from 'react-router-dom';
 
 interface DetailsCardProps {
   pokemonId: string;
 }
+interface DetailsCardProps {
+  pokemonId: string;
+  onClose: () => void;
+}
 
-export const DetailsCard = ({ pokemonId }: DetailsCardProps) => {
+export const DetailsCard = ({ pokemonId, onClose }: DetailsCardProps) => {
   const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchPokemon = async () => {
@@ -39,14 +41,7 @@ export const DetailsCard = ({ pokemonId }: DetailsCardProps) => {
 
   return (
     <div className={styles['details-card']}>
-      <button
-        className={styles.closeButton}
-        onClick={() => {
-          const newParams = new URLSearchParams(searchParams);
-          newParams.delete('details');
-          setSearchParams(newParams);
-        }}
-      >
+      <button className={styles.closeButton} onClick={onClose}>
         ×
       </button>
       <h2>{pokemon.name}</h2>

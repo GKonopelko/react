@@ -2,17 +2,20 @@ import { useState, useEffect, useCallback } from 'react';
 import styles from './styles.module.css';
 import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
-import { Link, Outlet, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
+  cardsPerPage?: number;
 }
 
 const CARDS_PER_PAGE = 10;
 
-export const Results = ({ resultPokemons }: ResultsProps) => {
+export const Results = ({
+  resultPokemons,
+  cardsPerPage = CARDS_PER_PAGE,
+}: ResultsProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { id: detailsId } = useParams();
   const currentPage = Number(searchParams.get('page')) || 1;
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,8 +25,8 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
     async (pokemonList: PokemonListItem[], page: number) => {
       setLoading(true);
       try {
-        const start = (page - 1) * CARDS_PER_PAGE;
-        const end = start + CARDS_PER_PAGE;
+        const start = (page - 1) * cardsPerPage;
+        const end = start + cardsPerPage;
         const pagePokemons = pokemonList.slice(start, end);
 
         const details = await Promise.all(
@@ -46,7 +49,7 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
         setLoading(false);
       }
     },
-    []
+    [cardsPerPage]
   );
 
   const loadInitialData = useCallback(() => {
@@ -92,10 +95,10 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
     );
   }
 
-  const totalPages = Math.ceil(allPokemonList.length / CARDS_PER_PAGE);
+  const totalPages = Math.ceil(allPokemonList.length / cardsPerPage);
 
   return (
-    <>
+    <div className={styles.wrapper}>
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
@@ -115,25 +118,17 @@ export const Results = ({ resultPokemons }: ResultsProps) => {
           </button>
         </div>
       )}
-      <div className={styles['results-container']}>
-        <div className={styles['results-grid']}>
-          {pokemonDetails.map((pokemon) => (
-            <Link
-              to={`?page=${currentPage}&details=${pokemon.id}`}
-              key={pokemon.id}
-              className={styles['card-link']}
-            >
-              <PokemonCard pokemon={pokemon} />
-            </Link>
-          ))}
-        </div>
-
-        {detailsId && (
-          <div className={styles['details-panel']}>
-            <Outlet />
-          </div>
-        )}
+      <div className={styles['results-list']}>
+        {pokemonDetails.map((pokemon) => (
+          <Link
+            to={`details/${pokemon.id}?page=${currentPage}`}
+            key={pokemon.id}
+            className={styles['card-link']}
+          >
+            <PokemonCard pokemon={pokemon} />
+          </Link>
+        ))}
       </div>
-    </>
+    </div>
   );
 };

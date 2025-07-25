@@ -1,7 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import type { PokemonDetails, PokemonListItem } from './pokemonTypes';
-import { Main } from './components/main/main-logic';
+import { Controls } from './components/controls/controls';
+import { ErrorMessage } from './components/error-message/error-message';
+import { Loader } from './components/loader/loader';
+import { Results } from './components/results/results';
+import { Outlet } from 'react-router-dom';
+import { Header } from './components/header/header';
+import { Footer } from './components/footer/footer';
+import { ResultsContainer } from './components/results-container/results-container';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
@@ -116,13 +123,19 @@ export const App = () => {
 
   return (
     <>
-      <Main
-        searchResults={state.searchResults}
-        loading={state.loading}
-        error={state.error}
-        onSearch={handleSearch}
-        onDismissError={handleDismissError}
-      />
+      <Header />
+      <Controls onSearch={handleSearch} />
+      {state.loading && <Loader />}
+      {state.error && (
+        <ErrorMessage error={state.error} onDismiss={handleDismissError} />
+      )}
+      <ResultsContainer>
+        {!state.loading && !state.error && (
+          <Results resultPokemons={state.searchResults} />
+        )}
+        <Outlet />
+      </ResultsContainer>
+      <Footer />
     </>
   );
 };
