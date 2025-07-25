@@ -112,11 +112,6 @@ export const App = () => {
     loadInitialData();
   }, [loadInitialData]);
 
-  useEffect(() => {
-    const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
-    handleSearch(savedQuery);
-  }, [handleSearch]);
-
   const handleDismissError = useCallback(() => {
     setState((prev) => ({ ...prev, error: null }));
   }, []);

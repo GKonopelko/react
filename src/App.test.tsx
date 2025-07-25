@@ -1,149 +1,104 @@
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { App } from './App';
-import type { PokemonListItem, PokemonDetails } from './pokemonTypes';
+import { render, screen, fireEvent, waitFor } from '../tests/test-utils';
 
-vi.mock('./components/main/main-logic', () => ({
-  Main: ({
-    error,
-    loading,
-    onSearch,
-    searchResults,
-  }: {
-    error?: string;
-    loading?: boolean;
-    onSearch?: (query: string) => void;
-    searchResults?: PokemonListItem[] | PokemonDetails | null;
-  }) => (
-    <div>
-      <div>test Main</div>
-      {loading && <div>Pokemons coming soon...</div>}
-      {error && <div data-testid="error">{error}</div>}
+vi.mock('./components/loader/loader', () => ({
+  Loader: () => <div>Pokemons coming soon...</div>,
+}));
 
-      {Array.isArray(searchResults) &&
-        searchResults.map((p: PokemonListItem) => (
-          <div key={p.name}>{p.name}</div>
-        ))}
-
-      <button onClick={() => onSearch?.('')}>Search</button>
-    </div>
+vi.mock('./components/error-message/error-message', () => ({
+  ErrorMessage: ({ error }: { error: string }) => (
+    <div data-testid="error">{error}</div>
   ),
 }));
 
-describe.skip('App Component', () => {
-  let consoleSpy: ReturnType<typeof vi.spyOn>;
+vi.mock('./components/results/results', () => ({
+  Results: () => <div>Results component</div>,
+}));
+
+describe('App Component', () => {
   beforeEach(() => {
-    consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    global.fetch = vi.fn().mockImplementation((url) => {
+      if (url.includes('pokemon?limit=500')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            results: [{ name: 'bulbasaur', url: 'url1' }],
+            next: null,
+          }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({
+          name: 'pikachu',
+          id: 25,
+          sprites: { front_default: 'image-url' },
+        }),
+      });
+    });
     vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('pikachu');
-    vi.stubGlobal('fetch', vi.fn());
   });
 
   afterEach(() => {
-    consoleSpy.mockRestore();
     vi.restoreAllMocks();
-    vi.unstubAllGlobals();
+    localStorage.clear();
   });
 
-  it('should render without errors', async () => {
-    await act(async () => {
-      render(<App />);
-    });
-    expect(screen.getByText('test Main')).toBeInTheDocument();
+  it('should render without errors', () => {
+    render(<App />);
+    expect(screen.getByText('Poke-monReact')).toBeInTheDocument();
   });
 
-  it('should read localStorage', async () => {
-    await act(async () => {
-      render(<App />);
-    });
-    expect(localStorage.getItem).toHaveBeenCalledWith(
-      'poke-monReactQueryContent'
-    );
-  });
-  it('should handle pokemon fetch', async () => {
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({ id: 1, name: 'pikachu' }),
-    } as Response);
+  it('should save search query to localStorage on search', async () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
 
     render(<App />);
 
+    const input = screen.getByPlaceholderText('Enter pokemon name or id');
+    const button = screen.getByRole('button', { name: /search pokemon/i });
+
+    fireEvent.change(input, { target: { value: 'pikachu' } });
+    fireEvent.click(button);
+
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
+      expect(setItemSpy).toHaveBeenCalledWith(
+        'poke-monReactQueryContent',
+        'pikachu'
+      );
+    });
+  });
+
+  it('should perform a fetch call with the search input', async () => {
+    render(<App />);
+
+    const input = screen.getByPlaceholderText('Enter pokemon name or id');
+    const button = screen.getByRole('button', { name: /search pokemon/i });
+
+    fireEvent.change(input, { target: { value: 'pikachu' } });
+    fireEvent.click(button);
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
         'https://pokeapi.co/api/v2/pokemon/pikachu'
       );
     });
   });
+
   it('should show loading state', async () => {
-    let resolveFetch: (value: Response) => void;
-    vi.mocked(fetch).mockImplementationOnce(
-      () =>
-        new Promise<Response>((resolve) => {
-          resolveFetch = resolve;
-        })
-    );
+    global.fetch = vi.fn().mockImplementationOnce(() => new Promise(() => {}));
 
     render(<App />);
+
+    const input = screen.getByPlaceholderText('Enter pokemon name or id');
+    const button = screen.getByRole('button', { name: /search pokemon/i });
+
+    fireEvent.change(input, { target: { value: 'pikachu' } });
+    fireEvent.click(button);
     expect(screen.getByText('Pokemons coming soon...')).toBeInTheDocument();
-    await act(async () => {
-      resolveFetch({
-        ok: true,
-        json: () => Promise.resolve({ id: 1, name: 'pikachu' }),
-      } as Response);
-    });
-
-    expect(
-      screen.queryByText('Pokemons coming soon...')
-    ).not.toBeInTheDocument();
-  });
-  it('should save search query to localStorage', async () => {
-    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
-
-    render(<App />);
-    fireEvent.click(screen.getByText('Search'));
-
-    await waitFor(() => {
-      expect(setItemSpy).not.toHaveBeenCalled();
-    });
   });
 
-  it.skip('should fetch all pokemons', async () => {
-    const mockPokemons: PokemonListItem[] = [
-      { name: 'bulbasaur', url: 'url1' },
-      { name: 'charmander', url: 'url2' },
-    ];
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: false,
-      status: 404,
-      json: () => Promise.resolve({}),
-    } as Response);
-
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          results: mockPokemons,
-          next: null,
-        }),
-    } as Response);
-
-    render(<App />);
-
-    fireEvent.click(screen.getByText('Search'));
-
-    await waitFor(() => {
-      mockPokemons.forEach((p) => {
-        expect(screen.queryByText(p.name)).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe.skip('error handling', () => {
+  describe('error handling', () => {
     it('shows 404 error', async () => {
       vi.mocked(fetch).mockResolvedValueOnce({
         ok: false,
@@ -152,6 +107,7 @@ describe.skip('App Component', () => {
       } as Response);
 
       render(<App />);
+
       await waitFor(() => {
         expect(screen.getByTestId('error')).toHaveTextContent('not found');
       });
@@ -165,6 +121,7 @@ describe.skip('App Component', () => {
       } as Response);
 
       render(<App />);
+
       await waitFor(() => {
         expect(screen.getByTestId('error')).toHaveTextContent(
           'Authentication required'
@@ -180,6 +137,7 @@ describe.skip('App Component', () => {
       } as Response);
 
       render(<App />);
+
       await waitFor(() => {
         expect(screen.getByTestId('error')).toHaveTextContent('Server error');
       });
@@ -187,6 +145,7 @@ describe.skip('App Component', () => {
 
     it('shows network error', async () => {
       vi.mocked(fetch).mockRejectedValueOnce(new Error('Network error'));
+
       render(<App />);
       await waitFor(() => {
         expect(screen.getByTestId('error')).toBeInTheDocument();
