@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import styles from './styles.module.css';
 import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
@@ -15,11 +15,18 @@ export const Results = ({
   resultPokemons,
   cardsPerPage = CARDS_PER_PAGE,
 }: ResultsProps) => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [allPokemonList, setAllPokemonList] = useState<PokemonListItem[]>([]);
+
+  const handlePokemonClick = (id: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('page', String(currentPage));
+    navigate(`details/${id}?${newSearchParams.toString()}`);
+  };
 
   const loadPageData = useCallback(
     async (pokemonList: PokemonListItem[], page: number) => {
@@ -87,8 +94,11 @@ export const Results = ({
 
   if (!Array.isArray(resultPokemons)) {
     return (
-      <div className={styles.results}>
-        <div className={styles['results-grid']}>
+      <div className={styles['results-list']}>
+        <div
+          className={styles['card-link']}
+          onClick={() => navigate(`details/${resultPokemons.id}?page=1`)}
+        >
           <PokemonCard pokemon={resultPokemons} />
         </div>
       </div>
@@ -120,13 +130,13 @@ export const Results = ({
       )}
       <div className={styles['results-list']}>
         {pokemonDetails.map((pokemon) => (
-          <Link
-            to={`details/${pokemon.id}?page=${currentPage}`}
+          <div
             key={pokemon.id}
             className={styles['card-link']}
+            onClick={() => handlePokemonClick(String(pokemon.id))}
           >
             <PokemonCard pokemon={pokemon} />
-          </Link>
+          </div>
         ))}
       </div>
     </div>
