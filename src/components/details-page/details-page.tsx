@@ -12,20 +12,19 @@ export const PokemonDetailsPage = () => {
   useEffect(() => {
     if (id && id !== prevId) {
       setPrevId(id);
+    } else if (!id && prevId) {
+      setPrevId(null);
     }
   }, [id, prevId]);
 
   const handleClose = () => {
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.delete('details');
-
     navigate({
       pathname: '/',
-      search: searchParams.toString(),
+      search: location.search,
     });
   };
 
-  if (!id) return <div>No Pokemon selected</div>;
+  if (!id) return null;
 
   return (
     <div className={styles['details-panel']}>

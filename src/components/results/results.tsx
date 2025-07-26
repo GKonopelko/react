@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import styles from './styles.module.css';
 import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
   cardsPerPage?: number;
+  onPokemonSelect?: () => void;
 }
 
 const CARDS_PER_PAGE = 10;
@@ -14,6 +15,7 @@ const CARDS_PER_PAGE = 10;
 export const Results = ({
   resultPokemons,
   cardsPerPage = CARDS_PER_PAGE,
+  onPokemonSelect,
 }: ResultsProps) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,11 +23,21 @@ export const Results = ({
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [allPokemonList, setAllPokemonList] = useState<PokemonListItem[]>([]);
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (resultsContainerRef.current) {
+      resultsContainerRef.current.style.overflow = 'auto';
+      resultsContainerRef.current.style.height = '100vh';
+      resultsContainerRef.current.scrollTo(0, 0);
+    }
+  }, [currentPage]);
 
   const handlePokemonClick = (id: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set('page', String(currentPage));
     navigate(`details/${id}?${newSearchParams.toString()}`);
+    if (onPokemonSelect) onPokemonSelect();
   };
 
   const loadPageData = useCallback(
@@ -73,7 +85,7 @@ export const Results = ({
 
   useEffect(() => {
     loadInitialData();
-  }, [loadInitialData, currentPage]);
+  }, [loadInitialData]);
 
   const handlePageChange = (page: number) => {
     if (!Array.isArray(resultPokemons)) return;
@@ -81,7 +93,6 @@ export const Results = ({
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set('page', String(page));
     setSearchParams(newSearchParams);
-    window.scrollTo(0, 0);
   };
 
   if (!resultPokemons) {
@@ -89,7 +100,16 @@ export const Results = ({
   }
 
   if (loading) {
-    return <div className={styles.results}>Loading pokemon details...</div>;
+    return (
+      <div className={styles.results}>
+        <div className={styles['spinner-container']}>
+          <div className={styles.spinner}></div>
+          <div className={styles['loading-text']}>
+            Loading pokemon details...
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!Array.isArray(resultPokemons)) {
@@ -97,7 +117,10 @@ export const Results = ({
       <div className={styles['results-list']}>
         <div
           className={styles['card-link']}
-          onClick={() => navigate(`details/${resultPokemons.id}?page=1`)}
+          onClick={() => {
+            navigate(`details/${resultPokemons.id}?page=1`);
+            if (onPokemonSelect) onPokemonSelect();
+          }}
         >
           <PokemonCard pokemon={resultPokemons} />
         </div>
@@ -108,7 +131,11 @@ export const Results = ({
   const totalPages = Math.ceil(allPokemonList.length / cardsPerPage);
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={styles.wrapper}
+      ref={resultsContainerRef}
+      style={{ overflow: 'auto', height: '100vh' }}
+    >
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button

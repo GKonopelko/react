@@ -4,9 +4,6 @@ import type { PokemonDetails } from '../../pokemonTypes';
 
 interface DetailsCardProps {
   pokemonId: string;
-}
-interface DetailsCardProps {
-  pokemonId: string;
   onClose: () => void;
 }
 
@@ -35,8 +32,16 @@ export const DetailsCard = ({ pokemonId, onClose }: DetailsCardProps) => {
     fetchPokemon();
   }, [pokemonId]);
 
-  if (loading) return <div>Loading details...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading)
+    return (
+      <div className={styles['details-loading']}>
+        <div className={styles['details-spinner']}></div>
+        <div className={styles['details-loading-text']}>Loading details...</div>
+      </div>
+    );
+
+  if (error)
+    return <div className={styles['details-error']}>Error: {error}</div>;
   if (!pokemon) return null;
 
   return (

@@ -41,10 +41,12 @@ export const App = () => {
   const handleSearch = useCallback(
     async (query: string) => {
       try {
+        setDetailsOpen(false);
         setState((prev) => ({
           ...prev,
           loading: true,
           error: null,
+          searchResults: null,
         }));
 
         if (query.trim() === '') {
@@ -116,6 +118,11 @@ export const App = () => {
     setState((prev) => ({ ...prev, error: null }));
   }, []);
 
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const handlePokemonSelect = useCallback(() => {
+    setDetailsOpen(true);
+  }, []);
+
   return (
     <>
       <Header />
@@ -126,9 +133,12 @@ export const App = () => {
       )}
       <ResultsContainer>
         {!state.loading && !state.error && (
-          <Results resultPokemons={state.searchResults} />
+          <Results
+            resultPokemons={state.searchResults}
+            onPokemonSelect={handlePokemonSelect}
+          />
         )}
-        <Outlet />
+        {detailsOpen && <Outlet />}
       </ResultsContainer>
       <Footer />
     </>

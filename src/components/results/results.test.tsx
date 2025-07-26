@@ -36,6 +36,9 @@ describe('Results Component', () => {
   };
 
   beforeEach(() => {
+    const mockScrollTo = vi.fn();
+    Element.prototype.scrollTo = mockScrollTo;
+
     global.fetch = vi.fn((url) => {
       const urlString = url.toString();
       return Promise.resolve(
@@ -73,7 +76,9 @@ describe('Results Component', () => {
   it('handles fetch errors', async () => {
     global.fetch = vi.fn(() => Promise.reject(new Error('Failed')));
     render(<Results resultPokemons={[mockPokemonItem]} />);
-    await waitFor(() => expect(screen.queryByText('Loading...')).toBeNull());
+    await waitFor(() => {
+      expect(screen.queryByText('Loading pokemon details...')).toBeNull();
+    });
   });
 
   it('shows pagination for multiple pages', async () => {
@@ -94,9 +99,12 @@ describe('Results Component', () => {
     vi.mocked(useNavigate).mockReturnValue(navigate);
 
     render(<Results resultPokemons={[mockPokemonItem]} />);
-    await waitFor(() => fireEvent.click(screen.getByText('bulbasaur')));
-    expect(navigate).toHaveBeenCalled();
+    await waitFor(() => {
+      fireEvent.click(screen.getByText('bulbasaur'));
+      expect(navigate).toHaveBeenCalled();
+    });
   });
+
   it('handles fetch errors properly', async () => {
     global.fetch = vi.fn(() => Promise.reject(new Error('Fetch error')));
     render(<Results resultPokemons={[mockPokemonItem]} />);
@@ -105,6 +113,7 @@ describe('Results Component', () => {
       expect(screen.queryByText('Loading pokemon details...')).toBeNull();
     });
   });
+
   it('changes page correctly', async () => {
     const setSearchParams = vi.fn();
     vi.mocked(useSearchParams).mockReturnValue([
@@ -126,9 +135,14 @@ describe('Results Component', () => {
       );
     });
   });
+
   it('navigates to details when pokemon card is clicked', async () => {
     const navigate = vi.fn();
     vi.mocked(useNavigate).mockReturnValue(navigate);
+    vi.mocked(useSearchParams).mockReturnValue([
+      new URLSearchParams('page=1'),
+      vi.fn(),
+    ]);
 
     render(<Results resultPokemons={[mockPokemonItem]} />);
 
@@ -139,6 +153,7 @@ describe('Results Component', () => {
       );
     });
   });
+
   it('loads initial data correctly', async () => {
     render(<Results resultPokemons={[mockPokemonItem]} />);
 
@@ -147,6 +162,7 @@ describe('Results Component', () => {
       expect(screen.getByText('bulbasaur')).toBeInTheDocument();
     });
   });
+
   it('responds to page changes in URL', async () => {
     vi.mocked(useSearchParams).mockReturnValue([
       new URLSearchParams('page=2'),
@@ -164,12 +180,15 @@ describe('Results Component', () => {
       expect(screen.getByText('Page 2 of 3')).toBeInTheDocument();
     });
   });
+
   it('handles null resultPokemons correctly', () => {
     render(<Results resultPokemons={null} />);
     expect(screen.getByText('No Pokemons :(')).toBeInTheDocument();
   });
+
   it('scrolls to top when page changes', async () => {
-    window.scrollTo = vi.fn();
+    const mockScrollTo = vi.fn();
+    Element.prototype.scrollTo = mockScrollTo;
 
     const setSearchParams = vi.fn();
     vi.mocked(useSearchParams).mockReturnValue([
@@ -186,9 +205,40 @@ describe('Results Component', () => {
 
     await waitFor(() => {
       fireEvent.click(screen.getByText('Next'));
-      expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
+      expect(mockScrollTo).toHaveBeenCalledWith(0, 0);
     });
   });
+
+  it('logs error when page data loading fails', async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    const testError = new Error('Test loading error');
+
+    global.fetch = vi.fn().mockRejectedValue(testError);
+
+    render(
+      <Results
+        resultPokemons={[
+          { name: 'pokemon-1', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
+          { name: 'pokemon-2', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
+        ]}
+        cardsPerPage={2}
+      />
+    );
+
+    await waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      const errorCalls = consoleErrorSpy.mock.calls;
+      const hasExpectedError = errorCalls.some(
+        (call) => call[0].includes('Error fetching') && call[1] === testError
+      );
+      expect(hasExpectedError).toBe(true);
+    });
+
+    consoleErrorSpy.mockRestore();
+  });
+
   it('does not scroll when resultPokemons is not an array', () => {
     window.scrollTo = vi.fn();
 
@@ -196,6 +246,7 @@ describe('Results Component', () => {
 
     expect(window.scrollTo).not.toHaveBeenCalled();
   });
+
   it('logs error when page data loading fails', async () => {
     const consoleErrorSpy = vi
       .spyOn(console, 'error')
@@ -225,13 +276,12 @@ describe('Results Component', () => {
 
     consoleErrorSpy.mockRestore();
   });
+
   it('logs error when main loading fails', async () => {
     const consoleErrorSpy = vi
       .spyOn(console, 'error')
       .mockImplementation(() => {});
     const testError = new Error('Main loading error');
-
-    // Мокаем Promise.all чтобы выбросить ошибку
     const originalPromiseAll = Promise.all;
     Promise.all = vi.fn().mockRejectedValue(testError);
 
@@ -243,10 +293,10 @@ describe('Results Component', () => {
         testError
       );
     });
-
     Promise.all = originalPromiseAll;
     consoleErrorSpy.mockRestore();
   });
+
   it('handles failed HTTP responses', async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: false,

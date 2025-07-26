@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PokemonDetailsPage } from './details-page';
 import { render, screen, fireEvent, waitFor } from '../../../tests/test-utils';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 vi.mock('../details-card/details-card', () => ({
   DetailsCard: ({
@@ -21,7 +21,7 @@ vi.mock('../details-card/details-card', () => ({
 const mockNavigate = vi.fn();
 const mockLocation = {
   pathname: '/',
-  search: '?details=1',
+  search: '',
   hash: '',
   state: null,
   key: 'default',
@@ -41,12 +41,12 @@ describe('PokemonDetailsPage Component', () => {
   beforeEach(() => {
     mockNavigate.mockClear();
     vi.mocked(useParams).mockReturnValue({});
+    vi.mocked(useLocation).mockReturnValue(mockLocation);
   });
 
-  it('should render "No Pokemon selected" when id is not provided', () => {
-    render(<PokemonDetailsPage />);
-
-    expect(screen.getByText('No Pokemon selected')).toBeInTheDocument();
+  it('should render nothing when id is not provided', () => {
+    const { container } = render(<PokemonDetailsPage />);
+    expect(container.firstChild).toBeNull();
   });
 
   it('should render DetailsCard with correct pokemonId', async () => {
