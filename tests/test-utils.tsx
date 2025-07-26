@@ -1,4 +1,11 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  renderHook,
+  act,
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 const customRender = (ui: React.ReactElement, options = {}) => {
@@ -8,4 +15,4 @@ const customRender = (ui: React.ReactElement, options = {}) => {
   });
 };
 
-export { customRender as render, screen, fireEvent, waitFor };
+export { customRender as render, screen, fireEvent, waitFor, renderHook, act };
