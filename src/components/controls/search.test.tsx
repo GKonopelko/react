@@ -1,21 +1,15 @@
-import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Search } from './search';
 import '@testing-library/jest-dom';
-import { MemoryRouter } from 'react-router-dom';
+import { fireEvent, render, screen } from '../../../tests/test-utils';
 
 describe('Search Component', () => {
   const mockSearch = vi.fn();
+
   it('should render input and button', () => {
-    const { container } = render(
-      <MemoryRouter>
-        <Search onSearch={mockSearch} />
-      </MemoryRouter>
-    );
+    const { container } = render(<Search onSearch={mockSearch} />);
 
     const form = container.querySelector('form');
-    expect(form).not.toBeNull();
-    if (!form) return;
     expect(form).toBeInTheDocument();
 
     const input = screen.getByPlaceholderText('Enter pokemon name or id');
@@ -25,22 +19,20 @@ describe('Search Component', () => {
     expect(button).toBeInTheDocument();
 
     fireEvent.change(input, { target: { value: ' test ' } });
+    if (!form) throw new Error('Form not found');
     fireEvent.submit(form);
     expect(mockSearch).toHaveBeenCalledWith('test');
   });
-  it('shoult write and read to/from localStorage', () => {
+
+  it('should write and read to/from localStorage', () => {
     localStorage.setItem('poke-monReactQueryContent', 'test');
     expect(localStorage.getItem('poke-monReactQueryContent')).toBe('test');
   });
 
-  it('shoult write and read to/from state', () => {
+  it('should write and read to/from state', () => {
     localStorage.setItem('poke-monReactQueryContent', 'test state');
 
-    render(
-      <MemoryRouter>
-        <Search onSearch={() => {}} />
-      </MemoryRouter>
-    );
+    render(<Search onSearch={() => {}} />);
 
     expect(screen.getByDisplayValue('test state')).toBeInTheDocument();
   });
