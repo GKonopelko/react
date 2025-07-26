@@ -26,10 +26,12 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <App />,
+        errorElement: <NotFound />,
         children: [
           {
             path: 'details/:id',
             element: <PokemonDetailsPage />,
+            errorElement: <NotFound />,
           },
         ],
       },
