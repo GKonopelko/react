@@ -10,8 +10,12 @@ beforeEach(() => {
 describe('DetailsCard Component', () => {
   const mockOnClose = vi.fn();
 
-  it('should show loading state initially', () => {
+  it('should show loading state initially', async () => {
+    const unresolvedPromise = new Promise<Response>(() => {});
+    vi.mocked(fetch).mockImplementationOnce(() => unresolvedPromise);
+
     render(<DetailsCard pokemonId="1" onClose={mockOnClose} />);
+
     expect(screen.getByText('Loading details...')).toBeInTheDocument();
   });
 
@@ -26,7 +30,17 @@ describe('DetailsCard Component', () => {
   });
 
   it('should render pokemon details when fetch succeeds', async () => {
-    const mockPokemon = createPokemonDetails(1);
+    const mockPokemon = {
+      ...createPokemonDetails(1),
+      sprites: {
+        other: {
+          'official-artwork': {
+            front_default: 'https://example.com/pokemon.png',
+          },
+        },
+      },
+    };
+
     vi.mocked(fetch).mockResolvedValueOnce({
       ok: true,
       json: async () => mockPokemon,
@@ -42,7 +56,17 @@ describe('DetailsCard Component', () => {
   });
 
   it('should call onClose when close button is clicked', async () => {
-    const mockPokemon = createPokemonDetails(1);
+    const mockPokemon = {
+      ...createPokemonDetails(1),
+      sprites: {
+        other: {
+          'official-artwork': {
+            front_default: 'https://example.com/pokemon.png',
+          },
+        },
+      },
+    };
+
     vi.mocked(fetch).mockResolvedValueOnce({
       ok: true,
       json: async () => mockPokemon,

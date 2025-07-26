@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { App } from './App';
 import { render, screen, fireEvent, waitFor } from '../tests/test-utils';
 import { createPokemonList, createPokemonDetails } from '../tests/mocks';
+import { act } from '@testing-library/react';
 
 vi.mock('./components/loader/loader', () => ({
   Loader: () => <div>Pokemons coming soon...</div>,
@@ -39,8 +40,10 @@ describe('App Component', () => {
     localStorage.clear();
   });
 
-  it('should render without errors', () => {
-    render(<App />);
+  it('should render without errors', async () => {
+    await act(async () => {
+      render(<App />);
+    });
     expect(screen.getByText('Poke-monReact')).toBeInTheDocument();
   });
 
@@ -80,10 +83,20 @@ describe('App Component', () => {
     });
 
     it('should show loading state during search', async () => {
+      const unresolvedPromise = new Promise(() => {});
       global.fetch = vi
         .fn()
-        .mockImplementationOnce(() => new Promise(() => {}));
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            json: async () => createPokemonList(1),
+          })
+        )
+        .mockImplementationOnce(() => unresolvedPromise);
+
       render(<App />);
+
+      await screen.findByPlaceholderText('Enter pokemon name or id');
 
       const input = screen.getByPlaceholderText('Enter pokemon name or id');
       const button = screen.getByRole('button', { name: /search pokemon/i });

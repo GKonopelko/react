@@ -73,21 +73,18 @@ describe('Results Component', () => {
     expect(screen.getByText('bulbasaur')).toBeInTheDocument();
   });
 
-  it('handles fetch errors', async () => {
-    global.fetch = vi.fn(() => Promise.reject(new Error('Failed')));
-    render(<Results resultPokemons={[mockPokemonItem]} />);
-    await waitFor(() => {
-      expect(screen.queryByText('Loading pokemon details...')).toBeNull();
-    });
-  });
-
   it('shows pagination for multiple pages', async () => {
-    render(
-      <Results
-        resultPokemons={Array(15).fill(mockPokemonItem)}
-        cardsPerPage={5}
-      />
-    );
+    const mockList = Array.from({ length: 15 }, (_, i) => ({
+      name: `pokemon-${i}`,
+      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
+    }));
+    global.fetch = vi.fn((url) => {
+      const id = parseInt(url.toString().split('/').slice(-2, -1)[0]);
+      return Promise.resolve(mockResponse(createPokemonDetails(id)));
+    });
+
+    render(<Results resultPokemons={mockList} cardsPerPage={5} />);
+
     await waitFor(() => {
       expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
       expect(screen.getByText('Next')).toBeInTheDocument();
@@ -106,12 +103,20 @@ describe('Results Component', () => {
   });
 
   it('handles fetch errors properly', async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
     global.fetch = vi.fn(() => Promise.reject(new Error('Fetch error')));
+
     render(<Results resultPokemons={[mockPokemonItem]} />);
 
     await waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalled();
       expect(screen.queryByText('Loading pokemon details...')).toBeNull();
     });
+
+    consoleErrorSpy.mockRestore();
   });
 
   it('changes page correctly', async () => {
@@ -121,12 +126,21 @@ describe('Results Component', () => {
       setSearchParams,
     ]);
 
-    render(
-      <Results
-        resultPokemons={Array(15).fill(mockPokemonItem)}
-        cardsPerPage={5}
-      />
-    );
+    const mockList = Array.from({ length: 15 }, (_, i) => ({
+      name: `pokemon-${i}`,
+      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
+    }));
+
+    global.fetch = vi.fn((url) => {
+      const id = parseInt(url.toString().split('/').slice(-2, -1)[0]);
+      return Promise.resolve(mockResponse(createPokemonDetails(id)));
+    });
+
+    render(<Results resultPokemons={mockList} cardsPerPage={5} />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       fireEvent.click(screen.getByText('Next'));
@@ -169,12 +183,17 @@ describe('Results Component', () => {
       vi.fn(),
     ]);
 
-    render(
-      <Results
-        resultPokemons={Array(15).fill(mockPokemonItem)}
-        cardsPerPage={5}
-      />
-    );
+    const mockList = Array.from({ length: 15 }, (_, i) => ({
+      name: `pokemon-${i}`,
+      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
+    }));
+
+    global.fetch = vi.fn((url) => {
+      const id = parseInt(url.toString().split('/').slice(-2, -1)[0]);
+      return Promise.resolve(mockResponse(createPokemonDetails(id)));
+    });
+
+    render(<Results resultPokemons={mockList} cardsPerPage={5} />);
 
     await waitFor(() => {
       expect(screen.getByText('Page 2 of 3')).toBeInTheDocument();
@@ -196,17 +215,22 @@ describe('Results Component', () => {
       setSearchParams,
     ]);
 
-    render(
-      <Results
-        resultPokemons={Array(15).fill(mockPokemonItem)}
-        cardsPerPage={5}
-      />
-    );
+    const mockList = Array.from({ length: 15 }, (_, i) => ({
+      name: `pokemon-${i}`,
+      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
+    }));
 
-    await waitFor(() => {
-      fireEvent.click(screen.getByText('Next'));
-      expect(mockScrollTo).toHaveBeenCalledWith(0, 0);
+    global.fetch = vi.fn((url) => {
+      const id = parseInt(url.toString().split('/').slice(-2, -1)[0]);
+      return Promise.resolve(mockResponse(createPokemonDetails(id)));
     });
+
+    render(<Results resultPokemons={mockList} cardsPerPage={5} />);
+
+    await waitFor(() => screen.getByText('Page 1 of 3'));
+
+    fireEvent.click(screen.getByText('Next'));
+    expect(mockScrollTo).toHaveBeenCalledWith(0, 0);
   });
 
   it('logs error when page data loading fails', async () => {
