@@ -1,113 +1,146 @@
+import { useState, useEffect, useCallback } from 'react';
 import './App.css';
-import { Component } from 'react';
 import type { PokemonDetails, PokemonListItem } from './pokemonTypes';
-import { Main } from './components/main/main-logic';
+import { Controls } from './components/controls/controls';
+import { ErrorMessage } from './components/error-message/error-message';
+import { Loader } from './components/loader/loader';
+import { Results } from './components/results/results';
+import { Outlet } from 'react-router-dom';
+import { Header } from './components/header/header';
+import { Footer } from './components/footer/footer';
+import { ResultsContainer } from './components/results-container/results-container';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
   loading: boolean;
   error: string | null;
-  hasError: boolean;
 }
 
-export class App extends Component<object, AppState> {
-  state: AppState = {
+export const App = () => {
+  const [state, setState] = useState<AppState>({
     searchResults: null,
     loading: false,
     error: null,
-    hasError: false,
-  };
+  });
 
-  fetchAllPokemons = async () => {
+  const fetchAllPokemons = useCallback(async (): Promise<PokemonListItem[]> => {
     let allPokemons: PokemonListItem[] = [];
     let nextUrl: string | null = 'https://pokeapi.co/api/v2/pokemon?limit=500';
 
     while (nextUrl) {
       const response = await fetch(nextUrl);
       if (!response.ok) throw new Error('Failed to fetch pokemons');
-      const data = await response.json();
+      const data: { results: PokemonListItem[]; next: string | null } =
+        await response.json();
       allPokemons = [...allPokemons, ...data.results];
       nextUrl = data.next;
     }
     return allPokemons;
-  };
+  }, []);
 
-  handleSearch = async (query: string) => {
-    try {
-      this.setState({ loading: true, error: null, hasError: false });
-      let response;
+  const handleSearch = useCallback(
+    async (query: string) => {
+      try {
+        setDetailsOpen(false);
+        setState((prev) => ({
+          ...prev,
+          loading: true,
+          error: null,
+          searchResults: null,
+        }));
 
-      if (query.trim() === '') {
-        const allPokemons = await this.fetchAllPokemons();
-        this.setState({
-          searchResults: allPokemons,
-          loading: false,
-        });
-        return;
-      } else {
-        response = await fetch(
+        if (query.trim() === '') {
+          const allPokemons = await fetchAllPokemons();
+          setState((prev) => ({
+            ...prev,
+            searchResults: allPokemons,
+            loading: false,
+          }));
+          return;
+        }
+
+        const response: Response = await fetch(
           `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`
         );
-      }
 
-      if (!response.ok) {
-        let errorMessage = 'Error';
-        if (response.status === 404) {
-          errorMessage = `Pokemon "${query}" not found`;
-        } else if (response.status >= 500) {
-          errorMessage = 'Server error';
-        } else if (response.status === 401) {
-          errorMessage = 'Authentication required';
-        } else {
-          errorMessage = `Request failed ${response.status}`;
+        if (!response.ok) {
+          let errorMessage = 'Error';
+          if (response.status === 404) {
+            errorMessage = `Pokemon "${query}" not found`;
+          } else if (response.status >= 500) {
+            errorMessage = 'Server error';
+          } else if (response.status === 401) {
+            errorMessage = 'Authentication required';
+          } else {
+            errorMessage = `Request failed ${response.status}`;
+          }
+          throw new Error(errorMessage);
         }
-        throw new Error(errorMessage);
+
+        const data: PokemonDetails = await response.json();
+        setState((prev) => ({
+          ...prev,
+          searchResults: data,
+          loading: false,
+        }));
+      } catch (err) {
+        setState((prev) => ({
+          ...prev,
+          error: err instanceof Error ? err.message : 'Unknown error',
+          searchResults: null,
+          loading: false,
+        }));
       }
-      const data = await response.json();
+    },
+    [fetchAllPokemons]
+  );
 
-      this.setState({
-        searchResults: data,
-        loading: false,
-      });
-    } catch (err) {
-      this.setState({
-        error: err instanceof Error ? err.message : 'Unknown error',
-        searchResults: null,
-        loading: false,
-      });
-    }
-  };
-
-  componentDidMount() {
+  const loadInitialData = useCallback(async () => {
     const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
-    this.handleSearch(savedQuery);
-  }
-
-  makeTestError = () => {
-    this.setState({
-      hasError: true,
-      error: "You broke the app! Don't do it again!",
-    });
-  };
-
-  handleDismissError = () => {
-    this.setState({ error: null });
-  };
-
-  render() {
-    if (this.state.hasError) {
-      throw new Error(this.state.error || 'Something went wrong!');
+    if (savedQuery.trim() === '') {
+      setState((prev) => ({ ...prev, loading: true }));
+      const allPokemons = await fetchAllPokemons();
+      setState((prev) => ({
+        ...prev,
+        searchResults: allPokemons,
+        loading: false,
+      }));
+    } else {
+      await handleSearch(savedQuery);
     }
+  }, [fetchAllPokemons, handleSearch]);
 
-    return (
-      <Main
-        searchResults={this.state.searchResults}
-        loading={this.state.loading}
-        error={this.state.error}
-        onSearch={this.handleSearch}
-        onMakeTestError={this.makeTestError}
-        onDismissError={this.handleDismissError}
-      />
-    );
-  }
-}
+  useEffect(() => {
+    loadInitialData();
+  }, [loadInitialData]);
+
+  const handleDismissError = useCallback(() => {
+    setState((prev) => ({ ...prev, error: null }));
+  }, []);
+
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const handlePokemonSelect = useCallback(() => {
+    setDetailsOpen(true);
+  }, []);
+
+  return (
+    <>
+      <Header />
+      <Controls onSearch={handleSearch} />
+      {state.loading && <Loader />}
+      {state.error && (
+        <ErrorMessage error={state.error} onDismiss={handleDismissError} />
+      )}
+      <ResultsContainer>
+        {!state.loading && !state.error && (
+          <Results
+            resultPokemons={state.searchResults}
+            onPokemonSelect={handlePokemonSelect}
+          />
+        )}
+        {detailsOpen && <Outlet />}
+      </ResultsContainer>
+      <Footer />
+    </>
+  );
+};

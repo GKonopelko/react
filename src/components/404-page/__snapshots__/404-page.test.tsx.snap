@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NotFound Component > should match snapshot 1`] = `
+<div>
+  <div
+    class="_notfound_c29591"
+  >
+    <h2>
+      404 - Page Not Found
+    </h2>
+    <p>
+      The page you are looking for does not exist.
+    </p>
+    <a
+      class="_link_c29591"
+      data-discover="true"
+      href="/"
+    >
+      Go back to Pokemons
+    </a>
+  </div>
+</div>
+`;

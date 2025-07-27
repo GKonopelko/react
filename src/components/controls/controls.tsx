@@ -1,19 +1,16 @@
-import { Component } from 'react';
-import { Search } from './search-class';
+import { Search } from './search';
 import styles from './styles.module.css';
 
 interface ControlsProps {
   onSearch: (query: string) => void;
 }
 
-export class Controls extends Component<ControlsProps> {
-  render() {
-    return (
-      <div className={styles.controls}>
-        <div className={styles['controls-content']}>
-          <Search onSearch={this.props.onSearch} />
-        </div>
+export const Controls = ({ onSearch }: ControlsProps) => {
+  return (
+    <div className={styles.controls}>
+      <div className={styles['controls-content']}>
+        <Search onSearch={onSearch} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};

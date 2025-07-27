@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '../../../tests/test-utils';
 import { Main } from './main-logic';
 import { describe, it, expect } from 'vitest';
 
@@ -9,7 +9,6 @@ describe('Main Component', () => {
       loading: false,
       error: null,
       onSearch: () => {},
-      onMakeTestError: () => {},
       onDismissError: () => {},
     };
     return render(<Main {...defaultProps} {...props} />);
@@ -17,16 +16,12 @@ describe('Main Component', () => {
 
   it('should render layout', () => {
     renderMain();
-
-    expect(
-      screen.getByRole('button', { name: /don't press the red button/i })
-    ).toBeInTheDocument();
-
-    expect(screen.getByAltText(/RS School/i)).toBeInTheDocument();
+    expect(screen.getByAltText('RS School')).toBeInTheDocument();
   });
-  it('should render Loader ', () => {
+
+  it('should render Loader', () => {
     renderMain({ loading: true });
-    expect(screen.getByText(/Pokemons coming soon.../i)).toBeInTheDocument();
+    expect(screen.getByText('Pokemons coming soon...')).toBeInTheDocument();
   });
 
   it('should render ErrorMessage', () => {
@@ -34,7 +29,7 @@ describe('Main Component', () => {
     renderMain({ error: testError });
     expect(screen.getByText(testError)).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /hide error/i })
+      screen.getByRole('button', { name: 'Hide error' })
     ).toBeInTheDocument();
   });
 });

@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import styles from './styles.module.css';
 
 interface ErrorMessageProps {
@@ -6,13 +5,11 @@ interface ErrorMessageProps {
   onDismiss: () => void;
 }
 
-export class ErrorMessage extends Component<ErrorMessageProps> {
-  render() {
-    return (
-      <div className={styles['error-message']}>
-        {this.props.error}
-        <button onClick={this.props.onDismiss}>Hide error</button>
-      </div>
-    );
-  }
-}
+export const ErrorMessage = ({ error, onDismiss }: ErrorMessageProps) => {
+  return (
+    <div className={styles['error-message']}>
+      {error}
+      <button onClick={onDismiss}>Hide error</button>
+    </div>
+  );
+};

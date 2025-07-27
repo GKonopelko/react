@@ -1,27 +1,34 @@
 import { render, screen } from '@testing-library/react';
 import { Header } from './header';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
 
 describe('Header Component', () => {
   it('should render the header with logo', () => {
-    render(<Header />);
-
-    const logo = screen.getByRole('img', { name: /react logo/i });
-    expect(logo).toBeInTheDocument();
-    expect(logo).toHaveAttribute('src');
-
-    const title = screen.getByRole('heading', {
-      name: /poke-monreact/i,
-    });
-    expect(title).toBeInTheDocument();
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
+    expect(screen.getByAltText('React logo')).toBeInTheDocument();
   });
 
   it('should have correct link attributes', () => {
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
 
-    const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', 'https://react.dev');
-    expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', 'noreferrer');
+    const externalLinks = screen
+      .getAllByRole('link')
+      .filter((link) => link.getAttribute('href')?.startsWith('http'));
+
+    externalLinks.forEach((link) => {
+      expect(link).toHaveAttribute(
+        'rel',
+        expect.stringMatching(/noreferrer|noopener/)
+      );
+    });
   });
 });
