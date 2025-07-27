@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import styles from './styles.module.css';
+import { useRouteError } from 'react-router-dom';
+import { NotFound } from '../404-page/404-page';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -54,4 +56,10 @@ export class ErrorBoundary extends Component<
 
     return this.props.children;
   }
+}
+
+export function RouteErrorBoundary() {
+  const error = useRouteError();
+  console.error('Route error:', error);
+  return <NotFound />;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import styles from './styles.module.css';
 import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
@@ -19,7 +19,21 @@ export const Results = ({
 }: ResultsProps) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = Number(searchParams.get('page')) || 1;
+
+  const currentPage = useMemo(() => {
+    const page = Number(searchParams.get('page'));
+    return isNaN(page) || page < 1 ? 1 : page;
+  }, [searchParams]);
+
+  useEffect(() => {
+    const pageParam = searchParams.get('page');
+    if (!pageParam || isNaN(Number(pageParam)) || Number(pageParam) < 1) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('page', '1');
+      setSearchParams(newParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [allPokemonList, setAllPokemonList] = useState<PokemonListItem[]>([]);
@@ -37,7 +51,7 @@ export const Results = ({
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set('page', String(currentPage));
     navigate(`details/${id}?${newSearchParams.toString()}`);
-    if (onPokemonSelect) onPokemonSelect();
+    onPokemonSelect?.();
   };
 
   const loadPageData = useCallback(
@@ -87,11 +101,24 @@ export const Results = ({
     loadInitialData();
   }, [loadInitialData]);
 
+  const totalPages = Math.max(
+    1,
+    Math.ceil(allPokemonList.length / cardsPerPage)
+  );
+  useEffect(() => {
+    if (currentPage < 1 || currentPage > totalPages) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set('page', '1');
+      setSearchParams(newSearchParams, { replace: true });
+    }
+  }, [currentPage, totalPages, searchParams, setSearchParams]);
+
   const handlePageChange = (page: number) => {
     if (!Array.isArray(resultPokemons)) return;
 
+    const validatedPage = Math.max(1, Math.min(page, totalPages));
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('page', String(page));
+    newSearchParams.set('page', String(validatedPage));
     setSearchParams(newSearchParams);
   };
 
@@ -119,7 +146,7 @@ export const Results = ({
           className={styles['card-link']}
           onClick={() => {
             navigate(`details/${resultPokemons.id}?page=1`);
-            if (onPokemonSelect) onPokemonSelect();
+            onPokemonSelect?.();
           }}
         >
           <PokemonCard pokemon={resultPokemons} />
@@ -127,8 +154,6 @@ export const Results = ({
       </div>
     );
   }
-
-  const totalPages = Math.ceil(allPokemonList.length / cardsPerPage);
 
   return (
     <div
@@ -141,6 +166,7 @@ export const Results = ({
           <button
             disabled={currentPage === 1}
             onClick={() => handlePageChange(currentPage - 1)}
+            aria-label="Previous page"
           >
             Previous
           </button>
@@ -150,22 +176,33 @@ export const Results = ({
           <button
             disabled={currentPage === totalPages}
             onClick={() => handlePageChange(currentPage + 1)}
+            aria-label="Next page"
           >
             Next
           </button>
         </div>
       )}
-      <div className={styles['results-list']}>
-        {pokemonDetails.map((pokemon) => (
-          <div
-            key={pokemon.id}
-            className={styles['card-link']}
-            onClick={() => handlePokemonClick(String(pokemon.id))}
-          >
-            <PokemonCard pokemon={pokemon} />
-          </div>
-        ))}
-      </div>
+
+      {pokemonDetails.length > 0 ? (
+        <div className={styles['results-list']}>
+          {pokemonDetails.map((pokemon) => (
+            <div
+              key={pokemon.id}
+              className={styles['card-link']}
+              onClick={() => handlePokemonClick(String(pokemon.id))}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) =>
+                e.key === 'Enter' && handlePokemonClick(String(pokemon.id))
+              }
+            >
+              <PokemonCard pokemon={pokemon} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.results}>No pokemons on this page</div>
+      )}
     </div>
   );
 };
