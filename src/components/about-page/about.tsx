@@ -1,10 +1,12 @@
 import styles from './styles.module.css';
 import { Link } from 'react-router-dom';
 import { Footer } from '../footer/footer';
+import { useTheme } from '../theme-context/use-theme';
 
 export const About = () => {
+  const { theme } = useTheme();
   return (
-    <div className={styles.about}>
+    <div className={styles.about} data-theme={theme}>
       <Link to="/" className={styles.link}>
         Go back to Pokemons
       </Link>

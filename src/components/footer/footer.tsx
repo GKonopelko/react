@@ -1,9 +1,11 @@
 import styles from './styles.module.css';
 import rssLogo from '../../assets/rss-logo.svg';
+import { useTheme } from '../theme-context/use-theme';
 
 export function Footer() {
+  const { theme } = useTheme();
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} data-theme={theme}>
       <div className={styles['footer-content']}>
         <a
           href="https://github.com/GKonopelko"

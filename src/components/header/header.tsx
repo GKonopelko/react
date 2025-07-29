@@ -13,10 +13,13 @@ export const Header = () => {
       data-testid="header"
       data-theme={theme}
     >
-      <a href="https://react.dev" target="_blank" rel="noreferrer">
-        <img src={reactLogo} className="logo react" alt="React logo" />
-      </a>
-      <h1>Poke-monReact</h1>
+      <div className={styles.container}>
+        <a href="https://react.dev" target="_blank" rel="noreferrer">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+        <h1>Poke-monReact</h1>
+        <ThemeSwitcher />
+      </div>
       <nav className={styles.nav}>
         <Link to="/" className={`${styles.link} ${styles[`link-${theme}`]}`}>
           Home
@@ -28,7 +31,6 @@ export const Header = () => {
           About
         </Link>
       </nav>
-      <ThemeSwitcher />
     </header>
   );
 };

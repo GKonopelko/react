@@ -51,3 +51,8 @@
   color: #7d7dff;
   background-color: #2a2a2a;
 }
+
+.container {
+  display: flex;
+  align-items: center;
+}
