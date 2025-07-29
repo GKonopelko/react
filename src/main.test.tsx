@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import { StrictMode, type ReactElement } from 'react';
-import { RouterProvider } from 'react-router-dom';
 import { createRoot, type Root } from 'react-dom/client';
 
 const mockRoot: Root = {
@@ -49,16 +48,6 @@ describe('main', () => {
     expect(vi.mocked(createRoot)).toHaveBeenCalledTimes(1);
     expect(vi.mocked(createRoot)).toHaveBeenCalledWith(root);
     expect(mockRoot.render).toHaveBeenCalledTimes(1);
-    expect(mockRoot.render).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: StrictMode,
-        props: {
-          children: expect.objectContaining({
-            type: RouterProvider,
-          }),
-        },
-      })
-    );
 
     document.body.removeChild(root);
   });

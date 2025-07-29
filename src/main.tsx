@@ -12,6 +12,7 @@ import { About } from './components/about-page/about';
 import { PokemonDetailsPage } from './components/details-page/details-page';
 import { Layout } from './components/layout/layout';
 import type { PokemonDetails } from './pokemonTypes';
+import { ThemeProvider } from './components/theme-context/theme-context-provider';
 
 const router = createBrowserRouter([
   {
@@ -69,6 +70,8 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </StrictMode>
 );

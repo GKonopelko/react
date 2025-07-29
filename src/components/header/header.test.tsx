@@ -1,13 +1,16 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Header } from './header';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
+import { ThemeProvider } from '../theme-context/theme-context-provider';
 
 describe('Header Component', () => {
   it('should render the header with logo', () => {
     render(
       <MemoryRouter>
-        <Header />
+        <ThemeProvider>
+          <Header />
+        </ThemeProvider>
       </MemoryRouter>
     );
     expect(screen.getByAltText('React logo')).toBeInTheDocument();
@@ -16,7 +19,9 @@ describe('Header Component', () => {
   it('should have correct link attributes', () => {
     render(
       <MemoryRouter>
-        <Header />
+        <ThemeProvider>
+          <Header />
+        </ThemeProvider>
       </MemoryRouter>
     );
 
@@ -30,5 +35,35 @@ describe('Header Component', () => {
         expect.stringMatching(/noreferrer|noopener/)
       );
     });
+  });
+
+  it('should apply light theme styles by default', () => {
+    render(
+      <MemoryRouter>
+        <ThemeProvider>
+          <Header />
+        </ThemeProvider>
+      </MemoryRouter>
+    );
+
+    const header = screen.getByRole('banner');
+    expect(header).toHaveAttribute('data-theme', 'light');
+  });
+
+  it('should toggle theme when ThemeSwitcher is clicked', async () => {
+    render(
+      <MemoryRouter>
+        <ThemeProvider>
+          <Header />
+        </ThemeProvider>
+      </MemoryRouter>
+    );
+
+    const themeButton = screen.getByLabelText('Toggle theme');
+    const header = screen.getByTestId('header');
+
+    expect(header).toHaveAttribute('data-theme', 'light');
+    fireEvent.click(themeButton);
+    expect(header).toHaveAttribute('data-theme', 'dark');
   });
 });
