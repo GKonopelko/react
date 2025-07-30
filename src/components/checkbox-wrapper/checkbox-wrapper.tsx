@@ -1,18 +1,20 @@
 import { useSelectionStore } from '../store/pokemon-store';
 import styles from './styles.module.css';
 
-export const SelectableWrapper = ({
+export const CheckboxWrapper = ({
   id,
+  name,
   children,
 }: {
   id: string;
+  name?: string;
   children: React.ReactNode;
 }) => {
   const { toggleSelection, isSelected } = useSelectionStore();
 
   const handleCheckboxClick = (e: React.MouseEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    toggleSelection(id);
+    toggleSelection(id, name);
   };
 
   return (

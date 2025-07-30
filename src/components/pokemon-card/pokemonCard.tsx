@@ -1,4 +1,4 @@
-import { SelectableWrapper } from '../checkbox-wrapper/checkbox-wrapper';
+import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 import styles from './styles.module.css';
 import type { PokemonDetails } from '../../pokemonTypes';
 
@@ -8,7 +8,7 @@ interface PokemonCardProps {
 
 export const PokemonCard = ({ pokemon }: PokemonCardProps) => {
   return (
-    <SelectableWrapper id={pokemon.id.toString()}>
+    <CheckboxWrapper id={pokemon.id.toString()} name={pokemon.name}>
       <img
         src={pokemon.sprites.front_default}
         alt={pokemon.name}
@@ -20,6 +20,6 @@ export const PokemonCard = ({ pokemon }: PokemonCardProps) => {
         <p className={styles.detail}>Height: {pokemon.height / 10} m</p>
         <p className={styles.detail}>Weight: {pokemon.weight / 10} kg</p>
       </div>
-    </SelectableWrapper>
+    </CheckboxWrapper>
   );
 };

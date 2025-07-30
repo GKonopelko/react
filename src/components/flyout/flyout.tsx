@@ -1,13 +1,35 @@
 import styles from './styles.module.css';
 import { useSelectionStore } from '../store/pokemon-store';
+import { useEffect, useState, useRef } from 'react';
 
 export const Flyout = () => {
-  const { unselectAll, getSelectedCount, selectedIds } = useSelectionStore();
+  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+  const downloadLinkRef = useRef<HTMLAnchorElement>(null);
+  const { unselectAll, getSelectedCount, getSelectedItems } =
+    useSelectionStore();
   const count = getSelectedCount();
 
   const handleExport = () => {
-    console.log('Selected IDs:', Array.from(selectedIds));
+    const items = getSelectedItems();
+    if (items.length === 0) return;
+
+    const headers = 'ID,Name\n';
+    const csvContent = items
+      .map(({ id, name }) => `"${id}","${name}"`)
+      .join('\n');
+
+    const blob = new Blob([headers + csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    setDownloadUrl(url);
   };
+
+  useEffect(() => {
+    if (downloadUrl && downloadLinkRef.current) {
+      downloadLinkRef.current.click();
+      URL.revokeObjectURL(downloadUrl);
+      setDownloadUrl(null);
+    }
+  }, [downloadUrl]);
 
   if (count === 0) return null;
 
@@ -17,6 +39,13 @@ export const Flyout = () => {
         <span>{count} items selected</span>
         <button onClick={unselectAll}>Unselect all</button>
         <button onClick={handleExport}>Download</button>
+        <a
+          ref={downloadLinkRef}
+          href={downloadUrl || undefined}
+          download={`${count}_items.csv`}
+          style={{ display: 'none' }}
+          aria-hidden="true"
+        />
       </div>
     </div>
   );
