@@ -7,8 +7,13 @@ interface PokemonCardProps {
 }
 
 export const PokemonCard = ({ pokemon }: PokemonCardProps) => {
+  const description = `Pokemon ID: ${pokemon.id}, Height: ${pokemon.height / 10}m, Weight: ${pokemon.weight / 10}kg`;
   return (
-    <CheckboxWrapper id={pokemon.id.toString()} name={pokemon.name}>
+    <CheckboxWrapper
+      id={pokemon.id.toString()}
+      name={pokemon.name}
+      description={description}
+    >
       <img
         src={pokemon.sprites.front_default}
         alt={pokemon.name}

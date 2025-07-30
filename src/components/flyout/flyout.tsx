@@ -1,21 +1,20 @@
 import styles from './styles.module.css';
-import { useSelectionStore } from '../store/pokemon-store';
+import { useStore } from '../store/store';
 import { useEffect, useState, useRef } from 'react';
 
 export const Flyout = () => {
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const downloadLinkRef = useRef<HTMLAnchorElement>(null);
-  const { unselectAll, getSelectedCount, getSelectedItems } =
-    useSelectionStore();
+  const { unselectAll, getSelectedCount, getSelectedItems } = useStore();
   const count = getSelectedCount();
 
   const handleExport = () => {
     const items = getSelectedItems();
     if (items.length === 0) return;
 
-    const headers = 'ID,Name\n';
+    const headers = 'ID,Name,Description\n';
     const csvContent = items
-      .map(({ id, name }) => `"${id}","${name}"`)
+      .map(({ id, name, description }) => `"${id}","${name}","${description}"`)
       .join('\n');
 
     const blob = new Blob([headers + csvContent], { type: 'text/csv' });
