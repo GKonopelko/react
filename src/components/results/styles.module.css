@@ -10,7 +10,7 @@
 .pagination button {
   padding: 0.5rem 1rem;
   border: 1px solid #ccc;
-  background: white;
+  background: var(--color-bg);
   cursor: pointer;
   border-radius: 4px;
 }

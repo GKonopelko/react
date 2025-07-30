@@ -5,6 +5,7 @@ import { Footer } from '../footer/footer';
 import { Loader } from '../loader/loader';
 import { ErrorMessage } from '../error-message/error-message';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
+import styles from './main-logic.module.css';
 
 interface MainProps {
   searchResults: PokemonDetails | PokemonListItem[] | null;
@@ -22,7 +23,7 @@ export const Main = ({
   onDismissError,
 }: MainProps) => {
   return (
-    <div className="wrapper">
+    <div className={styles.wrapper}>
       <Header />
       <Controls onSearch={onSearch} />
       {loading && <Loader />}

@@ -9,5 +9,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
-  return <ThemeContext value={{ theme, toggleTheme }}>{children}</ThemeContext>;
+  return (
+    <ThemeContext value={{ theme, toggleTheme }}>
+      <div className="theme-root" data-theme={theme}>
+        {children}
+      </div>
+    </ThemeContext>
+  );
 }

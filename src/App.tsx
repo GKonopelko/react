@@ -124,7 +124,7 @@ export const App = () => {
   }, []);
 
   return (
-    <>
+    <div className="appwrapper">
       <Header />
       <Controls onSearch={handleSearch} />
       {state.loading && <Loader />}
@@ -141,6 +141,6 @@ export const App = () => {
         {detailsOpen && <Outlet />}
       </ResultsContainer>
       <Footer />
-    </>
+    </div>
   );
 };

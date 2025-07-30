@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Header } from './header';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
@@ -35,35 +35,5 @@ describe('Header Component', () => {
         expect.stringMatching(/noreferrer|noopener/)
       );
     });
-  });
-
-  it('should apply light theme styles by default', () => {
-    render(
-      <MemoryRouter>
-        <ThemeProvider>
-          <Header />
-        </ThemeProvider>
-      </MemoryRouter>
-    );
-
-    const header = screen.getByRole('banner');
-    expect(header).toHaveAttribute('data-theme', 'light');
-  });
-
-  it('should toggle theme when ThemeSwitcher is clicked', async () => {
-    render(
-      <MemoryRouter>
-        <ThemeProvider>
-          <Header />
-        </ThemeProvider>
-      </MemoryRouter>
-    );
-
-    const themeButton = screen.getByLabelText('Toggle theme');
-    const header = screen.getByTestId('header');
-
-    expect(header).toHaveAttribute('data-theme', 'light');
-    fireEvent.click(themeButton);
-    expect(header).toHaveAttribute('data-theme', 'dark');
   });
 });

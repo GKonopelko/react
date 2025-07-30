@@ -1,4 +1,10 @@
 :root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -27,20 +33,21 @@
   --color-input-bg: #2a2a2a;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  color: var(--color-text);
+.theme-root {
+  width: 100%;
   background-color: var(--color-bg);
+  color: var(--color-text);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 a {
   font-weight: 500;
   color: var(--color-primary);
   text-decoration: inherit;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
 }
 
 a:hover {

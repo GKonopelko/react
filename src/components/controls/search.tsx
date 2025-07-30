@@ -35,7 +35,7 @@ export const Search = ({ onSearch }: SearchProps) => {
         value={queryContent}
         onChange={handleFormInput}
       />
-      <button type="submit">Search pokemon</button>
+      <button>Search pokemon</button>
     </form>
   );
 };
