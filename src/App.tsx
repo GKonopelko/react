@@ -9,6 +9,7 @@ import { Outlet } from 'react-router-dom';
 import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
 import { ResultsContainer } from './components/results-container/results-container';
+import { Flyout } from './components/flyout/flyout';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
@@ -140,6 +141,7 @@ export const App = () => {
         )}
         {detailsOpen && <Outlet />}
       </ResultsContainer>
+      <Flyout />
       <Footer />
     </div>
   );
