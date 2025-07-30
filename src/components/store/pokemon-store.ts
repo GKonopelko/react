@@ -1,41 +1,31 @@
 import { create } from 'zustand';
 
-interface SelectedPokemon {
-  id: string;
-  name: string;
-  url: string;
-  detailsUrl: string;
-}
-
-interface SelectedPokemonState {
-  selectedPokemons: Record<string, SelectedPokemon>;
-  togglePokemon: (pokemon: SelectedPokemon) => void;
+interface SelectionState {
+  selectedIds: Set<string>;
+  toggleSelection: (id: string) => void;
   unselectAll: () => void;
+  isSelected: (id: string) => boolean;
   getSelectedCount: () => number;
 }
 
-export const useSelectedPokemonStore = create<SelectedPokemonState>(
-  (set, get) => ({
-    selectedPokemons: {},
+export const useSelectionStore = create<SelectionState>((set, get) => ({
+  selectedIds: new Set(),
 
-    togglePokemon: (pokemon) =>
-      set((state) => {
-        const { id } = pokemon;
-        return state.selectedPokemons[id]
-          ? {
-              selectedPokemons: Object.fromEntries(
-                Object.entries(state.selectedPokemons).filter(
-                  ([key]) => key !== id
-                )
-              ),
-            }
-          : {
-              selectedPokemons: { ...state.selectedPokemons, [id]: pokemon },
-            };
-      }),
+  toggleSelection: (id) => {
+    set((state) => {
+      const newSet = new Set(state.selectedIds);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return { selectedIds: newSet };
+    });
+  },
 
-    unselectAll: () => set({ selectedPokemons: {} }),
+  unselectAll: () => set({ selectedIds: new Set() }),
 
-    getSelectedCount: () => Object.keys(get().selectedPokemons).length,
-  })
-);
+  isSelected: (id) => get().selectedIds.has(id),
+
+  getSelectedCount: () => get().selectedIds.size,
+}));
