@@ -20,7 +20,9 @@ describe('About Component', () => {
   it('should render back link', () => {
     render(<About />);
 
-    const backLink = screen.getByText('Go back to Pokemons');
+    const backLink = screen.getByRole('link', {
+      name: 'Select item link-back Go back to Pokemons',
+    });
     expect(backLink).toBeInTheDocument();
     expect(backLink).toHaveAttribute('href', '/');
   });
@@ -36,7 +38,7 @@ describe('About Component', () => {
     expect(taskLink).toHaveAttribute('target', '_blank');
     expect(taskLink).toHaveAttribute('rel', 'noopener noreferrer');
 
-    const courseLink = screen.getByText('course');
+    const courseLink = screen.getByText('course.');
     expect(courseLink).toHaveAttribute(
       'href',
       'https://rs.school/courses/reactjs'

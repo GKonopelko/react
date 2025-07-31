@@ -14,16 +14,18 @@ export const PokemonCard = ({ pokemon }: PokemonCardProps) => {
       name={pokemon.name}
       description={description}
     >
-      <img
-        src={pokemon.sprites.front_default}
-        alt={pokemon.name}
-        className={styles.image}
-      />
-      <h3 className={styles.name}>{pokemon.name}</h3>
-      <div className={styles.description}>
-        <p className={styles.id}>ID: {pokemon.id}</p>
-        <p className={styles.detail}>Height: {pokemon.height / 10} m</p>
-        <p className={styles.detail}>Weight: {pokemon.weight / 10} kg</p>
+      <div className={styles.wrapper}>
+        <img
+          src={pokemon.sprites.front_default}
+          alt={pokemon.name}
+          className={styles.image}
+        />
+        <h3 className={styles.name}>{pokemon.name}</h3>
+        <div className={styles.description}>
+          <p className={styles.id}>ID: {pokemon.id}</p>
+          <p className={styles.detail}>Height: {pokemon.height / 10} m</p>
+          <p className={styles.detail}>Weight: {pokemon.weight / 10} kg</p>
+        </div>
       </div>
     </CheckboxWrapper>
   );
