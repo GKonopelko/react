@@ -37,7 +37,7 @@ export const About = () => {
           </p>
           <p>It uses the PokeAPI, React Router and Error Boundary.</p>
         </CheckboxWrapper>
-        <p>
+        <div>
           <CheckboxWrapper
             id="about-links"
             name="about links"
@@ -62,7 +62,7 @@ export const About = () => {
               course.
             </a>
           </CheckboxWrapper>
-        </p>
+        </div>
         <Flyout />
         <Footer></Footer>
       </div>
