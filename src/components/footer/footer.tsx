@@ -1,5 +1,5 @@
 import styles from './styles.module.css';
-import rssLogo from '../../assets/rss-logo.svg';
+import rssLogo from '../../assets/icons/rss-logo.svg';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 
 export function Footer() {

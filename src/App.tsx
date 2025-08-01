@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import './App.css';
+import styles from './App.module.css';
 import type { PokemonDetails, PokemonListItem } from './pokemonTypes';
 import { Controls } from './components/controls/controls';
 import { ErrorMessage } from './components/error-message/error-message';
@@ -125,7 +125,7 @@ export const App = () => {
   }, []);
 
   return (
-    <div className="appwrapper">
+    <div className={styles.appwrapper}>
       <Header />
       <Controls onSearch={handleSearch} />
       {state.loading && <Loader />}
