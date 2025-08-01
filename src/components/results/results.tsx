@@ -43,7 +43,7 @@ export const Results = ({
   useEffect(() => {
     if (resultsContainerRef.current) {
       resultsContainerRef.current.style.overflow = 'auto';
-      resultsContainerRef.current.style.height = '100vh';
+      resultsContainerRef.current.style.height = 'auto';
       resultsContainerRef.current.scrollTo(0, 0);
     }
   }, [currentPage]);
