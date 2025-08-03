@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import './App.css';
+import styles from './App.module.css';
 import type { PokemonDetails, PokemonListItem } from './pokemonTypes';
 import { Controls } from './components/controls/controls';
 import { ErrorMessage } from './components/error-message/error-message';
@@ -9,6 +9,7 @@ import { Outlet } from 'react-router-dom';
 import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
 import { ResultsContainer } from './components/results-container/results-container';
+import { Flyout } from './components/flyout/flyout';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
@@ -124,7 +125,7 @@ export const App = () => {
   }, []);
 
   return (
-    <>
+    <div className={styles.appwrapper}>
       <Header />
       <Controls onSearch={handleSearch} />
       {state.loading && <Loader />}
@@ -140,7 +141,8 @@ export const App = () => {
         )}
         {detailsOpen && <Outlet />}
       </ResultsContainer>
+      <Flyout />
       <Footer />
-    </>
+    </div>
   );
 };

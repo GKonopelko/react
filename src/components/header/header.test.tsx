@@ -2,12 +2,15 @@ import { render, screen } from '@testing-library/react';
 import { Header } from './header';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect } from 'vitest';
+import { ThemeProvider } from '../theme-context/theme-context-provider';
 
 describe('Header Component', () => {
   it('should render the header with logo', () => {
     render(
       <MemoryRouter>
-        <Header />
+        <ThemeProvider>
+          <Header />
+        </ThemeProvider>
       </MemoryRouter>
     );
     expect(screen.getByAltText('React logo')).toBeInTheDocument();
@@ -16,7 +19,9 @@ describe('Header Component', () => {
   it('should have correct link attributes', () => {
     render(
       <MemoryRouter>
-        <Header />
+        <ThemeProvider>
+          <Header />
+        </ThemeProvider>
       </MemoryRouter>
     );
 

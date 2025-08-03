@@ -1,17 +1,21 @@
 .card {
+  position: relative;
   flex: 0 0 300px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
   padding: 16px;
   margin: 8px;
   text-align: center;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   transition: transform 0.2s;
   overflow: hidden;
+}
+
+.wrapper {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
 }
 
 .card:hover {
@@ -28,17 +32,27 @@
   font-size: 1.2rem;
   margin: 0;
   text-transform: capitalize;
-  color: #333;
+  color: var(--color-text);
 }
 
 .id {
-  color: #666;
+  color: var(--color-text);
   font-size: 0.9rem;
   margin: 4px 0;
 }
 
 .detail {
-  color: #444;
+  color: var(--color-text);
   font-size: 0.9rem;
   margin: 4px 0;
+}
+
+.checkbox {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  z-index: 10;
 }

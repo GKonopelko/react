@@ -2,6 +2,7 @@ import { type ChangeEvent, type FormEvent } from 'react';
 import styles from './styles.module.css';
 import { useLocalStorage } from '../ls-hook/ls-hook';
 import { useSearchParams } from 'react-router-dom';
+import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 
 export interface SearchProps {
   onSearch: (query: string) => void;
@@ -28,14 +29,16 @@ export const Search = ({ onSearch }: SearchProps) => {
 
   return (
     <form className={styles['search-component']} onSubmit={handleFormSubmit}>
-      <input
-        type="text"
-        id="search-input"
-        placeholder="Enter pokemon name or id"
-        value={queryContent}
-        onChange={handleFormInput}
-      />
-      <button type="submit">Search pokemon</button>
+      <CheckboxWrapper id="controls" name="controls" description="app controls">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Enter pokemon name or id"
+          value={queryContent}
+          onChange={handleFormInput}
+        />
+        <button>Search pokemon</button>
+      </CheckboxWrapper>
     </form>
   );
 };

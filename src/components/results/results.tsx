@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
 import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 
 interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
@@ -37,15 +38,6 @@ export const Results = ({
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [allPokemonList, setAllPokemonList] = useState<PokemonListItem[]>([]);
-  const resultsContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (resultsContainerRef.current) {
-      resultsContainerRef.current.style.overflow = 'auto';
-      resultsContainerRef.current.style.height = '100vh';
-      resultsContainerRef.current.scrollTo(0, 0);
-    }
-  }, [currentPage]);
 
   const handlePokemonClick = (id: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -105,6 +97,7 @@ export const Results = ({
     1,
     Math.ceil(allPokemonList.length / cardsPerPage)
   );
+
   useEffect(() => {
     if (currentPage < 1 || currentPage > totalPages) {
       const newSearchParams = new URLSearchParams(searchParams);
@@ -156,30 +149,32 @@ export const Results = ({
   }
 
   return (
-    <div
-      className={styles.wrapper}
-      ref={resultsContainerRef}
-      style={{ overflow: 'auto', height: '100vh' }}
-    >
+    <div className={styles.wrapper}>
       {totalPages > 1 && (
         <div className={styles.pagination}>
-          <button
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
-            aria-label="Previous page"
+          <CheckboxWrapper
+            id="pagination"
+            name="pagination"
+            description="pages pagination"
           >
-            Previous
-          </button>
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
-            aria-label="Next page"
-          >
-            Next
-          </button>
+            <button
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+              aria-label="Previous page"
+            >
+              Previous
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+              aria-label="Next page"
+            >
+              Next
+            </button>
+          </CheckboxWrapper>
         </div>
       )}
 
