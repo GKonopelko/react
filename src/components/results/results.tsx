@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import styles from './styles.module.css';
 import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
@@ -38,15 +38,6 @@ export const Results = ({
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetails[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [allPokemonList, setAllPokemonList] = useState<PokemonListItem[]>([]);
-  const resultsContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (resultsContainerRef.current) {
-      resultsContainerRef.current.style.overflow = 'auto';
-      resultsContainerRef.current.style.height = 'auto';
-      resultsContainerRef.current.scrollTo(0, 0);
-    }
-  }, [currentPage]);
 
   const handlePokemonClick = (id: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -106,6 +97,7 @@ export const Results = ({
     1,
     Math.ceil(allPokemonList.length / cardsPerPage)
   );
+
   useEffect(() => {
     if (currentPage < 1 || currentPage > totalPages) {
       const newSearchParams = new URLSearchParams(searchParams);
@@ -157,7 +149,7 @@ export const Results = ({
   }
 
   return (
-    <div className={styles.wrapper} ref={resultsContainerRef}>
+    <div className={styles.wrapper}>
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <CheckboxWrapper
