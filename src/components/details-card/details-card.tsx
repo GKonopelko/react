@@ -1,54 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import styles from './styles.module.css';
 import type { PokemonDetails } from '../../pokemonTypes';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 
 interface DetailsCardProps {
-  pokemonId: string;
   onClose: () => void;
 }
 
-export const DetailsCard = ({ pokemonId, onClose }: DetailsCardProps) => {
-  const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const DetailsCard = ({ onClose }: DetailsCardProps) => {
+  const pokemon = useLoaderData() as PokemonDetails;
 
-  useEffect(() => {
-    const fetchPokemon = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
-        );
-        if (!response.ok) throw new Error('Pokemon not found');
-        const data = await response.json();
-        setPokemon(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPokemon();
-  }, [pokemonId]);
-
-  if (loading)
+  if (!pokemon)
     return (
-      <div className={styles['details-loading']}>
-        <div className={styles['details-spinner']}></div>
-        <div className={styles['details-loading-text']}>Loading details...</div>
-      </div>
+      <div className={styles['details-error']}>Error: Pokemon not found</div>
     );
-
-  if (error)
-    return <div className={styles['details-error']}>Error: {error}</div>;
-  if (!pokemon) return null;
 
   return (
     <div className={styles.wrapper}>
       <CheckboxWrapper
-        id={`pokemon-details-${pokemonId}`}
+        id={`pokemon-details-${pokemon.id}`}
         name="details"
         description="pokemon details"
       >

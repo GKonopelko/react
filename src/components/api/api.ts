@@ -51,7 +51,7 @@ export const fetchPokemonDetails = async (
   const response = await fetch(`${BASE_URL}/${id}`);
 
   if (!response.ok) {
-    throw new Error('Pokémon not found');
+    throw new Error('Pokemon not found');
   }
 
   return await response.json();
