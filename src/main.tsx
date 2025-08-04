@@ -11,8 +11,8 @@ import { NotFound } from './components/404-page/404-page';
 import { About } from './components/about-page/about';
 import { PokemonDetailsPage } from './components/details-page/details-page';
 import { Layout } from './components/layout/layout';
-import type { PokemonDetails } from './pokemonTypes';
 import { ThemeProvider } from './components/theme-context/theme-context-provider';
+import { fetchPokemonDetails } from './components/api/api';
 
 const router = createBrowserRouter([
   {
@@ -34,19 +34,7 @@ const router = createBrowserRouter([
             element: <PokemonDetailsPage />,
             errorElement: <RouteErrorBoundary />,
             loader: async ({ params }) => {
-              if (!params.id || !/^\d+$/.test(params.id)) {
-                throw new Response('Invalid Pokemon ID', { status: 404 });
-              }
-
-              const response = await fetch(
-                `https://pokeapi.co/api/v2/pokemon/${params.id}`
-              );
-
-              if (!response.ok) {
-                throw new Response('Pokémon not found', { status: 404 });
-              }
-
-              return (await response.json()) as PokemonDetails;
+              return await fetchPokemonDetails(params.id || '');
             },
           },
         ],

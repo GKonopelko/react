@@ -10,6 +10,7 @@ import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
 import { ResultsContainer } from './components/results-container/results-container';
 import { Flyout } from './components/flyout/flyout';
+import { fetchAllPokemons, searchPokemon } from './components/api/api';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
@@ -24,77 +25,41 @@ export const App = () => {
     error: null,
   });
 
-  const fetchAllPokemons = useCallback(async (): Promise<PokemonListItem[]> => {
-    let allPokemons: PokemonListItem[] = [];
-    let nextUrl: string | null = 'https://pokeapi.co/api/v2/pokemon?limit=500';
+  const handleSearch = useCallback(async (query: string) => {
+    try {
+      setDetailsOpen(false);
+      setState((prev) => ({
+        ...prev,
+        loading: true,
+        error: null,
+        searchResults: null,
+      }));
 
-    while (nextUrl) {
-      const response = await fetch(nextUrl);
-      if (!response.ok) throw new Error('Failed to fetch pokemons');
-      const data: { results: PokemonListItem[]; next: string | null } =
-        await response.json();
-      allPokemons = [...allPokemons, ...data.results];
-      nextUrl = data.next;
-    }
-    return allPokemons;
-  }, []);
-
-  const handleSearch = useCallback(
-    async (query: string) => {
-      try {
-        setDetailsOpen(false);
+      if (query.trim() === '') {
+        const allPokemons = await fetchAllPokemons();
         setState((prev) => ({
           ...prev,
-          loading: true,
-          error: null,
-          searchResults: null,
-        }));
-
-        if (query.trim() === '') {
-          const allPokemons = await fetchAllPokemons();
-          setState((prev) => ({
-            ...prev,
-            searchResults: allPokemons,
-            loading: false,
-          }));
-          return;
-        }
-
-        const response: Response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`
-        );
-
-        if (!response.ok) {
-          let errorMessage = 'Error';
-          if (response.status === 404) {
-            errorMessage = `Pokemon "${query}" not found`;
-          } else if (response.status >= 500) {
-            errorMessage = 'Server error';
-          } else if (response.status === 401) {
-            errorMessage = 'Authentication required';
-          } else {
-            errorMessage = `Request failed ${response.status}`;
-          }
-          throw new Error(errorMessage);
-        }
-
-        const data: PokemonDetails = await response.json();
-        setState((prev) => ({
-          ...prev,
-          searchResults: data,
+          searchResults: allPokemons,
           loading: false,
         }));
-      } catch (err) {
-        setState((prev) => ({
-          ...prev,
-          error: err instanceof Error ? err.message : 'Unknown error',
-          searchResults: null,
-          loading: false,
-        }));
+        return;
       }
-    },
-    [fetchAllPokemons]
-  );
+
+      const data = await searchPokemon(query);
+      setState((prev) => ({
+        ...prev,
+        searchResults: data,
+        loading: false,
+      }));
+    } catch (err) {
+      setState((prev) => ({
+        ...prev,
+        error: err instanceof Error ? err.message : 'Unknown error',
+        searchResults: null,
+        loading: false,
+      }));
+    }
+  }, []);
 
   const loadInitialData = useCallback(async () => {
     const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
@@ -109,7 +74,7 @@ export const App = () => {
     } else {
       await handleSearch(savedQuery);
     }
-  }, [fetchAllPokemons, handleSearch]);
+  }, [handleSearch]);
 
   useEffect(() => {
     loadInitialData();
