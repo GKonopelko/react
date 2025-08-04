@@ -4,6 +4,7 @@ import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
+import { fetchPokemonDetailsByUrl } from '../api/api';
 
 interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
@@ -56,18 +57,11 @@ export const Results = ({
 
         const details = await Promise.all(
           pagePokemons.map(async (pokemon) => {
-            try {
-              const response = await fetch(pokemon.url);
-              if (!response.ok) return null;
-              return await response.json();
-            } catch (error) {
-              console.error(`Error fetching ${pokemon.url}:`, error);
-              return null;
-            }
+            return await fetchPokemonDetailsByUrl(pokemon.url);
           })
         );
 
-        setPokemonDetails(details.filter(Boolean));
+        setPokemonDetails(details.filter(Boolean) as PokemonDetails[]);
       } catch (error) {
         console.error('Error loading page data:', error);
       } finally {

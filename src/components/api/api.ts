@@ -56,3 +56,16 @@ export const fetchPokemonDetails = async (
 
   return await response.json();
 };
+
+export const fetchPokemonDetailsByUrl = async (
+  url: string
+): Promise<PokemonDetails | null> => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching ${url}:`, error);
+    return null;
+  }
+};
