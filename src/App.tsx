@@ -25,12 +25,11 @@ export const App = () => {
     error: allPokemonsError,
   } = useFetchAllPokemons();
 
-  const [searchQuery, setSearchQuery] = useState('');
   const {
-    isLoading: isSearchLoading,
+    mutateAsync: executeSearch,
+    isPending: isSearchPending,
     error: searchError,
-    refetch: executeSearch,
-  } = useSearchPokemon(searchQuery);
+  } = useSearchPokemon();
 
   const [state, setState] = useState<AppState>({
     searchResults: null,
@@ -55,8 +54,7 @@ export const App = () => {
           return;
         }
 
-        setSearchQuery(query);
-        const { data } = await executeSearch();
+        const data = await executeSearch(query);
 
         setState({
           searchResults: data || null,
@@ -99,7 +97,7 @@ export const App = () => {
     setDetailsOpen(true);
   }, []);
 
-  const isLoading = state.loading || isAllPokemonsLoading || isSearchLoading;
+  const isLoading = state.loading || isAllPokemonsLoading || isSearchPending;
   const error =
     state.error || searchError?.message || allPokemonsError?.message;
 

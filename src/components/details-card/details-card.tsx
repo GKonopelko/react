@@ -1,22 +1,13 @@
 import styles from './styles.module.css';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
-import { useFetchPokemonDetails } from '../api/api';
-import { Loader } from '../loader/loader';
+import type { PokemonDetails } from '../../pokemonTypes';
 
 interface DetailsCardProps {
-  pokemonId: string;
+  pokemon: PokemonDetails;
   onClose: () => void;
 }
 
-export const DetailsCard = ({ pokemonId, onClose }: DetailsCardProps) => {
-  const { data: pokemon, isLoading } = useFetchPokemonDetails(pokemonId);
-
-  if (isLoading) return <Loader />;
-  if (!pokemon)
-    return (
-      <div className={styles['details-error']}>Error: Pokemon not found</div>
-    );
-
+export const DetailsCard = ({ pokemon, onClose }: DetailsCardProps) => {
   return (
     <div className={styles.wrapper}>
       <CheckboxWrapper

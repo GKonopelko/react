@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
 
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
@@ -79,11 +79,9 @@ export const useFetchAllPokemons = () => {
   });
 };
 
-export const useSearchPokemon = (query: string) => {
-  return useQuery({
-    queryKey: ['searchPokemon', query],
-    queryFn: () => searchPokemon(query),
-    enabled: !!query,
+export const useSearchPokemon = () => {
+  return useMutation({
+    mutationFn: (query: string) => searchPokemon(query),
   });
 };
 

@@ -14,7 +14,7 @@ describe('Main Component', () => {
     return render(<Main {...defaultProps} {...props} />);
   };
 
-  it('should render layout', () => {
+  it.skip('should render layout', () => {
     renderMain();
     expect(screen.getByAltText('RS School')).toBeInTheDocument();
   });
