@@ -13,6 +13,9 @@ import { PokemonDetailsPage } from './components/details-page/details-page';
 import { Layout } from './components/layout/layout';
 import { ThemeProvider } from './components/theme-context/theme-context-provider';
 import { fetchPokemonDetails } from './components/api/api';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -58,8 +61,10 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <ThemeProvider>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </QueryClientProvider>
   </StrictMode>
 );

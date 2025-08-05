@@ -10,7 +10,7 @@ import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
 import { ResultsContainer } from './components/results-container/results-container';
 import { Flyout } from './components/flyout/flyout';
-import { fetchAllPokemons, searchPokemon } from './components/api/api';
+import { searchPokemon, useFetchAllPokemons } from './components/api/api';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
@@ -19,62 +19,64 @@ interface AppState {
 }
 
 export const App = () => {
+  const { data: allPokemons, isLoading } = useFetchAllPokemons();
   const [state, setState] = useState<AppState>({
     searchResults: null,
     loading: false,
     error: null,
   });
 
-  const handleSearch = useCallback(async (query: string) => {
-    try {
-      setDetailsOpen(false);
-      setState((prev) => ({
-        ...prev,
-        loading: true,
-        error: null,
-        searchResults: null,
-      }));
-
-      if (query.trim() === '') {
-        const allPokemons = await fetchAllPokemons();
+  const handleSearch = useCallback(
+    async (query: string) => {
+      try {
+        setDetailsOpen(false);
         setState((prev) => ({
           ...prev,
-          searchResults: allPokemons,
+          loading: true,
+          error: null,
+          searchResults: null,
+        }));
+
+        if (query.trim() === '') {
+          setState((prev) => ({
+            ...prev,
+            searchResults: allPokemons || [],
+            loading: false,
+          }));
+          return;
+        }
+
+        const data = await searchPokemon(query);
+        setState((prev) => ({
+          ...prev,
+          searchResults: data,
           loading: false,
         }));
-        return;
+      } catch (err) {
+        setState((prev) => ({
+          ...prev,
+          error: err instanceof Error ? err.message : 'Unknown error',
+          searchResults: null,
+          loading: false,
+        }));
       }
-
-      const data = await searchPokemon(query);
-      setState((prev) => ({
-        ...prev,
-        searchResults: data,
-        loading: false,
-      }));
-    } catch (err) {
-      setState((prev) => ({
-        ...prev,
-        error: err instanceof Error ? err.message : 'Unknown error',
-        searchResults: null,
-        loading: false,
-      }));
-    }
-  }, []);
+    },
+    [allPokemons]
+  );
 
   const loadInitialData = useCallback(async () => {
     const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
     if (savedQuery.trim() === '') {
       setState((prev) => ({ ...prev, loading: true }));
-      const allPokemons = await fetchAllPokemons();
       setState((prev) => ({
         ...prev,
-        searchResults: allPokemons,
-        loading: false,
+        loading: isLoading,
+        searchResults: allPokemons || [],
       }));
     } else {
       await handleSearch(savedQuery);
     }
-  }, [handleSearch]);
+  }, [handleSearch, isLoading, allPokemons]);
 
   useEffect(() => {
     loadInitialData();

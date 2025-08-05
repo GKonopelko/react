@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
 
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
@@ -69,3 +70,35 @@ export const fetchPokemonDetailsByUrl = async (
     return null;
   }
 };
+///test
+export const useFetchAllPokemons = () => {
+  return useQuery({
+    queryKey: ['allPokemons'],
+    queryFn: fetchAllPokemons,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+// export const useSearchPokemon = (query: string) => {
+//   return useQuery({
+//     queryKey: ['searchPokemon', query],
+//     queryFn: () => searchPokemon(query),
+//     enabled: !!query,
+//   });
+// };
+
+// export const useFetchPokemonDetails = (id: string) => {
+//   return useQuery({
+//     queryKey: ['pokemonDetails', id],
+//     queryFn: () => fetchPokemonDetails(id),
+//     enabled: !!id,
+//   });
+// };
+
+// export const useFetchPokemonDetailsByUrl = (url: string) => {
+//   return useQuery({
+//     queryKey: ['pokemonDetailsByUrl', url],
+//     queryFn: () => fetchPokemonDetailsByUrl(url),
+//     enabled: !!url,
+//   });
+// };
