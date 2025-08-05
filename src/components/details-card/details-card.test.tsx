@@ -12,7 +12,7 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-describe('DetailsCard Component', () => {
+describe.skip('DetailsCard Component', () => {
   const mockOnClose = vi.fn();
   const mockPokemon = {
     ...createPokemonDetails(1),

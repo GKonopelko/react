@@ -1,15 +1,17 @@
-import { useLoaderData } from 'react-router-dom';
 import styles from './styles.module.css';
-import type { PokemonDetails } from '../../pokemonTypes';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
+import { useFetchPokemonDetails } from '../api/api';
+import { Loader } from '../loader/loader';
 
 interface DetailsCardProps {
+  pokemonId: string;
   onClose: () => void;
 }
 
-export const DetailsCard = ({ onClose }: DetailsCardProps) => {
-  const pokemon = useLoaderData() as PokemonDetails;
+export const DetailsCard = ({ pokemonId, onClose }: DetailsCardProps) => {
+  const { data: pokemon, isLoading } = useFetchPokemonDetails(pokemonId);
 
+  if (isLoading) return <Loader />;
   if (!pokemon)
     return (
       <div className={styles['details-error']}>Error: Pokemon not found</div>

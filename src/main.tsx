@@ -12,10 +12,16 @@ import { About } from './components/about-page/about';
 import { PokemonDetailsPage } from './components/details-page/details-page';
 import { Layout } from './components/layout/layout';
 import { ThemeProvider } from './components/theme-context/theme-context-provider';
-import { fetchPokemonDetails } from './components/api/api';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      retry: 1,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -36,9 +42,6 @@ const router = createBrowserRouter([
             path: 'details/:id',
             element: <PokemonDetailsPage />,
             errorElement: <RouteErrorBoundary />,
-            loader: async ({ params }) => {
-              return await fetchPokemonDetails(params.id || '');
-            },
           },
         ],
       },

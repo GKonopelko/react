@@ -70,7 +70,7 @@ export const fetchPokemonDetailsByUrl = async (
     return null;
   }
 };
-///test
+
 export const useFetchAllPokemons = () => {
   return useQuery({
     queryKey: ['allPokemons'],
@@ -79,26 +79,26 @@ export const useFetchAllPokemons = () => {
   });
 };
 
-// export const useSearchPokemon = (query: string) => {
-//   return useQuery({
-//     queryKey: ['searchPokemon', query],
-//     queryFn: () => searchPokemon(query),
-//     enabled: !!query,
-//   });
-// };
+export const useSearchPokemon = (query: string) => {
+  return useQuery({
+    queryKey: ['searchPokemon', query],
+    queryFn: () => searchPokemon(query),
+    enabled: !!query,
+  });
+};
 
-// export const useFetchPokemonDetails = (id: string) => {
-//   return useQuery({
-//     queryKey: ['pokemonDetails', id],
-//     queryFn: () => fetchPokemonDetails(id),
-//     enabled: !!id,
-//   });
-// };
+export const useFetchPokemonDetails = (id: string) => {
+  return useQuery({
+    queryKey: ['pokemonDetails', id],
+    queryFn: () => fetchPokemonDetails(id),
+    enabled: !!id,
+  });
+};
 
-// export const useFetchPokemonDetailsByUrl = (url: string) => {
-//   return useQuery({
-//     queryKey: ['pokemonDetailsByUrl', url],
-//     queryFn: () => fetchPokemonDetailsByUrl(url),
-//     enabled: !!url,
-//   });
-// };
+export const useFetchPokemonDetailsByUrl = (url: string) => {
+  return useQuery({
+    queryKey: ['pokemonDetailsByUrl', url],
+    queryFn: () => fetchPokemonDetailsByUrl(url),
+    enabled: !!url,
+  });
+};

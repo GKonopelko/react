@@ -10,7 +10,7 @@ import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
 import { ResultsContainer } from './components/results-container/results-container';
 import { Flyout } from './components/flyout/flyout';
-import { searchPokemon, useFetchAllPokemons } from './components/api/api';
+import { useSearchPokemon, useFetchAllPokemons } from './components/api/api';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
@@ -19,64 +19,73 @@ interface AppState {
 }
 
 export const App = () => {
-  const { data: allPokemons, isLoading } = useFetchAllPokemons();
+  const {
+    data: allPokemons,
+    isLoading: isAllPokemonsLoading,
+    error: allPokemonsError,
+  } = useFetchAllPokemons();
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const {
+    isLoading: isSearchLoading,
+    error: searchError,
+    refetch: executeSearch,
+  } = useSearchPokemon(searchQuery);
+
   const [state, setState] = useState<AppState>({
     searchResults: null,
     loading: false,
     error: null,
   });
 
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
   const handleSearch = useCallback(
     async (query: string) => {
       try {
         setDetailsOpen(false);
-        setState((prev) => ({
-          ...prev,
-          loading: true,
-          error: null,
-          searchResults: null,
-        }));
+        setState((prev) => ({ ...prev, loading: true, error: null }));
 
         if (query.trim() === '') {
-          setState((prev) => ({
-            ...prev,
+          setState({
             searchResults: allPokemons || [],
-            loading: false,
-          }));
+            loading: isAllPokemonsLoading,
+            error: allPokemonsError?.message || null,
+          });
           return;
         }
 
-        const data = await searchPokemon(query);
-        setState((prev) => ({
-          ...prev,
-          searchResults: data,
+        setSearchQuery(query);
+        const { data } = await executeSearch();
+
+        setState({
+          searchResults: data || null,
           loading: false,
-        }));
+          error: null,
+        });
       } catch (err) {
-        setState((prev) => ({
-          ...prev,
-          error: err instanceof Error ? err.message : 'Unknown error',
+        setState({
           searchResults: null,
           loading: false,
-        }));
+          error: (err as Error).message,
+        });
       }
     },
-    [allPokemons]
+    [allPokemons, isAllPokemonsLoading, allPokemonsError, executeSearch]
   );
 
-  const loadInitialData = useCallback(async () => {
+  const loadInitialData = useCallback(() => {
     const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
     if (savedQuery.trim() === '') {
-      setState((prev) => ({ ...prev, loading: true }));
-      setState((prev) => ({
-        ...prev,
-        loading: isLoading,
+      setState({
         searchResults: allPokemons || [],
-      }));
+        loading: isAllPokemonsLoading,
+        error: allPokemonsError?.message || null,
+      });
     } else {
-      await handleSearch(savedQuery);
+      handleSearch(savedQuery);
     }
-  }, [handleSearch, isLoading, allPokemons]);
+  }, [allPokemons, isAllPokemonsLoading, allPokemonsError, handleSearch]);
 
   useEffect(() => {
     loadInitialData();
@@ -86,21 +95,22 @@ export const App = () => {
     setState((prev) => ({ ...prev, error: null }));
   }, []);
 
-  const [detailsOpen, setDetailsOpen] = useState(false);
   const handlePokemonSelect = useCallback(() => {
     setDetailsOpen(true);
   }, []);
+
+  const isLoading = state.loading || isAllPokemonsLoading || isSearchLoading;
+  const error =
+    state.error || searchError?.message || allPokemonsError?.message;
 
   return (
     <div className={styles.appwrapper}>
       <Header />
       <Controls onSearch={handleSearch} />
-      {state.loading && <Loader />}
-      {state.error && (
-        <ErrorMessage error={state.error} onDismiss={handleDismissError} />
-      )}
+      {isLoading && <Loader />}
+      {error && <ErrorMessage error={error} onDismiss={handleDismissError} />}
       <ResultsContainer>
-        {!state.loading && !state.error && (
+        {!isLoading && !error && (
           <Results
             resultPokemons={state.searchResults}
             onPokemonSelect={handlePokemonSelect}
