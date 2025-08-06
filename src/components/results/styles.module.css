@@ -71,3 +71,7 @@
 .card-link {
   cursor: pointer;
 }
+
+.timestamp {
+  text-align: center;
+}

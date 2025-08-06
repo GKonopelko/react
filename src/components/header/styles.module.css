@@ -18,6 +18,12 @@
   gap: 1rem;
 }
 
+.subcontainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .logo {
   height: 3rem;
   padding: 0.5em;
@@ -47,4 +53,13 @@
   a .logo {
     animation: logo-spin infinite 20s linear;
   }
+}
+
+.refreshbutton:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+
+.refreshbutton::after {
+  content: ' ↻';
 }

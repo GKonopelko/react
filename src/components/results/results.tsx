@@ -124,7 +124,9 @@ export const Results = ({
           </CheckboxWrapper>
         </div>
       )}
-
+      <div className={styles.timestamp}>
+        Results last updated: {new Date().toLocaleTimeString()}
+      </div>
       {pokemonDetails?.length ? (
         <div className={styles['results-list']}>
           {pokemonDetails.map((pokemon) => (

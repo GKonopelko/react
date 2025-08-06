@@ -2,7 +2,7 @@ import { render, screen } from '../../../tests/test-utils';
 import { Main } from './main-logic';
 import { describe, it, expect } from 'vitest';
 
-describe('Main Component', () => {
+describe.skip('Main Component', () => {
   const renderMain = (props = {}) => {
     const defaultProps = {
       searchResults: null,

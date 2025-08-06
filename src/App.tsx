@@ -11,6 +11,7 @@ import { Footer } from './components/footer/footer';
 import { ResultsContainer } from './components/results-container/results-container';
 import { Flyout } from './components/flyout/flyout';
 import { useSearchPokemon, useFetchAllPokemons } from './components/api/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface AppState {
   searchResults: PokemonDetails | PokemonListItem[] | null;
@@ -19,6 +20,7 @@ interface AppState {
 }
 
 export const App = () => {
+  const queryClient = useQueryClient();
   const {
     data: allPokemons,
     isLoading: isAllPokemonsLoading,
@@ -101,9 +103,16 @@ export const App = () => {
   const error =
     state.error || searchError?.message || allPokemonsError?.message;
 
+  const handleRefresh = useCallback(() => {
+    console.log('Invalidating queries...');
+    queryClient.invalidateQueries();
+    const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
+    handleSearch(savedQuery);
+  }, [queryClient, handleSearch]);
+
   return (
     <div className={styles.appwrapper}>
-      <Header />
+      <Header onRefresh={handleRefresh} />
       <Controls onSearch={handleSearch} />
       {isLoading && <Loader />}
       {error && <ErrorMessage error={error} onDismiss={handleDismissError} />}
