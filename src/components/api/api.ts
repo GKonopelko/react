@@ -1,19 +1,9 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
 
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
-//for test loading - delete
-
-// const BASE_URL = 'https://broken-pokeapi.co/api/v2/pokemon';
-
-//
 
 export const fetchAllPokemons = async (): Promise<PokemonListItem[]> => {
-  //for test loading - delete
-
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
-  //
   let allPokemons: PokemonListItem[] = [];
   let nextUrl: string | null = `${BASE_URL}?limit=500`;
 
@@ -90,8 +80,22 @@ export const useFetchAllPokemons = () => {
 };
 
 export const useSearchPokemon = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (query: string) => searchPokemon(query),
+    onSuccess: (data, query) => {
+      queryClient.setQueryData(['pokemon', query], data);
+    },
+  });
+};
+
+export const useGetCachedPokemon = (name: string) => {
+  return useQuery({
+    queryKey: ['pokemonSearch', name],
+    queryFn: () => null,
+    enabled: false,
+    staleTime: Infinity,
   });
 };
 

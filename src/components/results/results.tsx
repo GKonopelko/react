@@ -4,7 +4,7 @@ import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchPokemonDetailsByUrl } from '../api/api';
 import { Loader } from '../loader/loader';
 
@@ -12,6 +12,7 @@ interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
   cardsPerPage?: number;
   onPokemonSelect?: () => void;
+  currentQuery?: string;
 }
 
 const CARDS_PER_PAGE = 10;
@@ -20,9 +21,11 @@ export const Results = ({
   resultPokemons,
   cardsPerPage = CARDS_PER_PAGE,
   onPokemonSelect,
+  currentQuery = '',
 }: ResultsProps) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const queryClient = useQueryClient();
 
   const currentPage = useMemo(() => {
     const page = Number(searchParams.get('page'));
@@ -71,6 +74,14 @@ export const Results = ({
     newSearchParams.set('page', String(validatedPage));
     setSearchParams(newSearchParams);
   };
+
+  const cacheState = currentQuery
+    ? queryClient.getQueryState(['pokemon', currentQuery])
+    : null;
+  const cacheTime = cacheState?.dataUpdatedAt;
+  const cacheMessage = cacheTime
+    ? `Data loaded from cache (${new Date(cacheTime).toLocaleTimeString()})`
+    : 'Data loaded from network';
 
   if (!resultPokemons) {
     return <div className={styles.results}>No Pokemons found</div>;
@@ -124,9 +135,8 @@ export const Results = ({
           </CheckboxWrapper>
         </div>
       )}
-      <div className={styles.timestamp}>
-        Results last updated: {new Date().toLocaleTimeString()}
-      </div>
+
+      <div className={styles.dataSource}>{cacheMessage}</div>
       {pokemonDetails?.length ? (
         <div className={styles['results-list']}>
           {pokemonDetails.map((pokemon) => (

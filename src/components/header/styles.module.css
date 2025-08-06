@@ -21,7 +21,7 @@
 .subcontainer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .logo {
@@ -62,4 +62,19 @@
 
 .refreshbutton::after {
   content: ' ↻';
+}
+
+.cachestatus {
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.cachestatus[data-fresh='true'] {
+  background-color: #e6f7ee;
+  color: green;
+}
+
+.cachestatus[data-fresh='false'] {
+  background-color: #fff8e1;
+  color: orangered;
 }
