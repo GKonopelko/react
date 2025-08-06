@@ -1,3 +1,5 @@
+import { type ReactNode } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   render,
   screen,
@@ -5,12 +7,29 @@ import {
   waitFor,
   renderHook,
   act,
+  type RenderOptions,
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-const customRender = (ui: React.ReactElement, options = {}) => {
+export const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
+
+export const createWrapper = () => {
+  const queryClient = new QueryClient();
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <MemoryRouter>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </MemoryRouter>
+  );
+  wrapper.displayName = 'TestWrapper';
+  return wrapper;
+};
+
+const customRender = (
+  ui: React.ReactElement,
+  options?: Omit<RenderOptions, 'wrapper'>
+) => {
   return render(ui, {
-    wrapper: ({ children }) => <MemoryRouter>{children}</MemoryRouter>,
+    wrapper: createWrapper(),
     ...options,
   });
 };
