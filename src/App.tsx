@@ -13,29 +13,24 @@ import { Flyout } from './components/flyout/flyout';
 import { useSearchPokemon, useFetchAllPokemons } from './components/api/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCacheStatus } from './components/hooks/useCacheStatus';
+import { useErrorStore } from './components/store/errorStore';
 
 interface AppState {
   loading: boolean;
-  error: string | null;
 }
 
 export const App = () => {
   const queryClient = useQueryClient();
-  const {
-    data: allPokemons,
-    isLoading: isAllPokemonsLoading,
-    error: allPokemonsError,
-  } = useFetchAllPokemons();
+  const { data: allPokemons, isLoading: isAllPokemonsLoading } =
+    useFetchAllPokemons();
 
-  const {
-    mutateAsync: executeSearch,
-    isPending: isSearchPending,
-    error: searchError,
-  } = useSearchPokemon();
+  const { mutateAsync: executeSearch, isPending: isSearchPending } =
+    useSearchPokemon();
+
+  const { mainError, setMainError, dismissError } = useErrorStore();
 
   const [state, setState] = useState<AppState>({
     loading: false,
-    error: null,
   });
 
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -46,7 +41,8 @@ export const App = () => {
       try {
         setCurrentQuery(query);
         setDetailsOpen(false);
-        setState((prev) => ({ ...prev, loading: true, error: null }));
+        setState((prev) => ({ ...prev, loading: true }));
+        setMainError(null);
 
         if (query.trim() === '') {
           setState((prev) => ({ ...prev, loading: false }));
@@ -64,15 +60,13 @@ export const App = () => {
 
         await executeSearch(query);
       } catch (err) {
-        setState({
-          loading: false,
-          error: (err as Error).message,
-        });
+        setMainError((err as Error).message);
+        setState((prev) => ({ ...prev, loading: false }));
       } finally {
         setState((prev) => ({ ...prev, loading: false }));
       }
     },
-    [executeSearch, queryClient]
+    [executeSearch, queryClient, setMainError]
   );
 
   const loadInitialData = useCallback(() => {
@@ -80,20 +74,15 @@ export const App = () => {
     if (savedQuery.trim() === '') {
       setState({
         loading: isAllPokemonsLoading,
-        error: allPokemonsError?.message || null,
       });
     } else {
       handleSearch(savedQuery);
     }
-  }, [allPokemonsError?.message, handleSearch, isAllPokemonsLoading]);
+  }, [handleSearch, isAllPokemonsLoading]);
 
   useEffect(() => {
     loadInitialData();
   }, [loadInitialData]);
-
-  const handleDismissError = useCallback(() => {
-    setState((prev) => ({ ...prev, error: null }));
-  }, []);
 
   const handlePokemonSelect = useCallback(() => {
     setDetailsOpen(true);
@@ -109,8 +98,7 @@ export const App = () => {
   }, [currentQuery, handleSearch, queryClient]);
 
   const isLoading = state.loading || isAllPokemonsLoading || isSearchPending;
-  const error =
-    state.error || searchError?.message || allPokemonsError?.message;
+  const error = mainError;
 
   const displayData =
     currentQuery.trim() === ''
@@ -125,7 +113,7 @@ export const App = () => {
       <Header onRefresh={handleRefresh} cacheStatus={cacheStatus} />
       <Controls onSearch={handleSearch} />
       {isLoading && <Loader />}
-      {error && <ErrorMessage error={error} onDismiss={handleDismissError} />}
+      {error && <ErrorMessage error={error} onDismiss={dismissError} />}
       <ResultsContainer>
         {!isLoading && !error && (
           <Results

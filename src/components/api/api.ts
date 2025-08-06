@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
+import { useErrorStore } from '../store/errorStore';
 
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 
@@ -71,22 +72,35 @@ export const fetchPokemonDetailsByUrl = async (
   }
 };
 
-export const useFetchAllPokemons = () => {
-  return useQuery({
-    queryKey: ['allPokemons'],
-    queryFn: fetchAllPokemons,
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
 export const useSearchPokemon = () => {
+  const { setMainError } = useErrorStore();
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<PokemonDetails, Error, string>({
     mutationFn: (query: string) => searchPokemon(query),
+    onError: (error: Error) => {
+      setMainError(error.message);
+    },
     onSuccess: (data, query) => {
       queryClient.setQueryData(['pokemon', query], data);
     },
+  });
+};
+
+export const useFetchAllPokemons = () => {
+  const { setMainError } = useErrorStore();
+
+  return useQuery<PokemonListItem[], Error>({
+    queryKey: ['allPokemons'],
+    queryFn: async () => {
+      try {
+        return await fetchAllPokemons();
+      } catch (error) {
+        setMainError(error instanceof Error ? error.message : 'Unknown error');
+        throw error;
+      }
+    },
+    staleTime: 5 * 60 * 1000,
   });
 };
 
