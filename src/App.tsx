@@ -10,7 +10,11 @@ import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
 import { ResultsContainer } from './components/results-container/results-container';
 import { Flyout } from './components/flyout/flyout';
-import { useSearchPokemon, useFetchAllPokemons } from './components/api/api';
+import {
+  useSearchPokemon,
+  useFetchAllPokemons,
+  fetchAllPokemons,
+} from './components/api/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCacheStatus } from './components/hooks/useCacheStatus';
 import { useErrorStore } from './components/store/errorStore';
@@ -88,14 +92,27 @@ export const App = () => {
     setDetailsOpen(true);
   }, []);
 
-  const handleRefresh = useCallback(() => {
-    if (currentQuery.trim() === '') {
-      queryClient.invalidateQueries({ queryKey: ['allPokemons'] });
-    } else {
-      queryClient.invalidateQueries({ queryKey: ['pokemon', currentQuery] });
+  const handleRefresh = useCallback(async () => {
+    try {
+      setState((prev) => ({ ...prev, loading: true }));
+      setMainError(null);
+
+      if (currentQuery.trim() === '') {
+        await queryClient.resetQueries({ queryKey: ['allPokemons'] });
+        await queryClient.prefetchQuery({
+          queryKey: ['allPokemons'],
+          queryFn: fetchAllPokemons,
+        });
+      } else {
+        await queryClient.resetQueries({ queryKey: ['pokemon', currentQuery] });
+        await executeSearch(currentQuery);
+      }
+    } catch (err) {
+      setMainError((err as Error).message);
+    } finally {
+      setState((prev) => ({ ...prev, loading: false }));
     }
-    handleSearch(currentQuery);
-  }, [currentQuery, handleSearch, queryClient]);
+  }, [currentQuery, executeSearch, queryClient, setMainError]);
 
   const isLoading = state.loading || isAllPokemonsLoading || isSearchPending;
   const error = mainError;
