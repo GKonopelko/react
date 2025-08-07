@@ -11,8 +11,19 @@ import { NotFound } from './components/404-page/404-page';
 import { About } from './components/about-page/about';
 import { PokemonDetailsPage } from './components/details-page/details-page';
 import { Layout } from './components/layout/layout';
-import type { PokemonDetails } from './pokemonTypes';
 import { ThemeProvider } from './components/theme-context/theme-context-provider';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -33,21 +44,6 @@ const router = createBrowserRouter([
             path: 'details/:id',
             element: <PokemonDetailsPage />,
             errorElement: <RouteErrorBoundary />,
-            loader: async ({ params }) => {
-              if (!params.id || !/^\d+$/.test(params.id)) {
-                throw new Response('Invalid Pokemon ID', { status: 404 });
-              }
-
-              const response = await fetch(
-                `https://pokeapi.co/api/v2/pokemon/${params.id}`
-              );
-
-              if (!response.ok) {
-                throw new Response('Pokémon not found', { status: 404 });
-              }
-
-              return (await response.json()) as PokemonDetails;
-            },
           },
         ],
       },
@@ -70,8 +66,11 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <ThemeProvider>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </ThemeProvider>
+    </QueryClientProvider>
   </StrictMode>
 );

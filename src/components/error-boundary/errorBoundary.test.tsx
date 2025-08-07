@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '../../../tests/test-utils';
 import { ErrorBoundary } from './errorBoundary';
 
@@ -11,10 +11,6 @@ const WorkingComponent = () => <div>Working component</div>;
 describe('ErrorBoundary Component', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   it('should render error message and reset button when child throws error', () => {

@@ -1,82 +1,47 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '../../../tests/test-utils';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '../../../tests/test-utils';
 import { DetailsCard } from './details-card';
 import { createPokemonDetails } from '../../../tests/mocks';
 
-beforeEach(() => {
-  global.fetch = vi.fn();
-});
-
-describe('DetailsCard Component', () => {
+describe('Компонент DetailsCard', () => {
   const mockOnClose = vi.fn();
-
-  it('should show loading state initially', async () => {
-    const unresolvedPromise = new Promise<Response>(() => {});
-    vi.mocked(fetch).mockImplementationOnce(() => unresolvedPromise);
-
-    render(<DetailsCard pokemonId="1" onClose={mockOnClose} />);
-
-    expect(screen.getByText('Loading details...')).toBeInTheDocument();
-  });
-
-  it('should show error state when fetch fails', async () => {
-    vi.mocked(fetch).mockRejectedValueOnce(new Error('Pokemon not found'));
-
-    render(<DetailsCard pokemonId="1" onClose={mockOnClose} />);
-
-    await waitFor(() => {
-      expect(screen.getByText(/Error: Pokemon not found/)).toBeInTheDocument();
-    });
-  });
-
-  it('should render pokemon details when fetch succeeds', async () => {
-    const mockPokemon = {
-      ...createPokemonDetails(1),
-      sprites: {
-        other: {
-          'official-artwork': {
-            front_default: 'https://example.com/pokemon.png',
-          },
+  const mockPokemon = {
+    ...createPokemonDetails(1),
+    abilities: [],
+    sprites: {
+      ...createPokemonDetails(1).sprites,
+      other: {
+        'official-artwork': {
+          front_default: 'image-1.png',
         },
       },
-    };
+    },
+  };
 
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockPokemon,
-    } as Response);
+  it('should show pokemon details', () => {
+    render(<DetailsCard pokemon={mockPokemon} onClose={mockOnClose} />);
 
-    render(<DetailsCard pokemonId="1" onClose={mockOnClose} />);
-
-    await waitFor(() => {
-      expect(screen.getByText(mockPokemon.name)).toBeInTheDocument();
-      expect(screen.getByAltText(mockPokemon.name)).toBeInTheDocument();
-      expect(screen.getByText('hp:')).toBeInTheDocument();
-    });
+    expect(screen.getByText(mockPokemon.name)).toBeInTheDocument();
+    expect(screen.getByAltText(mockPokemon.name)).toBeInTheDocument();
+    expect(screen.getByText('hp:')).toBeInTheDocument();
+    expect(screen.getByText('55')).toBeInTheDocument();
   });
 
-  it('should call onClose when close button is clicked', async () => {
-    const mockPokemon = {
-      ...createPokemonDetails(1),
-      sprites: {
-        other: {
-          'official-artwork': {
-            front_default: 'https://example.com/pokemon.png',
-          },
-        },
-      },
-    };
+  it('should call onClose on clicking close button', () => {
+    render(<DetailsCard pokemon={mockPokemon} onClose={mockOnClose} />);
 
-    vi.mocked(fetch).mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockPokemon,
-    } as Response);
+    fireEvent.click(screen.getByText('×'));
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
+  });
 
-    render(<DetailsCard pokemonId="1" onClose={mockOnClose} />);
+  it('should show pokemon image', () => {
+    render(<DetailsCard pokemon={mockPokemon} onClose={mockOnClose} />);
 
-    await waitFor(() => {
-      fireEvent.click(screen.getByText('×'));
-      expect(mockOnClose).toHaveBeenCalledTimes(1);
-    });
+    const image = screen.getByAltText(mockPokemon.name);
+    expect(image).toBeInTheDocument();
+    expect(image).toHaveAttribute(
+      'src',
+      mockPokemon.sprites.other['official-artwork'].front_default
+    );
   });
 });

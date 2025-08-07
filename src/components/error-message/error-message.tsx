@@ -8,7 +8,7 @@ interface ErrorMessageProps {
 export const ErrorMessage = ({ error, onDismiss }: ErrorMessageProps) => {
   return (
     <div className={styles['error-message']}>
-      {error}
+      ⚠️ {error}
       <button onClick={onDismiss}>Hide error</button>
     </div>
   );

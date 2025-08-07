@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 
 export interface SearchProps {
-  onSearch: (query: string) => void;
+  onSearch: (query: string) => Promise<void>;
 }
 
 export const Search = ({ onSearch }: SearchProps) => {
@@ -19,12 +19,20 @@ export const Search = ({ onSearch }: SearchProps) => {
     setQueryContent(event.target.value);
   };
 
-  const handleFormSubmit = (event: FormEvent) => {
+  const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    const query = queryContent.trim();
+
+    if (!query) {
+      await onSearch('');
+      return;
+    }
+
     const newParams = new URLSearchParams(searchParams);
     newParams.set('page', '1');
-    setSearchParams(searchParams);
-    onSearch(queryContent.trim());
+    setSearchParams(newParams);
+
+    await onSearch(query);
   };
 
   return (
@@ -37,7 +45,7 @@ export const Search = ({ onSearch }: SearchProps) => {
           value={queryContent}
           onChange={handleFormInput}
         />
-        <button>Search pokemon</button>
+        <button type="submit">Search pokemon</button>
       </CheckboxWrapper>
     </form>
   );

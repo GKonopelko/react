@@ -10,133 +10,135 @@ import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
 import { ResultsContainer } from './components/results-container/results-container';
 import { Flyout } from './components/flyout/flyout';
+import {
+  useSearchPokemon,
+  useFetchAllPokemons,
+  fetchAllPokemons,
+} from './components/api/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCacheStatus } from './components/hooks/useCacheStatus';
+import { useErrorStore } from './components/store/errorStore';
 
 interface AppState {
-  searchResults: PokemonDetails | PokemonListItem[] | null;
   loading: boolean;
-  error: string | null;
 }
 
 export const App = () => {
+  const queryClient = useQueryClient();
+  const { data: allPokemons, isLoading: isAllPokemonsLoading } =
+    useFetchAllPokemons();
+
+  const { mutateAsync: executeSearch, isPending: isSearchPending } =
+    useSearchPokemon();
+
+  const { mainError, setMainError, dismissError } = useErrorStore();
+
   const [state, setState] = useState<AppState>({
-    searchResults: null,
     loading: false,
-    error: null,
   });
 
-  const fetchAllPokemons = useCallback(async (): Promise<PokemonListItem[]> => {
-    let allPokemons: PokemonListItem[] = [];
-    let nextUrl: string | null = 'https://pokeapi.co/api/v2/pokemon?limit=500';
-
-    while (nextUrl) {
-      const response = await fetch(nextUrl);
-      if (!response.ok) throw new Error('Failed to fetch pokemons');
-      const data: { results: PokemonListItem[]; next: string | null } =
-        await response.json();
-      allPokemons = [...allPokemons, ...data.results];
-      nextUrl = data.next;
-    }
-    return allPokemons;
-  }, []);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [currentQuery, setCurrentQuery] = useState('');
 
   const handleSearch = useCallback(
     async (query: string) => {
       try {
+        setCurrentQuery(query);
         setDetailsOpen(false);
-        setState((prev) => ({
-          ...prev,
-          loading: true,
-          error: null,
-          searchResults: null,
-        }));
+        setState((prev) => ({ ...prev, loading: true }));
+        setMainError(null);
 
         if (query.trim() === '') {
-          const allPokemons = await fetchAllPokemons();
-          setState((prev) => ({
-            ...prev,
-            searchResults: allPokemons,
-            loading: false,
-          }));
+          setState((prev) => ({ ...prev, loading: false }));
           return;
         }
 
-        const response: Response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`
-        );
-
-        if (!response.ok) {
-          let errorMessage = 'Error';
-          if (response.status === 404) {
-            errorMessage = `Pokemon "${query}" not found`;
-          } else if (response.status >= 500) {
-            errorMessage = 'Server error';
-          } else if (response.status === 401) {
-            errorMessage = 'Authentication required';
-          } else {
-            errorMessage = `Request failed ${response.status}`;
-          }
-          throw new Error(errorMessage);
+        const cachedData = queryClient.getQueryData<PokemonDetails>([
+          'pokemon',
+          query,
+        ]);
+        if (cachedData) {
+          setState((prev) => ({ ...prev, loading: false }));
+          return;
         }
 
-        const data: PokemonDetails = await response.json();
-        setState((prev) => ({
-          ...prev,
-          searchResults: data,
-          loading: false,
-        }));
+        await executeSearch(query);
       } catch (err) {
-        setState((prev) => ({
-          ...prev,
-          error: err instanceof Error ? err.message : 'Unknown error',
-          searchResults: null,
-          loading: false,
-        }));
+        setMainError((err as Error).message);
+        setState((prev) => ({ ...prev, loading: false }));
+      } finally {
+        setState((prev) => ({ ...prev, loading: false }));
       }
     },
-    [fetchAllPokemons]
+    [executeSearch, queryClient, setMainError]
   );
 
-  const loadInitialData = useCallback(async () => {
+  const loadInitialData = useCallback(() => {
     const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
     if (savedQuery.trim() === '') {
-      setState((prev) => ({ ...prev, loading: true }));
-      const allPokemons = await fetchAllPokemons();
-      setState((prev) => ({
-        ...prev,
-        searchResults: allPokemons,
-        loading: false,
-      }));
+      setState({
+        loading: isAllPokemonsLoading,
+      });
     } else {
-      await handleSearch(savedQuery);
+      handleSearch(savedQuery);
     }
-  }, [fetchAllPokemons, handleSearch]);
+  }, [handleSearch, isAllPokemonsLoading]);
 
   useEffect(() => {
     loadInitialData();
   }, [loadInitialData]);
 
-  const handleDismissError = useCallback(() => {
-    setState((prev) => ({ ...prev, error: null }));
-  }, []);
-
-  const [detailsOpen, setDetailsOpen] = useState(false);
   const handlePokemonSelect = useCallback(() => {
     setDetailsOpen(true);
   }, []);
 
+  const handleRefresh = useCallback(async () => {
+    try {
+      setState((prev) => ({ ...prev, loading: true }));
+      setMainError(null);
+
+      if (currentQuery.trim() === '') {
+        await queryClient.resetQueries({ queryKey: ['allPokemons'] });
+        await queryClient.prefetchQuery({
+          queryKey: ['allPokemons'],
+          queryFn: fetchAllPokemons,
+        });
+      } else {
+        await queryClient.resetQueries({ queryKey: ['pokemon', currentQuery] });
+        await executeSearch(currentQuery);
+      }
+    } catch (err) {
+      setMainError((err as Error).message);
+    } finally {
+      setState((prev) => ({ ...prev, loading: false }));
+    }
+  }, [currentQuery, executeSearch, queryClient, setMainError]);
+
+  const isLoading = state.loading || isAllPokemonsLoading || isSearchPending;
+  const error = mainError;
+
+  const displayData =
+    currentQuery.trim() === ''
+      ? allPokemons || []
+      : queryClient.getQueryData<PokemonDetails>(['pokemon', currentQuery]) ||
+        null;
+
+  const cacheStatus = useCacheStatus(currentQuery);
+
   return (
     <div className={styles.appwrapper}>
-      <Header />
+      <Header onRefresh={handleRefresh} cacheStatus={cacheStatus} />
       <Controls onSearch={handleSearch} />
-      {state.loading && <Loader />}
-      {state.error && (
-        <ErrorMessage error={state.error} onDismiss={handleDismissError} />
-      )}
+      {isLoading && <Loader />}
+      {error && <ErrorMessage error={error} onDismiss={dismissError} />}
       <ResultsContainer>
-        {!state.loading && !state.error && (
+        {!isLoading && !error && (
           <Results
-            resultPokemons={state.searchResults}
+            resultPokemons={
+              displayData as PokemonListItem[] | PokemonDetails | null
+            }
             onPokemonSelect={handlePokemonSelect}
+            currentQuery={currentQuery}
           />
         )}
         {detailsOpen && <Outlet />}

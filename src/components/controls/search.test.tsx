@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import { Search } from './search';
 import '@testing-library/jest-dom';
-import { fireEvent, render, screen } from '../../../tests/test-utils';
+import { fireEvent, render, screen, waitFor } from '../../../tests/test-utils';
 
 describe('Search Component', () => {
-  const mockSearch = vi.fn();
+  const mockSearch = vi.fn().mockResolvedValue(undefined);
 
-  it('should render input and button', () => {
+  it('should render input and button', async () => {
     const { container } = render(<Search onSearch={mockSearch} />);
 
     const form = container.querySelector('form');
@@ -21,7 +21,8 @@ describe('Search Component', () => {
     fireEvent.change(input, { target: { value: ' test ' } });
     if (!form) throw new Error('Form not found');
     fireEvent.submit(form);
-    expect(mockSearch).toHaveBeenCalledWith('test');
+
+    await waitFor(() => expect(mockSearch).toHaveBeenCalledWith('test'));
   });
 
   it('should write and read to/from localStorage', () => {
@@ -32,7 +33,7 @@ describe('Search Component', () => {
   it('should write and read to/from state', () => {
     localStorage.setItem('poke-monReactQueryContent', 'test state');
 
-    render(<Search onSearch={() => {}} />);
+    render(<Search onSearch={mockSearch} />);
 
     expect(screen.getByDisplayValue('test state')).toBeInTheDocument();
   });

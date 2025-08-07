@@ -18,6 +18,12 @@
   gap: 1rem;
 }
 
+.subcontainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .logo {
   height: 3rem;
   padding: 0.5em;
@@ -47,4 +53,28 @@
   a .logo {
     animation: logo-spin infinite 20s linear;
   }
+}
+
+.refreshbutton:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+
+.refreshbutton::after {
+  content: ' ↻';
+}
+
+.cachestatus {
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.cachestatus[data-fresh='true'] {
+  background-color: #e6f7ee;
+  color: green;
+}
+
+.cachestatus[data-fresh='false'] {
+  background-color: #fff8e1;
+  color: orangered;
 }

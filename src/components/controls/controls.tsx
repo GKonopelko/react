@@ -2,7 +2,7 @@ import { Search } from './search';
 import styles from './styles.module.css';
 
 interface ControlsProps {
-  onSearch: (query: string) => void;
+  onSearch: (query: string) => Promise<void>;
 }
 
 export const Controls = ({ onSearch }: ControlsProps) => {
