@@ -11,7 +11,7 @@ interface MainProps {
   searchResults: PokemonDetails | PokemonListItem[] | null;
   loading: boolean;
   error: string | null;
-  onSearch: (query: string) => void;
+  onSearch: (query: string) => Promise<void>;
   onDismissError: () => void;
 }
 

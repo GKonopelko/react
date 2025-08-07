@@ -26,7 +26,7 @@ vi.mock('../header/header', () => ({
 }));
 
 vi.mock('../controls/controls', () => ({
-  Controls: ({ onSearch }: { onSearch: () => void }) => (
+  Controls: ({ onSearch }: { onSearch: () => Promise<void> }) => (
     <div data-testid="controls">
       <button onClick={() => onSearch()}>Search</button>
     </div>
@@ -47,7 +47,7 @@ describe('Main Component', () => {
       searchResults: null,
       loading: false,
       error: null,
-      onSearch: vi.fn(),
+      onSearch: vi.fn().mockResolvedValue(undefined),
       onDismissError: vi.fn(),
     };
     return render(<Main {...defaultProps} {...props} />);
