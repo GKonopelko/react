@@ -13,10 +13,10 @@ import { MemoryRouter } from 'react-router-dom';
 
 export const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 
-export const createWrapper = () => {
+export const createWrapper = (initialEntries: string[] = ['/']) => {
   const queryClient = new QueryClient();
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <MemoryRouter>
+    <MemoryRouter initialEntries={initialEntries}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </MemoryRouter>
   );
@@ -26,10 +26,10 @@ export const createWrapper = () => {
 
 const customRender = (
   ui: React.ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
+  options?: Omit<RenderOptions, 'wrapper'> & { initialEntries?: string[] }
 ) => {
   return render(ui, {
-    wrapper: createWrapper(),
+    wrapper: createWrapper(options?.initialEntries),
     ...options,
   });
 };

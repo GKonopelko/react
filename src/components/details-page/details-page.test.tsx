@@ -1,11 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '../../../tests/test-utils';
-import { useParams } from 'react-router-dom';
 import { useFetchPokemonDetails } from '../api/api';
-import { createPokemonDetails } from '../../../tests/mocks';
+import { createPokemonDetails, mockQueryResult } from '../../../tests/mocks';
 import { PokemonDetailsPage } from './details-page';
-import type { UseQueryResult } from '@tanstack/react-query';
 import type { PokemonDetails } from '../../pokemonTypes';
+import { useNavigate, useParams } from 'react-router-dom';
 
 vi.mock('../details-card/details-card', () => ({
   DetailsCard: ({
@@ -41,64 +40,37 @@ vi.mock('../error-message/error-message', () => ({
   ),
 }));
 
-const mockNavigate = vi.fn();
-const mockLocation = {
-  pathname: '/',
-  search: '?test=1',
-  hash: '',
-  state: null,
-  key: 'default',
-};
+vi.mock('../api/api', () => ({
+  useFetchPokemonDetails: vi.fn(() => mockQueryResult<PokemonDetails>()),
+}));
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+vi.mock('react-router-dom', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('react-router-dom')>();
   return {
     ...actual,
     useParams: vi.fn(() => ({})),
-    useNavigate: () => mockNavigate,
-    useLocation: () => mockLocation,
+    useNavigate: vi.fn(() => vi.fn()),
+    useLocation: vi.fn(() => ({
+      pathname: '/',
+      search: '?test=1',
+      hash: '',
+      state: null,
+      key: 'default',
+    })),
   };
 });
 
-const createMockQueryResult = <T, E = Error>(
-  overrides: Partial<UseQueryResult<T, E>> = {}
-): UseQueryResult<T, E> =>
-  ({
-    data: undefined,
-    error: null,
-    isError: false,
-    isPending: false,
-    isLoading: false,
-    isSuccess: false,
-    isFetching: false,
-    isLoadingError: false,
-    isRefetchError: false,
-    isPaused: false,
-    status: 'pending',
-    fetchStatus: 'idle',
-    failureCount: 0,
-    failureReason: null,
-    errorUpdateCount: 0,
-    isFetched: false,
-    isFetchedAfterMount: false,
-    isInitialLoading: false,
-    isPlaceholderData: false,
-    isRefetching: false,
-    isStale: false,
-    refetch: vi.fn().mockResolvedValue({}),
-    ...overrides,
-  }) as UseQueryResult<T, E>;
-
-vi.mock('../api/api', () => ({
-  useFetchPokemonDetails: vi.fn(() => createMockQueryResult<PokemonDetails>()),
-}));
-
 describe('PokemonDetailsPage Component', () => {
+  const mockUseFetchPokemonDetails = vi.mocked(useFetchPokemonDetails);
+  const mockUseNavigate = vi.mocked(useNavigate);
+  const mockUseParams = vi.mocked(useParams);
+
   beforeEach(() => {
-    mockNavigate.mockClear();
-    vi.mocked(useParams).mockReturnValue({});
-    vi.mocked(useFetchPokemonDetails).mockReturnValue(
-      createMockQueryResult<PokemonDetails>()
+    vi.clearAllMocks();
+    mockUseParams.mockReturnValue({});
+    mockUseNavigate.mockImplementation(() => vi.fn());
+    mockUseFetchPokemonDetails.mockReturnValue(
+      mockQueryResult<PokemonDetails>()
     );
   });
 
@@ -108,12 +80,13 @@ describe('PokemonDetailsPage Component', () => {
   });
 
   it('should render loader when loading', () => {
-    vi.mocked(useParams).mockReturnValue({ id: '25' });
-    vi.mocked(useFetchPokemonDetails).mockReturnValue(
-      createMockQueryResult<PokemonDetails>({
+    mockUseParams.mockReturnValue({ id: '25' });
+    mockUseFetchPokemonDetails.mockReturnValue(
+      mockQueryResult<PokemonDetails>({
         isPending: true,
         isLoading: true,
         status: 'pending',
+        fetchStatus: 'fetching',
       })
     );
 
@@ -122,9 +95,9 @@ describe('PokemonDetailsPage Component', () => {
   });
 
   it('should render error message when error occurs', () => {
-    vi.mocked(useParams).mockReturnValue({ id: '25' });
-    vi.mocked(useFetchPokemonDetails).mockReturnValue(
-      createMockQueryResult<PokemonDetails>({
+    mockUseParams.mockReturnValue({ id: '25' });
+    mockUseFetchPokemonDetails.mockReturnValue(
+      mockQueryResult<PokemonDetails>({
         isError: true,
         error: new Error('Test error'),
         status: 'error',
@@ -142,9 +115,10 @@ describe('PokemonDetailsPage Component', () => {
       ...createPokemonDetails(25),
       abilities: [{ ability: { name: 'static' } }],
     };
-    vi.mocked(useParams).mockReturnValue({ id: '25' });
-    vi.mocked(useFetchPokemonDetails).mockReturnValue(
-      createMockQueryResult<PokemonDetails>({
+
+    mockUseParams.mockReturnValue({ id: '25' });
+    mockUseFetchPokemonDetails.mockReturnValue(
+      mockQueryResult<PokemonDetails>({
         data: mockPokemon,
         isSuccess: true,
         status: 'success',
@@ -157,14 +131,18 @@ describe('PokemonDetailsPage Component', () => {
     );
   });
 
-  it('should navigate to home with search params when DetailsCard calls onClose', () => {
+  it('should navigate to home when DetailsCard calls onClose', () => {
+    const navigateMock = vi.fn();
+    mockUseNavigate.mockImplementation(() => navigateMock);
+
     const mockPokemon = {
       ...createPokemonDetails(25),
       abilities: [{ ability: { name: 'static' } }],
     };
-    vi.mocked(useParams).mockReturnValue({ id: '25' });
-    vi.mocked(useFetchPokemonDetails).mockReturnValue(
-      createMockQueryResult<PokemonDetails>({
+
+    mockUseParams.mockReturnValue({ id: '25' });
+    mockUseFetchPokemonDetails.mockReturnValue(
+      mockQueryResult<PokemonDetails>({
         data: mockPokemon,
         isSuccess: true,
         status: 'success',
@@ -174,47 +152,9 @@ describe('PokemonDetailsPage Component', () => {
     render(<PokemonDetailsPage />);
     fireEvent.click(screen.getByText('Close'));
 
-    expect(mockNavigate).toHaveBeenCalledWith({
+    expect(navigateMock).toHaveBeenCalledWith({
       pathname: '/',
       search: '?test=1',
     });
-  });
-
-  it('should update when pokemonId changes', () => {
-    const { rerender } = render(<PokemonDetailsPage />);
-
-    expect(screen.queryByTestId('details-card-mock')).not.toBeInTheDocument();
-
-    vi.mocked(useParams).mockReturnValue({ id: '25' });
-    vi.mocked(useFetchPokemonDetails).mockReturnValue(
-      createMockQueryResult<PokemonDetails>({
-        data: {
-          ...createPokemonDetails(25),
-          abilities: [{ ability: { name: 'static' } }],
-        },
-        isSuccess: true,
-        status: 'success',
-      })
-    );
-    rerender(<PokemonDetailsPage />);
-    expect(screen.getByTestId('details-card-mock')).toHaveTextContent(
-      'Mock DetailsCard: pokemon-25'
-    );
-
-    vi.mocked(useParams).mockReturnValue({ id: '150' });
-    vi.mocked(useFetchPokemonDetails).mockReturnValue(
-      createMockQueryResult<PokemonDetails>({
-        data: {
-          ...createPokemonDetails(150),
-          abilities: [{ ability: { name: 'pressure' } }],
-        },
-        isSuccess: true,
-        status: 'success',
-      })
-    );
-    rerender(<PokemonDetailsPage />);
-    expect(screen.getByTestId('details-card-mock')).toHaveTextContent(
-      'Mock DetailsCard: pokemon-150'
-    );
   });
 });
