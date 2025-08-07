@@ -23,7 +23,6 @@ vi.mock('react-router-dom', async () => {
 describe('main', () => {
   beforeEach(() => {
     vi.resetModules();
-    vi.clearAllMocks();
     document.getElementById('root')?.remove();
   });
 

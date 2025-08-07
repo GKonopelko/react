@@ -8,7 +8,14 @@ import {
   useFetchPokemonDetails,
   useFetchPokemonDetailsByUrl,
 } from './api';
-import { act, renderHook, waitFor } from '../../../tests/test-utils';
+import {
+  act,
+  renderHook,
+  waitFor,
+  mockFetchResponse,
+  mockFetchError,
+  mockFetchNetworkError,
+} from '../../../tests/test-utils';
 import { useErrorStore } from '../store/errorStore';
 import { createPokemonDetails, createPokemonList } from '../../../tests/mocks';
 import { BASE_URL, createWrapper } from '../../../tests/test-utils';
@@ -19,7 +26,6 @@ global.fetch = mockFetch;
 describe('API Functions', () => {
   beforeEach(() => {
     mockFetch.mockClear();
-    vi.clearAllMocks();
     useErrorStore.setState({
       mainError: null,
       setMainError: vi.fn(),
@@ -29,7 +35,9 @@ describe('API Functions', () => {
 
   describe('useFetchAllPokemons', () => {
     it('should handle error', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Failed to fetch pokemons'));
+      mockFetch.mockImplementationOnce(() =>
+        mockFetchError(new Error('Failed to fetch pokemons'))
+      );
 
       renderHook(() => useFetchAllPokemons(), {
         wrapper: createWrapper(),
@@ -46,10 +54,7 @@ describe('API Functions', () => {
   describe('searchPokemon', () => {
     it('should fetch pokemon by name', async () => {
       const mockPokemon = createPokemonDetails(1);
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockPokemon),
-      });
+      mockFetch.mockResolvedValueOnce(mockFetchResponse(mockPokemon));
 
       const result = await searchPokemon('pikachu');
       expect(result).toEqual(mockPokemon);
@@ -57,10 +62,7 @@ describe('API Functions', () => {
     });
 
     it('should throw not found error', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-      });
+      mockFetch.mockResolvedValueOnce(mockFetchNetworkError(404));
 
       await expect(searchPokemon('unknown')).rejects.toThrow(
         'Pokemon "unknown" not found'
@@ -68,19 +70,13 @@ describe('API Functions', () => {
     });
 
     it('should throw server error', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-      });
+      mockFetch.mockResolvedValueOnce(mockFetchNetworkError(500));
 
       await expect(searchPokemon('pikachu')).rejects.toThrow('Server error');
     });
 
     it('should throw auth error', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 401,
-      });
+      mockFetch.mockResolvedValueOnce(mockFetchNetworkError(401));
 
       await expect(searchPokemon('pikachu')).rejects.toThrow(
         'Authentication required'
@@ -91,10 +87,7 @@ describe('API Functions', () => {
   describe('fetchPokemonDetails', () => {
     it('should fetch pokemon details by id', async () => {
       const mockPokemon = createPokemonDetails(1);
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockPokemon),
-      });
+      mockFetch.mockResolvedValueOnce(mockFetchResponse(mockPokemon));
 
       const result = await fetchPokemonDetails('1');
       expect(result).toEqual(mockPokemon);
@@ -108,9 +101,7 @@ describe('API Functions', () => {
     });
 
     it('should throw error when pokemon not found', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-      });
+      mockFetch.mockResolvedValueOnce(mockFetchNetworkError(404));
 
       await expect(fetchPokemonDetails('999')).rejects.toThrow(
         'Pokemon not found'
@@ -121,19 +112,14 @@ describe('API Functions', () => {
   describe('fetchPokemonDetailsByUrl', () => {
     it('should fetch pokemon details by url', async () => {
       const mockPokemon = createPokemonDetails(1);
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockPokemon),
-      });
+      mockFetch.mockResolvedValueOnce(mockFetchResponse(mockPokemon));
 
       const result = await fetchPokemonDetailsByUrl(`${BASE_URL}/1`);
       expect(result).toEqual(mockPokemon);
     });
 
     it('should return null when fetch fails', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-      });
+      mockFetch.mockResolvedValueOnce(mockFetchNetworkError(404));
 
       const result = await fetchPokemonDetailsByUrl(`${BASE_URL}/999`);
       expect(result).toBeNull();
@@ -152,10 +138,7 @@ describe('API Functions', () => {
     describe('useSearchPokemon', () => {
       it('should call searchPokemon and set query data on success', async () => {
         const mockPokemon = createPokemonDetails(1);
-        mockFetch.mockResolvedValueOnce({
-          ok: true,
-          json: () => Promise.resolve(mockPokemon),
-        });
+        mockFetch.mockResolvedValueOnce(mockFetchResponse(mockPokemon));
 
         const { result } = renderHook(() => useSearchPokemon(), {
           wrapper: createWrapper(),
@@ -171,10 +154,7 @@ describe('API Functions', () => {
       });
 
       it('should call setMainError on failure', async () => {
-        mockFetch.mockResolvedValueOnce({
-          ok: false,
-          status: 404,
-        });
+        mockFetch.mockResolvedValueOnce(mockFetchNetworkError(404));
 
         const { result } = renderHook(() => useSearchPokemon(), {
           wrapper: createWrapper(),
@@ -193,10 +173,9 @@ describe('API Functions', () => {
     describe('useFetchAllPokemons', () => {
       it('should fetch all pokemons', async () => {
         const mockPokemons = createPokemonList(1).results;
-        mockFetch.mockResolvedValueOnce({
-          ok: true,
-          json: () => Promise.resolve({ results: mockPokemons, next: null }),
-        });
+        mockFetch.mockResolvedValueOnce(
+          mockFetchResponse({ results: mockPokemons, next: null })
+        );
 
         const { result } = renderHook(() => useFetchAllPokemons(), {
           wrapper: createWrapper(),
@@ -208,7 +187,9 @@ describe('API Functions', () => {
       });
 
       it('should handle error', async () => {
-        mockFetch.mockRejectedValueOnce(new Error('Failed to fetch pokemons'));
+        mockFetch.mockImplementationOnce(() =>
+          mockFetchError(new Error('Failed to fetch pokemons'))
+        );
 
         renderHook(() => useFetchAllPokemons(), {
           wrapper: createWrapper(),
@@ -225,10 +206,7 @@ describe('API Functions', () => {
     describe('useFetchPokemonDetails', () => {
       it('should fetch pokemon details when enabled', async () => {
         const mockPokemon = createPokemonDetails(1);
-        mockFetch.mockResolvedValueOnce({
-          ok: true,
-          json: () => Promise.resolve(mockPokemon),
-        });
+        mockFetch.mockResolvedValueOnce(mockFetchResponse(mockPokemon));
 
         const { result } = renderHook(() => useFetchPokemonDetails('1'), {
           wrapper: createWrapper(),
@@ -251,10 +229,7 @@ describe('API Functions', () => {
     describe('useFetchPokemonDetailsByUrl', () => {
       it('should fetch pokemon details by url when enabled', async () => {
         const mockPokemon = createPokemonDetails(1);
-        mockFetch.mockResolvedValueOnce({
-          ok: true,
-          json: () => Promise.resolve(mockPokemon),
-        });
+        mockFetch.mockResolvedValueOnce(mockFetchResponse(mockPokemon));
 
         const { result } = renderHook(
           () => useFetchPokemonDetailsByUrl(`${BASE_URL}/1`),

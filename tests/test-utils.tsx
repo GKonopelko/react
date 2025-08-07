@@ -35,3 +35,19 @@ const customRender = (
 };
 
 export { customRender as render, screen, fireEvent, waitFor, renderHook, act };
+
+export const mockFetchResponse = (data: unknown, ok = true) => ({
+  ok,
+  json: () => Promise.resolve(data),
+  text: () => Promise.resolve(JSON.stringify(data)),
+});
+
+export const mockFetchError = (error: Error) => {
+  return Promise.reject(error);
+};
+
+export const mockFetchNetworkError = (status: number) => ({
+  ok: false,
+  status,
+  json: () => Promise.resolve(null),
+});

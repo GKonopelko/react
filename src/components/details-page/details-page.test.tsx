@@ -6,43 +6,59 @@ import { PokemonDetailsPage } from './details-page';
 import type { PokemonDetails } from '../../pokemonTypes';
 import { useNavigate, useParams } from 'react-router-dom';
 
-vi.mock('../details-card/details-card', () => ({
-  DetailsCard: ({
-    pokemon,
-    onClose,
-  }: {
-    pokemon: PokemonDetails;
-    onClose: () => void;
-  }) => (
-    <div data-testid="details-card-mock">
-      Mock DetailsCard: {pokemon.name}
-      <button onClick={onClose}>Close</button>
-    </div>
-  ),
-}));
+vi.mock('../details-card/details-card', async (importOriginal) => {
+  const mod =
+    await importOriginal<typeof import('../details-card/details-card')>();
+  return {
+    ...mod,
+    DetailsCard: vi.fn(
+      ({
+        pokemon,
+        onClose,
+      }: {
+        pokemon: PokemonDetails;
+        onClose: () => void;
+      }) => (
+        <div data-testid="details-card-mock">
+          Mock DetailsCard: {pokemon.name}
+          <button onClick={onClose}>Close</button>
+        </div>
+      )
+    ),
+  };
+});
 
-vi.mock('../loader/loader', () => ({
-  Loader: () => <div data-testid="loader-mock">Loading...</div>,
-}));
+vi.mock('../loader/loader', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('../loader/loader')>();
+  return {
+    ...mod,
+    Loader: vi.fn(() => <div data-testid="loader-mock">Loading...</div>),
+  };
+});
 
-vi.mock('../error-message/error-message', () => ({
-  ErrorMessage: ({
-    error,
-    onDismiss,
-  }: {
-    error: string;
-    onDismiss: () => void;
-  }) => (
-    <div data-testid="error-message-mock">
-      {error}
-      <button onClick={onDismiss}>Dismiss</button>
-    </div>
-  ),
-}));
+vi.mock('../error-message/error-message', async (importOriginal) => {
+  const mod =
+    await importOriginal<typeof import('../error-message/error-message')>();
+  return {
+    ...mod,
+    ErrorMessage: vi.fn(
+      ({ error, onDismiss }: { error: string; onDismiss: () => void }) => (
+        <div data-testid="error-message-mock">
+          {error}
+          <button onClick={onDismiss}>Dismiss</button>
+        </div>
+      )
+    ),
+  };
+});
 
-vi.mock('../api/api', () => ({
-  useFetchPokemonDetails: vi.fn(() => mockQueryResult<PokemonDetails>()),
-}));
+vi.mock('../api/api', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('../api/api')>();
+  return {
+    ...mod,
+    useFetchPokemonDetails: vi.fn(() => mockQueryResult<PokemonDetails>()),
+  };
+});
 
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal<typeof import('react-router-dom')>();
@@ -66,14 +82,12 @@ describe('PokemonDetailsPage Component', () => {
   const mockUseParams = vi.mocked(useParams);
 
   beforeEach(() => {
-    vi.clearAllMocks();
     mockUseParams.mockReturnValue({});
     mockUseNavigate.mockImplementation(() => vi.fn());
     mockUseFetchPokemonDetails.mockReturnValue(
       mockQueryResult<PokemonDetails>()
     );
   });
-
   it('should render nothing when id is not provided', () => {
     const { container } = render(<PokemonDetailsPage />);
     expect(container.firstChild).toBeNull();

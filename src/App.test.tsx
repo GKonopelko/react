@@ -36,7 +36,6 @@ describe('App Component', () => {
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
     localStorage.clear();
   });
 

@@ -9,7 +9,7 @@ vi.mock('react-router-dom', async (importOriginal) => {
   };
 });
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '../../../tests/test-utils';
 import { Results } from './results';
 import { createPokemonDetails, createPokemonList } from '../../../tests/mocks';
@@ -49,10 +49,6 @@ describe.skip('Results Component', () => {
     });
 
     vi.mocked(useNavigate).mockReturnValue(vi.fn());
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
   });
 
   it('renders "No Pokemons" when resultPokemons is null', () => {
