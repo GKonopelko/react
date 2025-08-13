@@ -1,4 +1,4 @@
-import { useStore } from '../store/store';
+import { useStore } from '../../utils/store/store';
 import styles from './styles.module.css';
 
 export const CheckboxWrapper = ({

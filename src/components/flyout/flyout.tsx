@@ -1,5 +1,5 @@
 import styles from './styles.module.css';
-import { useStore } from '../store/store';
+import { useStore } from '../../utils/store/store';
 import { useEffect, useState, useRef } from 'react';
 
 export const Flyout = () => {

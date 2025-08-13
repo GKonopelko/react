@@ -15,10 +15,10 @@ import {
   mockFetchResponse,
   mockFetchError,
   mockFetchNetworkError,
-} from '../../../tests/test-utils';
-import { useErrorStore } from '../store/errorStore';
-import { createPokemonDetails, createPokemonList } from '../../../tests/mocks';
-import { BASE_URL, createWrapper } from '../../../tests/test-utils';
+} from '../../tests/test-utils';
+import { useErrorStore } from './store/errorStore';
+import { createPokemonDetails, createPokemonList } from '../../tests/mocks';
+import { BASE_URL, createWrapper } from '../../tests/test-utils';
 
 const mockFetch = vi.fn();
 global.fetch = mockFetch;

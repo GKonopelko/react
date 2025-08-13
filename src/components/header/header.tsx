@@ -3,7 +3,7 @@ import reactLogo from '../../assets/icons/react.svg';
 import { Link } from 'react-router-dom';
 import { ThemeSwitcher } from '../theme-context/button-theme-switcher';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
-import type { CacheStatus } from '../hooks/useCacheStatus';
+import type { CacheStatus } from '../../utils/useCacheStatus';
 
 interface HeaderProps {
   onRefresh?: () => void;

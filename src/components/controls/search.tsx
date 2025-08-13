@@ -1,8 +1,8 @@
 import { type ChangeEvent, type FormEvent } from 'react';
 import styles from './styles.module.css';
-import { useLocalStorage } from '../ls-hook/ls-hook';
 import { useSearchParams } from 'react-router-dom';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
+import { useLocalStorage } from '../../utils/ls-hook';
 
 export interface SearchProps {
   onSearch: (query: string) => Promise<void>;

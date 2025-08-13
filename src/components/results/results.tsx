@@ -5,7 +5,7 @@ import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchPokemonDetailsByUrl } from '../api/api';
+import { fetchPokemonDetailsByUrl } from '../../utils/api';
 import { Loader } from '../loader/loader';
 
 interface ResultsProps {

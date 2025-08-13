@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
-import { useErrorStore } from '../store/errorStore';
+import type { PokemonDetails, PokemonListItem } from '../pokemonTypes';
+import { useErrorStore } from './store/errorStore';
 
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 

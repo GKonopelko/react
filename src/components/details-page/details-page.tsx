@@ -1,7 +1,7 @@
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { DetailsCard } from '../details-card/details-card';
 import styles from './styles.module.css';
-import { useFetchPokemonDetails } from '../api/api';
+import { useFetchPokemonDetails } from '../../utils/api';
 import { Loader } from '../loader/loader';
 import { ErrorMessage } from '../error-message/error-message';
 

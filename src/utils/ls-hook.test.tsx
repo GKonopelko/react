@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook, act } from '../../../tests/test-utils';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { renderHook, act } from '../../tests/test-utils';
 import { useLocalStorage } from './ls-hook';
 
 describe('useLocalStorage Hook', () => {
@@ -10,10 +10,6 @@ describe('useLocalStorage Hook', () => {
     localStorage.clear();
     vi.spyOn(Storage.prototype, 'getItem');
     vi.spyOn(Storage.prototype, 'setItem');
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   it('should return initial value when no value in localStorage', () => {
