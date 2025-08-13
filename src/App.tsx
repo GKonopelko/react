@@ -1,46 +1,44 @@
 import { useState, useEffect, useCallback } from 'react';
 import styles from './App.module.css';
-import type { PokemonDetails, PokemonListItem } from './pokemonTypes';
+import { Outlet } from 'react-router-dom';
 import { Controls } from './components/controls/controls';
 import { ErrorMessage } from './components/error-message/error-message';
 import { Loader } from './components/loader/loader';
 import { Results } from './components/results/results';
-import { Outlet } from 'react-router-dom';
 import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
 import { ResultsContainer } from './components/results-container/results-container';
 import { Flyout } from './components/flyout/flyout';
-import { useQueryClient } from '@tanstack/react-query';
-import { useFetchAllPokemons, useSearchPokemon } from './utils/api';
+import { useSearchPokemon } from './utils/api';
 import { useErrorStore } from './utils/store/errorStore';
 import { useCacheStatus } from './utils/useCacheStatus';
 import { usePokemonData } from './utils/usePokemonData';
 import { usePokemonSearch } from './utils/usePokemonSearch';
+import { usePokemonDisplayData } from './utils/usePokemonDisplayData';
+import { usePokemonInitializer } from './utils/usePokemonInitializer';
 
 export const App = () => {
-  const queryClient = useQueryClient();
-  const { data: allPokemons, isLoading: isAllPokemonsLoading } =
-    useFetchAllPokemons();
-  const { mutateAsync: executeSearch, isPending: isSearchPending } =
-    useSearchPokemon();
   const { mainError, dismissError } = useErrorStore();
   const [detailsOpen, setDetailsOpen] = useState(false);
-
-  const { currentQuery, setCurrentQuery, loading, handleRefresh } =
-    usePokemonData();
+  const { currentQuery, loading, handleRefresh } = usePokemonData();
   const { handleSearch } = usePokemonSearch();
+  const { displayData, isAllPokemonsLoading } =
+    usePokemonDisplayData(currentQuery);
+  const { loadInitialData } = usePokemonInitializer(handleSearch);
+  const { mutateAsync: executeSearch, isPending: isSearchPending } =
+    useSearchPokemon();
+  const cacheStatus = useCacheStatus(currentQuery);
 
   const wrappedHandleSearch = useCallback(
     async (query: string) => {
       try {
-        setCurrentQuery(query);
-        setDetailsOpen(false);
         await handleSearch(query);
+        setDetailsOpen(false);
       } catch (err) {
         console.error('Search error:', err);
       }
     },
-    [handleSearch, setCurrentQuery]
+    [handleSearch]
   );
 
   const wrappedHandleRefresh = useCallback(async () => {
@@ -51,12 +49,6 @@ export const App = () => {
     }
   }, [handleRefresh, currentQuery, executeSearch]);
 
-  const loadInitialData = useCallback(() => {
-    const savedQuery = localStorage.getItem('poke-monReactQueryContent') || '';
-    if (savedQuery.trim() === '') return;
-    wrappedHandleSearch(savedQuery);
-  }, [wrappedHandleSearch]);
-
   useEffect(() => {
     loadInitialData();
   }, [loadInitialData]);
@@ -66,12 +58,6 @@ export const App = () => {
   }, []);
 
   const isLoading = loading || isAllPokemonsLoading || isSearchPending;
-  const displayData =
-    currentQuery.trim() === ''
-      ? allPokemons || []
-      : queryClient.getQueryData<PokemonDetails>(['pokemon', currentQuery]) ||
-        null;
-  const cacheStatus = useCacheStatus(currentQuery);
 
   return (
     <div className={styles.appwrapper}>
@@ -84,9 +70,7 @@ export const App = () => {
       <ResultsContainer>
         {!isLoading && !mainError && (
           <Results
-            resultPokemons={
-              displayData as PokemonListItem[] | PokemonDetails | null
-            }
+            resultPokemons={displayData}
             onPokemonSelect={handlePokemonSelect}
             currentQuery={currentQuery}
           />
