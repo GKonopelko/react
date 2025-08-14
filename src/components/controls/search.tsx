@@ -1,6 +1,6 @@
 import { type ChangeEvent, type FormEvent } from 'react';
 import styles from './styles.module.css';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 import { useLocalStorage } from '../../utils/ls-hook';
 
@@ -9,7 +9,8 @@ export interface SearchProps {
 }
 
 export const Search = ({ onSearch }: SearchProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [queryContent, setQueryContent] = useLocalStorage(
     'poke-monReactQueryContent',
     ''
@@ -30,7 +31,7 @@ export const Search = ({ onSearch }: SearchProps) => {
 
     const newParams = new URLSearchParams(searchParams);
     newParams.set('page', '1');
-    setSearchParams(newParams);
+    router.push(`?${newParams.toString()}`);
 
     await onSearch(query);
   };

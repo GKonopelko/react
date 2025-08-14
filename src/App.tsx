@@ -17,7 +17,7 @@ import { usePokemonSearch } from './utils/usePokemonSearch';
 import { usePokemonDisplayData } from './utils/usePokemonDisplayData';
 import { usePokemonInitializer } from './utils/usePokemonInitializer';
 
-export const App = () => {
+export default function App() {
   const { mainError, dismissError } = useErrorStore();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const { currentQuery, loading, handleRefresh } = usePokemonData();
@@ -82,4 +82,4 @@ export const App = () => {
       <Footer />
     </div>
   );
-};
+}

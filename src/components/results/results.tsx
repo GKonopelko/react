@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import styles from './styles.module.css';
 import { PokemonCard } from '../pokemon-card/pokemonCard';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchPokemonDetailsByUrl } from '../../utils/api';
@@ -23,8 +23,8 @@ export const Results = ({
   onPokemonSelect,
   currentQuery = '',
 }: ResultsProps) => {
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
 
   const currentPage = useMemo(() => {
@@ -62,7 +62,7 @@ export const Results = ({
   const handlePokemonClick = (id: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set('page', String(currentPage));
-    navigate(`details/${id}?${newSearchParams.toString()}`);
+    router.push(`details/${id}?${newSearchParams.toString()}`);
     onPokemonSelect?.();
   };
 
@@ -72,7 +72,7 @@ export const Results = ({
     const validatedPage = Math.max(1, Math.min(page, totalPages));
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set('page', String(validatedPage));
-    setSearchParams(newSearchParams);
+    router.push(`?${newSearchParams.toString()}`);
   };
 
   const cacheState = currentQuery

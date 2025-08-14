@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 import reactLogo from '../../assets/icons/react.svg';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { ThemeSwitcher } from '../theme-context/button-theme-switcher';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 import type { CacheStatus } from '../../utils/useCacheStatus';
@@ -22,10 +22,10 @@ export const Header = ({ onRefresh, cacheStatus }: HeaderProps) => {
           <ThemeSwitcher />
         </div>
         <nav className={styles.nav}>
-          <Link to="/" className={styles.link}>
+          <Link href="/" className={styles.link}>
             Home
           </Link>
-          <Link to="/about" className={styles.link}>
+          <Link href="/about" className={styles.link}>
             About
           </Link>
         </nav>
