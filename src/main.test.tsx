@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createBrowserRouter, type RouteObject } from 'react-router-dom';
+import { createBrowserRouter, type RouteObject } from 'next/link';
 import { StrictMode, type ReactElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 

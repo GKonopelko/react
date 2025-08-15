@@ -30,7 +30,7 @@ import {
   mockQueryResult,
 } from '../../../tests/mocks';
 import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 
 const mockResponse = (data: unknown) =>

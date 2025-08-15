@@ -1,4 +1,6 @@
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+'use client';
+
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { DetailsCard } from '../details-card/details-card';
 import styles from './styles.module.css';
 import { useFetchPokemonDetails } from '../../utils/api';
@@ -7,21 +9,20 @@ import { ErrorMessage } from '../error-message/error-message';
 
 export const PokemonDetailsPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const {
     data: pokemon,
     isLoading,
     isError,
     error,
-  } = useFetchPokemonDetails(id || '');
+  } = useFetchPokemonDetails(id as string);
 
   const handleClose = () => {
-    navigate({
-      pathname: '/',
-      search: location.search,
-    });
+    router.push(
+      `/${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
+    );
   };
 
   if (!id) return null;

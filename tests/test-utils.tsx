@@ -9,7 +9,7 @@ import {
   act,
   type RenderOptions,
 } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'next/link';
 
 export const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 

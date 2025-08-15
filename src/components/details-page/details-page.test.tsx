@@ -4,7 +4,7 @@ import { useFetchPokemonDetails } from '../../utils/api';
 import { createPokemonDetails, mockQueryResult } from '../../../tests/mocks';
 import { PokemonDetailsPage } from './details-page';
 import type { PokemonDetails } from '../../pokemonTypes';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
 
 vi.mock('../details-card/details-card', async (importOriginal) => {
   const mod =
@@ -78,7 +78,7 @@ vi.mock('react-router-dom', async (importOriginal) => {
 
 describe.skip('PokemonDetailsPage Component', () => {
   const mockUseFetchPokemonDetails = vi.mocked(useFetchPokemonDetails);
-  const mockUseNavigate = vi.mocked(useNavigate);
+  const mockUseNavigate = vi.mocked(useRouter);
   const mockUseParams = vi.mocked(useParams);
 
   beforeEach(() => {

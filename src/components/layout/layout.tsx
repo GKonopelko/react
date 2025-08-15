@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'next/link';
 import styles from './styles.module.css';
 
 export const Layout = () => {

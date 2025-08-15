@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { Header } from './header';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'next/link';
 import { describe, it, expect } from 'vitest';
 import { ThemeProvider } from '../theme-context/theme-context-provider';
 

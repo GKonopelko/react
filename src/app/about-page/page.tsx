@@ -1,15 +1,17 @@
+'use client';
+
 import styles from './styles.module.css';
-import { Link } from 'react-router-dom';
-import { Footer } from '../footer/footer';
-import { useTheme } from '../theme-context/use-theme';
-import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
-import { Flyout } from '../flyout/flyout';
+import Link from 'next/link';
+import { Footer } from '../../components/footer/footer';
+import { useTheme } from '../../components/theme-context/use-theme';
+import { CheckboxWrapper } from '../../components/checkbox-wrapper/checkbox-wrapper';
+import { Flyout } from '../../components/flyout/flyout';
 
 export const About = () => {
   const { theme } = useTheme();
   return (
     <div className={styles.about} data-theme={theme}>
-      <Link to="/" className={styles.link}>
+      <Link href="/" className={styles.link}>
         <CheckboxWrapper
           id="link-back"
           name="link back"

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import App from './App';
 import { render, screen, fireEvent, waitFor } from '../tests/test-utils';
 import { createPokemonList, createPokemonDetails } from '../tests/mocks';
 import { act } from '@testing-library/react';
+import App from 'next/app';
 
 vi.mock('./components/loader/loader', () => ({
   Loader: () => <div>Pokemons coming soon...</div>,
