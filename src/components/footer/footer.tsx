@@ -1,6 +1,8 @@
 import styles from './styles.module.css';
-import rssLogo from '../../assets/icons/rss-logo.svg';
+import RssLogo from '../../assets/icons/rss-logo.svg';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
+
+const RsLogo = (props: React.SVGProps<SVGSVGElement>) => <RssLogo {...props} />;
 
 export function Footer() {
   return (
@@ -27,7 +29,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className={styles['footer-link']}
           >
-            <img src={rssLogo} alt="RS School" className={styles['rss-logo']} />
+            <RsLogo className={styles['rss-logo']} />
           </a>
         </div>
       </CheckboxWrapper>
