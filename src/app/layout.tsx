@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { ThemeProvider } from '../components/theme-context/theme-context-provider';
+import './global.css';
 
 export const metadata: Metadata = {
   title: 'NextJs',
@@ -13,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div id="root">{children}</div>
+        <ThemeProvider>
+          <div id="root">{children}</div>
+        </ThemeProvider>
       </body>
     </html>
   );

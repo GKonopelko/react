@@ -1,7 +1,10 @@
 import styles from './styles.module.css';
 import { useTheme } from './use-theme';
-import sun from '../../assets/icons/sun.svg';
-import moon from '../../assets/icons/moon.svg';
+import Sun from '../../assets/icons/sun.svg';
+import Moon from '../../assets/icons/moon.svg';
+
+const SunIcon = (props: React.SVGProps<SVGSVGElement>) => <Sun {...props} />;
+const MoonIcon = (props: React.SVGProps<SVGSVGElement>) => <Moon {...props} />;
 
 export function ThemeSwitcher() {
   const { theme, toggleTheme } = useTheme();
@@ -12,11 +15,11 @@ export function ThemeSwitcher() {
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       className={styles.button}
     >
-      <img
-        src={theme === 'light' ? moon : sun}
-        className={styles.icon}
-        alt="Theme icon"
-      />
+      {theme === 'light' ? (
+        <MoonIcon className={styles.icon} />
+      ) : (
+        <SunIcon className={styles.icon} />
+      )}
     </button>
   );
 }

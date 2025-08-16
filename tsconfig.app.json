@@ -7,7 +7,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "types": ["react", "react-dom", "vitest/globals"],
+    "types": ["react", "react-dom", "vitest/globals", "@svgr/webpack"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -27,5 +27,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "tests"]
+  "include": ["src", "tests", "next.config.js"]
 }
