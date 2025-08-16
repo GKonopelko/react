@@ -2,7 +2,6 @@
 
 import { Suspense, useCallback, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import styles from './styles.module.css';
 import { Controls } from '../components/controls/controls';
 import { ErrorMessage } from '../components/error-message/error-message';
 import { Loader } from '../components/loader/loader';
@@ -18,7 +17,8 @@ import { usePokemonData } from '../utils/usePokemonData';
 import { usePokemonSearch } from '../utils/usePokemonSearch';
 import { usePokemonDisplayData } from '../utils/usePokemonDisplayData';
 import { usePokemonInitializer } from '../utils/usePokemonInitializer';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { PokemonDetailsPage } from '../components/details-page/details-page';
 
 const queryClient = new QueryClient();
 
@@ -34,6 +34,7 @@ export default function HomePage() {
 
 function PokemonList() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const { mainError, dismissError } = useErrorStore();
   const { currentQuery, loading, handleRefresh } = usePokemonData();
@@ -44,6 +45,8 @@ function PokemonList() {
   const { mutateAsync: executeSearch, isPending: isSearchPending } =
     useSearchPokemon();
   const cacheStatus = useCacheStatus(currentQuery);
+
+  const pokemonId = searchParams.get('details');
 
   const wrappedHandleSearch = useCallback(
     async (query: string) => {
@@ -70,17 +73,23 @@ function PokemonList() {
 
   const handlePokemonSelect = useCallback(
     (id: string) => {
-      router.push(
-        `/details/${id}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
-      );
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('details', id);
+      router.push(`${pathname}?${params.toString()}`);
     },
-    [router, searchParams]
+    [router, pathname, searchParams]
   );
+
+  const handleCloseDetails = useCallback(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('details');
+    router.push(`${pathname}?${params.toString()}`);
+  }, [router, pathname, searchParams]);
 
   const isLoading = loading || isAllPokemonsLoading || isSearchPending;
 
   return (
-    <div className={styles.appwrapper}>
+    <div>
       <Header onRefresh={wrappedHandleRefresh} cacheStatus={cacheStatus} />
       <Controls onSearch={wrappedHandleSearch} />
 
@@ -91,9 +100,12 @@ function PokemonList() {
         {!isLoading && !mainError && (
           <Results
             resultPokemons={displayData}
-            onPokemonSelect={() => handlePokemonSelect}
+            onPokemonSelect={handlePokemonSelect}
             currentQuery={currentQuery}
           />
+        )}
+        {pokemonId && (
+          <PokemonDetailsPage id={pokemonId} onClose={handleCloseDetails} />
         )}
       </ResultsContainer>
 

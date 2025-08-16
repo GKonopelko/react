@@ -11,7 +11,7 @@ import { Loader } from '../loader/loader';
 interface ResultsProps {
   resultPokemons: PokemonDetails | PokemonListItem[] | null;
   cardsPerPage?: number;
-  onPokemonSelect?: () => void;
+  onPokemonSelect: (id: string) => void;
   currentQuery?: string;
 }
 
@@ -60,10 +60,7 @@ export const Results = ({
   }, [resultPokemons, isPaginated, cardsPerPage]);
 
   const handlePokemonClick = (id: string) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('page', String(currentPage));
-    router.push(`details/${id}?${newSearchParams.toString()}`);
-    onPokemonSelect?.();
+    onPokemonSelect?.(id);
   };
 
   const handlePageChange = (page: number) => {

@@ -1,15 +1,23 @@
 'use client';
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { DetailsCard } from '../details-card/details-card';
 import styles from './styles.module.css';
 import { useFetchPokemonDetails } from '../../utils/api';
 import { Loader } from '../loader/loader';
 import { ErrorMessage } from '../error-message/error-message';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
-export const PokemonDetailsPage = () => {
-  const { id } = useParams();
+interface PokemonDetailsPageProps {
+  id: string;
+  onClose: () => void;
+}
+
+export const PokemonDetailsPage = ({
+  id,
+  onClose,
+}: PokemonDetailsPageProps) => {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const {
@@ -17,15 +25,14 @@ export const PokemonDetailsPage = () => {
     isLoading,
     isError,
     error,
-  } = useFetchPokemonDetails(id as string);
+  } = useFetchPokemonDetails(id);
 
   const handleClose = () => {
-    router.push(
-      `/${searchParams.toString() ? `?${searchParams.toString()}` : ''}`
-    );
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('details');
+    router.push(`${pathname}?${params.toString()}`);
+    onClose();
   };
-
-  if (!id) return null;
 
   if (isLoading) return <Loader />;
 
