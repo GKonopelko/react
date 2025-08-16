@@ -1,5 +1,7 @@
+'use client';
+
 import styles from './styles.module.css';
-import ReactLogo from '../../assets/icons/react.svg';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ThemeSwitcher } from '../theme-context/button-theme-switcher';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
@@ -10,15 +12,25 @@ interface HeaderProps {
   cacheStatus?: CacheStatus;
 }
 
-const Logo = (props: React.SVGProps<SVGSVGElement>) => <ReactLogo {...props} />;
-
 export const Header = ({ onRefresh, cacheStatus }: HeaderProps) => {
   return (
     <header className={styles.header} data-testid="header">
       <CheckboxWrapper id="header" name="header" description="app header">
         <div className={styles.container}>
           <a href="https://react.dev" target="_blank" rel="noreferrer">
-            <Logo className={styles.logo} aria-hidden="true" />
+            <div className={styles.logoContainer}>
+              <Image
+                src="/assets/icons/react.svg"
+                alt="React Logo"
+                width={40}
+                height={40}
+                className={styles.logo}
+                style={{ width: 'auto', height: 'auto' }}
+                unoptimized
+                priority
+                aria-hidden="true"
+              />
+            </div>
           </a>
           <h1>Poke-monReact</h1>
           <ThemeSwitcher />

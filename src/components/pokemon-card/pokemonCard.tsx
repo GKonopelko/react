@@ -1,6 +1,7 @@
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 import styles from './styles.module.css';
 import type { PokemonDetails } from '../../pokemonTypes';
+import Image from 'next/image';
 
 interface PokemonCardProps {
   pokemon: PokemonDetails;
@@ -15,10 +16,13 @@ export const PokemonCard = ({ pokemon }: PokemonCardProps) => {
       description={description}
     >
       <div className={styles.wrapper}>
-        <img
+        <Image
           src={pokemon.sprites.front_default}
-          alt={pokemon.name}
+          alt={`${pokemon.name} sprite`}
+          width={96}
+          height={96}
           className={styles.image}
+          priority={false}
         />
         <h3 className={styles.name}>{pokemon.name}</h3>
         <div className={styles.description}>

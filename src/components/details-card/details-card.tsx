@@ -1,6 +1,7 @@
 import styles from './styles.module.css';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 import type { PokemonDetails } from '../../pokemonTypes';
+import Image from 'next/image';
 
 interface DetailsCardProps {
   pokemon: PokemonDetails;
@@ -8,6 +9,9 @@ interface DetailsCardProps {
 }
 
 export const DetailsCard = ({ pokemon, onClose }: DetailsCardProps) => {
+  const artworkUrl = pokemon.sprites.other?.['official-artwork']?.front_default;
+  const fallbackUrl = pokemon.sprites.front_default;
+
   return (
     <div className={styles.wrapper}>
       <CheckboxWrapper
@@ -20,13 +24,20 @@ export const DetailsCard = ({ pokemon, onClose }: DetailsCardProps) => {
             ×
           </button>
           <h2>{pokemon.name}</h2>
-          <img
-            src={
-              pokemon.sprites.other?.['official-artwork']?.front_default ?? ''
-            }
-            alt={pokemon.name}
-            className={styles['pokemon-big-img']}
-          />
+
+          {artworkUrl || fallbackUrl ? (
+            <Image
+              src={artworkUrl || fallbackUrl || ''}
+              alt={`Official artwork of ${pokemon.name}`}
+              width={200}
+              height={200}
+              className={styles.artwork}
+              priority={true}
+            />
+          ) : (
+            <div className={styles.placeholder}>No image available</div>
+          )}
+
           <div className={styles.stats}>
             {pokemon.stats.map((stat) => (
               <div key={stat.stat.name}>
