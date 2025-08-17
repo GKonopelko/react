@@ -3,9 +3,10 @@
 import { useMemo } from 'react';
 import styles from './styles.module.css';
 import type { PokemonListItem } from '../../pokemonTypes';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 import Image from 'next/image';
+import { PokemonDetailsPage } from '../details-page/details-page';
 
 interface ResultsProps {
   resultPokemons: PokemonListItem[];
@@ -20,8 +21,11 @@ export const Results = ({
   currentPage = 1,
   cardsPerPage = CARDS_PER_PAGE,
 }: ResultsProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const query = searchParams.get('search') || '';
+  const detailsId = searchParams.get('details');
 
   const displayData = useMemo(() => {
     if (!query) return resultPokemons;
@@ -46,7 +50,19 @@ export const Results = ({
   const handlePageChange = (page: number) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('page', String(page));
-    window.history.pushState(null, '', `?${newSearchParams.toString()}`);
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+  };
+
+  const handlePokemonClick = (id: string) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('details', id);
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+  };
+
+  const handleCloseDetails = () => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('details');
+    router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
   if (query && displayData.length === 0) {
@@ -58,61 +74,71 @@ export const Results = ({
   }
 
   return (
-    <div className={styles.wrapper}>
-      {totalPages > 1 && (
-        <div className={styles.pagination}>
-          <CheckboxWrapper
-            id="pagination"
-            name="pagination"
-            description="pages pagination"
-          >
-            <button
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
+    <div className={`${styles.wrapper} ${detailsId ? styles.withDetails : ''}`}>
+      <div className={styles['results-container']}>
+        {totalPages > 1 && (
+          <div className={styles.pagination}>
+            <CheckboxWrapper
+              id="pagination"
+              name="pagination"
+              description="pages pagination"
             >
-              Previous
-            </button>
-            <span>
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              Next
-            </button>
-          </CheckboxWrapper>
+              <button
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                Next
+              </button>
+            </CheckboxWrapper>
+          </div>
+        )}
+        <div className={styles['results-list']}>
+          {paginatedResults.map((pokemon) => {
+            const pokemonId = pokemon.url.split('/').slice(-2, -1)[0];
+
+            return (
+              <CheckboxWrapper
+                key={pokemon.name}
+                id={pokemon.name}
+                name={pokemon.name}
+                description={`Pokemon ${pokemon.name}`}
+              >
+                <div
+                  className={styles['pokemon-item']}
+                  onClick={() => handlePokemonClick(pokemonId)}
+                >
+                  <div className={styles['image-container']}>
+                    <Image
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`}
+                      alt={pokemon.name}
+                      width={96}
+                      height={96}
+                      className={styles.image}
+                    />
+                  </div>
+                  <h3>{pokemon.name}</h3>
+                  <p>ID: {pokemonId}</p>
+                </div>
+              </CheckboxWrapper>
+            );
+          })}
+        </div>
+      </div>
+
+      {detailsId && (
+        <div className={styles['details-panel']}>
+          <PokemonDetailsPage id={detailsId} onClose={handleCloseDetails} />
         </div>
       )}
-
-      <div className={styles['results-list']}>
-        {paginatedResults.map((pokemon) => {
-          const pokemonId = pokemon.url.split('/').slice(-2, -1)[0];
-
-          return (
-            <CheckboxWrapper
-              key={pokemon.name}
-              id={pokemon.name}
-              name={pokemon.name}
-              description={`Pokemon ${pokemon.name}`}
-            >
-              <div className={styles['pokemon-item']}>
-                <div className={styles.imageContainer}>
-                  <Image
-                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`}
-                    alt={pokemon.name}
-                    width={96}
-                    height={96}
-                    className={styles.image}
-                  />
-                </div>
-                <h3>{pokemon.name}</h3>
-                <p>ID: {pokemonId}</p>
-              </div>
-            </CheckboxWrapper>
-          );
-        })}
-      </div>
     </div>
   );
 };
