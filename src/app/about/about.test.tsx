@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '../../../tests/test-utils';
-import { About } from './page';
+import { About } from '../../components/about/about';
 
 describe('About Component', () => {
   it('should render about page content', () => {

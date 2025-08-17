@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ClientProviders>
-          <div id="root">
+          <div id="root" className="theme-root">
             <Header />
             <main>{children}</main>
             <Footer />
