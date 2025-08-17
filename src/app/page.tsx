@@ -8,11 +8,11 @@ export default async function HomePage() {
   const allPokemons = await fetchAllPokemons();
 
   return (
-    <div>
+    <>
       <Controls />
       <Suspense fallback={<Loader />}>
         <PageClient allPokemons={allPokemons} />
       </Suspense>
-    </div>
+    </>
   );
 }
