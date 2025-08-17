@@ -21,7 +21,6 @@ interface SelectionState {
 export const useStore = create<SelectionState>((set, get) => ({
   selectedItems: new Map(),
   toggleSelection: (id, name, description) => {
-    console.log('Toggling:', id, name, description);
     set((state) => {
       const newMap = new Map(state.selectedItems);
       if (newMap.has(id)) {
@@ -29,7 +28,6 @@ export const useStore = create<SelectionState>((set, get) => ({
       } else if (name && description) {
         newMap.set(id, { name, description });
       }
-      console.log('New state:', Array.from(newMap.entries()));
       return { selectedItems: newMap };
     });
   },
@@ -37,7 +35,6 @@ export const useStore = create<SelectionState>((set, get) => ({
   isSelected: (id) => get().selectedItems.has(id),
   getSelectedCount: () => {
     const size = get().selectedItems.size;
-    console.log('Current selected count:', size);
     return size;
   },
   getSelectedItems: () =>

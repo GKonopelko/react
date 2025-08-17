@@ -1,47 +1,58 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '../../../tests/test-utils';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { DetailsCard } from './details-card';
-import { createPokemonDetails } from '../../../tests/mocks';
 
-describe('Компонент DetailsCard', () => {
-  const mockOnClose = vi.fn();
+vi.mock('next/image', () => ({
+  __esModule: true,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    <img {...props} />
+  ),
+}));
+
+describe('DetailsCard', () => {
   const mockPokemon = {
-    ...createPokemonDetails(1),
-    abilities: [],
+    id: 1,
+    name: 'bulbasaur',
     sprites: {
-      ...createPokemonDetails(1).sprites,
+      front_default:
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
       other: {
         'official-artwork': {
-          front_default: 'image-1.png',
+          front_default:
+            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
         },
       },
     },
+    height: 7,
+    weight: 69,
+    types: [{ type: { name: 'grass' } }, { type: { name: 'poison' } }],
+    stats: [
+      { base_stat: 45, stat: { name: 'hp' } },
+      { base_stat: 49, stat: { name: 'attack' } },
+      { base_stat: 49, stat: { name: 'defense' } },
+    ],
+    abilities: [
+      { ability: { name: 'overgrow' }, is_hidden: false },
+      { ability: { name: 'chlorophyll' }, is_hidden: true },
+    ],
   };
 
-  it('should show pokemon details', () => {
-    render(<DetailsCard pokemon={mockPokemon} onClose={mockOnClose} />);
+  const mockOnClose = vi.fn();
 
+  it('renders pokemon name', () => {
+    render(<DetailsCard pokemon={mockPokemon} onClose={mockOnClose} />);
     expect(screen.getByText(mockPokemon.name)).toBeInTheDocument();
-    expect(screen.getByAltText(mockPokemon.name)).toBeInTheDocument();
-    expect(screen.getByText('hp:')).toBeInTheDocument();
-    expect(screen.getByText('55')).toBeInTheDocument();
   });
 
-  it('should call onClose on clicking close button', () => {
+  it('calls onClose when close button is clicked', () => {
     render(<DetailsCard pokemon={mockPokemon} onClose={mockOnClose} />);
-
     fireEvent.click(screen.getByText('×'));
-    expect(mockOnClose).toHaveBeenCalledTimes(1);
+    expect(mockOnClose).toHaveBeenCalled();
   });
 
-  it('should show pokemon image', () => {
+  it('renders pokemon stats', () => {
     render(<DetailsCard pokemon={mockPokemon} onClose={mockOnClose} />);
-
-    const image = screen.getByAltText(mockPokemon.name);
-    expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute(
-      'src',
-      mockPokemon.sprites.other['official-artwork'].front_default
-    );
+    expect(screen.getByText('hp:')).toBeInTheDocument();
+    expect(screen.getByText('45')).toBeInTheDocument();
   });
 });

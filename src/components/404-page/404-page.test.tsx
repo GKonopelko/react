@@ -1,6 +1,22 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '../../../tests/test-utils';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import { NotFound } from './404-page';
+
+vi.mock('next/link', () => ({
+  default: ({
+    children,
+    href,
+    className,
+  }: {
+    children: React.ReactNode;
+    href: string;
+    className?: string;
+  }) => (
+    <a href={href} className={className} data-discover="true">
+      {children}
+    </a>
+  ),
+}));
 
 describe('NotFound Component', () => {
   it('should render 404 message', () => {
@@ -15,14 +31,13 @@ describe('NotFound Component', () => {
   it('should render link to home page', () => {
     render(<NotFound />);
 
-    const link = screen.getByText('Go back to Pokemons');
+    const link = screen.getByRole('link', { name: 'Go back to Pokemons' });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', '/');
   });
 
   it('should match snapshot', () => {
     const { container } = render(<NotFound />);
-
     expect(container).toMatchSnapshot();
   });
 });

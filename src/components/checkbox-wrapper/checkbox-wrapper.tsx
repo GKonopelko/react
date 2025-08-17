@@ -20,7 +20,6 @@ export const CheckboxWrapper = ({
 
   const handleCheckboxClick = (e: React.MouseEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    console.log('Checkbox clicked:', id);
     toggleSelection(id, name, description);
   };
 

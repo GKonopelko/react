@@ -99,27 +99,10 @@ export const useFetchAllPokemons = () => {
   });
 };
 
-export const useGetCachedPokemon = (name: string) => {
-  return useQuery({
-    queryKey: ['pokemonSearch', name],
-    queryFn: () => null,
-    enabled: false,
-    staleTime: Infinity,
-  });
-};
-
 export const useFetchPokemonDetails = (id: string) => {
   return useQuery({
     queryKey: ['pokemonDetails', id],
     queryFn: () => fetchPokemonDetails(id),
     enabled: !!id,
-  });
-};
-
-export const useFetchPokemonDetailsByUrl = (url: string) => {
-  return useQuery({
-    queryKey: ['pokemonDetailsByUrl', url],
-    queryFn: () => fetchPokemonDetailsByUrl(url),
-    enabled: !!url,
   });
 };

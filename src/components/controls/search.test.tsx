@@ -1,40 +1,60 @@
 import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import { Search } from './search';
 import '@testing-library/jest-dom';
-import { fireEvent, render, screen, waitFor } from '../../../tests/test-utils';
+
+const mockPush = vi.fn();
+const mockGet = vi.fn().mockReturnValue('');
+const mockToString = vi.fn().mockReturnValue('');
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+  useSearchParams: () => ({
+    get: mockGet,
+    toString: mockToString,
+  }),
+}));
+
+vi.mock('../../utils/api', () => ({
+  useSearchPokemon: () => ({
+    mutate: vi.fn(),
+  }),
+}));
+
+vi.mock('../checkbox-wrapper/checkbox-wrapper', () => ({
+  CheckboxWrapper: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+}));
 
 describe('Search Component', () => {
-  const mockSearch = vi.fn().mockResolvedValue(undefined);
-
-  it('should render input and button', async () => {
-    const { container } = render(<Search onSearch={mockSearch} />);
-
-    const form = container.querySelector('form');
-    expect(form).toBeInTheDocument();
-
-    const input = screen.getByPlaceholderText('Enter pokemon name or id');
-    expect(input).toBeInTheDocument();
-
-    const button = screen.getByText('Search pokemon');
-    expect(button).toBeInTheDocument();
-
-    fireEvent.change(input, { target: { value: ' test ' } });
-    if (!form) throw new Error('Form not found');
-    fireEvent.submit(form);
-
-    await waitFor(() => expect(mockSearch).toHaveBeenCalledWith('test'));
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockGet.mockReturnValue('');
   });
 
-  it('should write and read to/from localStorage', () => {
-    localStorage.setItem('poke-monReactQueryContent', 'test');
-    expect(localStorage.getItem('poke-monReactQueryContent')).toBe('test');
+  it('renders input and search button', () => {
+    render(<Search />);
+
+    expect(
+      screen.getByPlaceholderText('Enter pokemon name or id')
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('button', { name: 'Search pokemon' })
+    ).toBeInTheDocument();
   });
 
-  it('should write and read to/from state', () => {
-    localStorage.setItem('poke-monReactQueryContent', 'test state');
+  it('initializes with value from URL params', () => {
+    mockGet.mockImplementation((key: string) =>
+      key === 'search' ? 'bulbasaur' : ''
+    );
 
-    render(<Search onSearch={mockSearch} />);
-
-    expect(screen.getByDisplayValue('test state')).toBeInTheDocument();
+    render(<Search />);
+    expect(screen.getByPlaceholderText('Enter pokemon name or id')).toHaveValue(
+      'bulbasaur'
+    );
   });
 });

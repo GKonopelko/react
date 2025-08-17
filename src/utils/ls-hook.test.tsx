@@ -1,15 +1,27 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, act } from '../../tests/test-utils';
+import { renderHook, act } from '@testing-library/react';
 import { useLocalStorage } from './ls-hook';
 
 describe('useLocalStorage Hook', () => {
   const key = 'test-key';
   const initialValue = 'initial-value';
+  let mockStorage: Record<string, string> = {};
 
   beforeEach(() => {
-    localStorage.clear();
-    vi.spyOn(Storage.prototype, 'getItem');
-    vi.spyOn(Storage.prototype, 'setItem');
+    mockStorage = {};
+    vi.clearAllMocks();
+
+    global.Storage.prototype.getItem = vi.fn((key: string) => {
+      return mockStorage[key] || null;
+    });
+
+    global.Storage.prototype.setItem = vi.fn((key: string, value: string) => {
+      mockStorage[key] = value;
+    });
+
+    global.Storage.prototype.clear = vi.fn(() => {
+      mockStorage = {};
+    });
   });
 
   it('should return initial value when no value in localStorage', () => {
@@ -55,5 +67,15 @@ describe('useLocalStorage Hook', () => {
 
     expect(result.current[0]).toBe(newValue);
     expect(localStorage.getItem).toHaveBeenCalledWith(key);
+  });
+
+  it('should handle JSON values correctly', () => {
+    const jsonValue = { foo: 'bar' };
+    const jsonString = JSON.stringify(jsonValue);
+    localStorage.setItem(key, jsonString);
+
+    const { result } = renderHook(() => useLocalStorage(key, initialValue));
+
+    expect(result.current[0]).toBe(jsonString);
   });
 });

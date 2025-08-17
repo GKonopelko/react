@@ -1,6 +1,34 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '../../../tests/test-utils';
-import { About } from '../../components/about/about';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { About } from './about';
+
+vi.mock('next/link', () => ({
+  default: ({
+    children,
+    href,
+  }: {
+    children: React.ReactNode;
+    href: string;
+  }) => <a href={href}>{children}</a>,
+}));
+
+vi.mock('../../components/theme-context/use-theme', () => ({
+  useTheme: () => ({ theme: 'light' }),
+}));
+
+vi.mock('../../components/footer/footer', () => ({
+  Footer: () => <div data-testid="footer">Footer Mock</div>,
+}));
+
+vi.mock('../../components/flyout/flyout', () => ({
+  Flyout: () => <div data-testid="flyout">Flyout Mock</div>,
+}));
+
+vi.mock('../../components/checkbox-wrapper/checkbox-wrapper', () => ({
+  CheckboxWrapper: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+}));
 
 describe('About Component', () => {
   it('should render about page content', () => {
@@ -20,9 +48,7 @@ describe('About Component', () => {
   it('should render back link', () => {
     render(<About />);
 
-    const backLink = screen.getByRole('link', {
-      name: 'Select item link-back Go back to Pokemons',
-    });
+    const backLink = screen.getByRole('link', { name: /Go back to Pokemons/i });
     expect(backLink).toBeInTheDocument();
     expect(backLink).toHaveAttribute('href', '/');
   });
@@ -49,7 +75,6 @@ describe('About Component', () => {
 
   it('should render Footer component', () => {
     render(<About />);
-
-    expect(screen.getByAltText('RS School')).toBeInTheDocument();
+    expect(screen.getByTestId('footer')).toBeInTheDocument();
   });
 });
