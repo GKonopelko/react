@@ -3,10 +3,12 @@
 import styles from './styles.module.css';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
 import Image from 'next/image';
+import { Flyout } from '../flyout/flyout';
 
 export function Footer() {
   return (
     <footer className={styles.footer}>
+      <Flyout />
       <CheckboxWrapper
         id="pagination"
         name="pagination"

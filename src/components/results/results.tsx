@@ -67,14 +67,16 @@ export const Results = ({
 
   if (query && displayData.length === 0) {
     return (
-      <div className={styles.noResults}>
+      <div className={styles['no-results']}>
         <p>No pokemons found for &quot;{query}&quot;</p>
       </div>
     );
   }
 
   return (
-    <div className={`${styles.wrapper} ${detailsId ? styles.withDetails : ''}`}>
+    <div
+      className={`${styles.wrapper} ${detailsId ? styles['wrapper-with-details'] : ''}`}
+    >
       <div className={styles['results-container']}>
         {totalPages > 1 && (
           <div className={styles.pagination}>
@@ -122,7 +124,6 @@ export const Results = ({
                       alt={pokemon.name}
                       width={96}
                       height={96}
-                      className={styles.image}
                     />
                   </div>
                   <h3>{pokemon.name}</h3>
