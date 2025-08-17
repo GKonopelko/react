@@ -5,20 +5,15 @@ import { useErrorStore } from './store/errorStore';
 const BASE_URL = 'https://pokeapi.co/api/v2/pokemon';
 
 export const fetchAllPokemons = async (): Promise<PokemonListItem[]> => {
-  let allPokemons: PokemonListItem[] = [];
-  let nextUrl: string | null = `${BASE_URL}?limit=500`;
-
-  while (nextUrl) {
-    const response = await fetch(nextUrl);
-    if (!response.ok) throw new Error('Failed to fetch pokemons');
-
-    const data: { results: PokemonListItem[]; next: string | null } =
-      await response.json();
-    allPokemons = [...allPokemons, ...data.results];
-    nextUrl = data.next;
+  try {
+    const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=500');
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data = await response.json();
+    return data.results;
+  } catch (error) {
+    console.error('Failed to fetch pokemons:', error);
+    throw error;
   }
-
-  return allPokemons;
 };
 
 export const searchPokemon = async (query: string): Promise<PokemonDetails> => {

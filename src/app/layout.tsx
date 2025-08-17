@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ThemeProvider } from '../components/theme-context/theme-context-provider';
+import { ClientProviders } from './client-providers';
 import './global.css';
 
 export const metadata: Metadata = {
@@ -15,9 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeProvider>
+        <ClientProviders>
           <div id="root">{children}</div>
-        </ThemeProvider>
+        </ClientProviders>
       </body>
     </html>
   );

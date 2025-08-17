@@ -1,20 +1,16 @@
-import { type ChangeEvent, type FormEvent } from 'react';
+'use client';
+
+import { type ChangeEvent, type FormEvent, useState } from 'react';
 import styles from './styles.module.css';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
-import { useLocalStorage } from '../../utils/ls-hook';
+import { useSearchPokemon } from '../../utils/api';
 
-export interface SearchProps {
-  onSearch: (query: string) => Promise<void>;
-}
-
-export const Search = ({ onSearch }: SearchProps) => {
+export const Search = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [queryContent, setQueryContent] = useLocalStorage(
-    'poke-monReactQueryContent',
-    ''
-  );
+  const [queryContent, setQueryContent] = useState('');
+  const { mutate: searchPokemon } = useSearchPokemon();
 
   const handleFormInput = (event: ChangeEvent<HTMLInputElement>) => {
     setQueryContent(event.target.value);
@@ -24,16 +20,13 @@ export const Search = ({ onSearch }: SearchProps) => {
     event.preventDefault();
     const query = queryContent.trim();
 
-    if (!query) {
-      await onSearch('');
-      return;
-    }
-
-    const newParams = new URLSearchParams(searchParams);
+    const newParams = new URLSearchParams(searchParams.toString());
     newParams.set('page', '1');
     router.push(`?${newParams.toString()}`);
 
-    await onSearch(query);
+    if (query) {
+      searchPokemon(query);
+    }
   };
 
   return (

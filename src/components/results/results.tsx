@@ -1,109 +1,44 @@
+'use client';
+
 import { useMemo } from 'react';
 import styles from './styles.module.css';
-import { PokemonCard } from '../pokemon-card/pokemonCard';
-import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
+import type { PokemonListItem } from '../../pokemonTypes';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchPokemonDetailsByUrl } from '../../utils/api';
-import { Loader } from '../loader/loader';
 
 interface ResultsProps {
-  resultPokemons: PokemonDetails | PokemonListItem[] | null;
+  resultPokemons: PokemonListItem[];
+  currentPage: number;
   cardsPerPage?: number;
-  onPokemonSelect: (id: string) => void;
-  currentQuery?: string;
 }
 
 const CARDS_PER_PAGE = 10;
 
 export const Results = ({
   resultPokemons,
+  currentPage = 1,
   cardsPerPage = CARDS_PER_PAGE,
-  onPokemonSelect,
-  currentQuery = '',
 }: ResultsProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const queryClient = useQueryClient();
 
-  const currentPage = useMemo(() => {
-    const page = Number(searchParams.get('page'));
-    return isNaN(page) || page < 1 ? 1 : page;
-  }, [searchParams]);
+  const paginatedResults = useMemo(() => {
+    const start = (currentPage - 1) * cardsPerPage;
+    const end = start + cardsPerPage;
+    return resultPokemons.slice(start, end);
+  }, [resultPokemons, currentPage, cardsPerPage]);
 
-  const isPaginated = Array.isArray(resultPokemons);
-
-  const { data: pokemonDetails, isLoading } = useQuery({
-    queryKey: ['pokemonDetails', currentPage, resultPokemons],
-    queryFn: async () => {
-      if (!isPaginated || !resultPokemons) return [];
-
-      const start = (currentPage - 1) * cardsPerPage;
-      const end = start + cardsPerPage;
-      const pagePokemons = resultPokemons.slice(start, end);
-
-      const details = await Promise.all(
-        pagePokemons.map((pokemon) => fetchPokemonDetailsByUrl(pokemon.url))
-      );
-
-      return details.filter(Boolean) as PokemonDetails[];
-    },
-    enabled: isPaginated,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const totalPages = useMemo(() => {
-    return isPaginated && resultPokemons
-      ? Math.max(1, Math.ceil(resultPokemons.length / cardsPerPage))
-      : 1;
-  }, [resultPokemons, isPaginated, cardsPerPage]);
-
-  const handlePokemonClick = (id: string) => {
-    onPokemonSelect?.(id);
-  };
+  const totalPages = Math.max(
+    1,
+    Math.ceil(resultPokemons.length / cardsPerPage)
+  );
 
   const handlePageChange = (page: number) => {
-    if (!isPaginated) return;
-
     const validatedPage = Math.max(1, Math.min(page, totalPages));
-    const newSearchParams = new URLSearchParams(searchParams);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set('page', String(validatedPage));
     router.push(`?${newSearchParams.toString()}`);
   };
-
-  const cacheState = currentQuery
-    ? queryClient.getQueryState(['pokemon', currentQuery])
-    : null;
-  const cacheTime = cacheState?.dataUpdatedAt;
-  const cacheMessage = cacheTime
-    ? `Data loaded from cache (${new Date(cacheTime).toLocaleTimeString()})`
-    : 'Data loaded from network';
-
-  if (!resultPokemons) {
-    return <div className={styles.results}>No Pokemons found</div>;
-  }
-
-  if (isLoading) {
-    return (
-      <div className={styles.results}>
-        <Loader />
-      </div>
-    );
-  }
-
-  if (!isPaginated) {
-    return (
-      <div className={styles['results-list']}>
-        <div
-          className={styles['card-link']}
-          onClick={() => handlePokemonClick(resultPokemons.id.toString())}
-        >
-          <PokemonCard pokemon={resultPokemons} />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.wrapper}>
@@ -133,22 +68,14 @@ export const Results = ({
         </div>
       )}
 
-      <div className={styles.dataSource}>{cacheMessage}</div>
-      {pokemonDetails?.length ? (
-        <div className={styles['results-list']}>
-          {pokemonDetails.map((pokemon) => (
-            <div
-              key={pokemon.id}
-              className={styles['card-link']}
-              onClick={() => handlePokemonClick(pokemon.id.toString())}
-            >
-              <PokemonCard pokemon={pokemon} />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className={styles.results}>No pokemons on this page</div>
-      )}
+      <div className={styles['results-list']}>
+        {paginatedResults.map((pokemon) => (
+          <div key={pokemon.name} className={styles['pokemon-item']}>
+            <h3>{pokemon.name}</h3>
+            <p>URL: {pokemon.url}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
