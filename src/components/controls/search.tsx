@@ -1,6 +1,6 @@
 'use client';
 
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { type ChangeEvent, type FormEvent, useState, useEffect } from 'react';
 import styles from './styles.module.css';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
@@ -12,6 +12,11 @@ export const Search = () => {
   const [queryContent, setQueryContent] = useState('');
   const { mutate: searchPokemon } = useSearchPokemon();
 
+  useEffect(() => {
+    const query = searchParams.get('search') || '';
+    setQueryContent(query);
+  }, [searchParams]);
+
   const handleFormInput = (event: ChangeEvent<HTMLInputElement>) => {
     setQueryContent(event.target.value);
   };
@@ -21,6 +26,11 @@ export const Search = () => {
     const query = queryContent.trim();
 
     const newParams = new URLSearchParams(searchParams.toString());
+    if (query) {
+      newParams.set('search', query);
+    } else {
+      newParams.delete('search');
+    }
     newParams.set('page', '1');
     router.push(`?${newParams.toString()}`);
 
@@ -40,6 +50,19 @@ export const Search = () => {
           onChange={handleFormInput}
         />
         <button type="submit">Search pokemon</button>
+        {queryContent && (
+          <button
+            type="button"
+            onClick={() => {
+              setQueryContent('');
+              const newParams = new URLSearchParams(searchParams.toString());
+              newParams.delete('search');
+              router.push(`?${newParams.toString()}`);
+            }}
+          >
+            Clear
+          </button>
+        )}
       </CheckboxWrapper>
     </form>
   );
