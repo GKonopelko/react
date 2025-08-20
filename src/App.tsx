@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Modal } from './modal';
+import { Modal } from './Modal';
+import { UncontrolledForm } from './uncontrolledForm';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +24,12 @@ function App() {
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <div className="modal-body">
             <h3>Modal Window</h3>
-            <p>Form will be here.</p>
+            <UncontrolledForm
+              onClose={function (): void {
+                throw new Error('Function not implemented.');
+              }}
+            />
+            ,
             <div className="modal-actions">
               <button onClick={() => setIsModalOpen(false)}>Close Modal</button>
             </div>
