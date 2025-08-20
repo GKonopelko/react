@@ -29,3 +29,7 @@ coverage/
 
 # Dependency files
 package-lock.json
+
+# Игнорировать все пустые папки
+**/
+!.gitkeep
