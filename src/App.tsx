@@ -1,4 +1,3 @@
-import './App.css';
 import { useState } from 'react';
 import { Modal } from './modal';
 
@@ -6,18 +5,31 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div>
-      <h1>Shared modal components</h1>
-      <h2>1. Uncontrolled components approach Form</h2>
-      <h2>2. Form created using React Hook Form</h2>
+    <div className="app-container">
+      <header>
+        <h1>Shared Modal Components</h1>
+      </header>
 
-      <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
+      <main>
+        <section>
+          <h2>1. Uncontrolled Components Approach Form</h2>
+          <h2>2. Form Created Using React Hook Form</h2>
+        </section>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h3>Modal window</h3>
-        <p>Form will be here.</p>
-        <button onClick={() => setIsModalOpen(false)}>Close</button>
-      </Modal>
+        <button onClick={() => setIsModalOpen(true)} className="primary-button">
+          Open Modal
+        </button>
+
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <div className="modal-body">
+            <h3>Modal Window</h3>
+            <p>Form will be here.</p>
+            <div className="modal-actions">
+              <button onClick={() => setIsModalOpen(false)}>Close Modal</button>
+            </div>
+          </div>
+        </Modal>
+      </main>
     </div>
   );
 }
