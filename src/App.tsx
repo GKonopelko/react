@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Modal } from './Modal';
-import { UncontrolledForm } from './uncontrolledForm';
+import { ControlledForm } from './ControlledForm';
+import { Modal } from './modal';
+import { UncontrolledForm } from './UncontrolledForm';
 
 function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUncontrolledModalOpen, setIsUncontrolledModalOpen] = useState(false);
+  const [isControlledModalOpen, setIsControlledModalOpen] = useState(false);
 
   return (
     <div className="app-container">
@@ -17,22 +19,40 @@ function App() {
           <h2>2. Form Created Using React Hook Form</h2>
         </section>
 
-        <button onClick={() => setIsModalOpen(true)} className="primary-button">
-          Open Modal
-        </button>
+        <div className="form-buttons" style={{ display: 'flex', gap: '1rem' }}>
+          <button
+            onClick={() => setIsUncontrolledModalOpen(true)}
+            className="primary-button"
+          >
+            Open Uncontrolled Form
+          </button>
+          <button
+            onClick={() => setIsControlledModalOpen(true)}
+            className="primary-button"
+          >
+            Open Controlled Form
+          </button>
+        </div>
 
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Modal
+          isOpen={isUncontrolledModalOpen}
+          onClose={() => setIsUncontrolledModalOpen(false)}
+        >
           <div className="modal-body">
-            <h3>Modal Window</h3>
+            <h3>Uncontrolled Form</h3>
             <UncontrolledForm
-              onClose={function (): void {
-                throw new Error('Function not implemented.');
-              }}
+              onClose={() => setIsUncontrolledModalOpen(false)}
             />
-            ,
-            <div className="modal-actions">
-              <button onClick={() => setIsModalOpen(false)}>Close Modal</button>
-            </div>
+          </div>
+        </Modal>
+
+        <Modal
+          isOpen={isControlledModalOpen}
+          onClose={() => setIsControlledModalOpen(false)}
+        >
+          <div className="modal-body">
+            <h3>Controlled Form</h3>
+            <ControlledForm onClose={() => setIsControlledModalOpen(false)} />
           </div>
         </Modal>
       </main>

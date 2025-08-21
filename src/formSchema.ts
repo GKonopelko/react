@@ -8,7 +8,11 @@ export const isStrongPassword = (password: string): boolean => {
 
 export const formSchema = z
   .object({
-    name: z.string().min(2, 'At least two symbols').max(50, 'Name is too long'),
+    name: z
+      .string()
+      .min(2, 'At least two symbols')
+      .max(50, 'Name is too long')
+      .regex(/^[A-Z]/, 'First letter must be uppercase'),
 
     age: z
       .number()
