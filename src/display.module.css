@@ -1,0 +1,41 @@
+.container {
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  flex: 1 1 300px;
+  max-width: calc(33.333% - 1rem);
+}
+
+.card.new {
+  border-color: #646cff;
+  box-shadow: 0 0 10px rgb(100 108 255 / 30%);
+  background-color: rgb(100 108 255 / 5%);
+}
+
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.image img {
+  max-width: 100%;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}

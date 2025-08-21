@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { ControlledForm } from './ControlledForm';
-import { Modal } from './modal';
 import { UncontrolledForm } from './UncontrolledForm';
+import { DataDisplay } from './DisplayFormData';
+import { Modal } from './modal';
 
 function App() {
   const [isUncontrolledModalOpen, setIsUncontrolledModalOpen] = useState(false);
@@ -24,15 +25,17 @@ function App() {
             onClick={() => setIsUncontrolledModalOpen(true)}
             className="primary-button"
           >
-            Open Uncontrolled Form
+            1. Open Uncontrolled Form
           </button>
           <button
             onClick={() => setIsControlledModalOpen(true)}
             className="primary-button"
           >
-            Open Controlled Form
+            2. Open Controlled Form
           </button>
         </div>
+
+        <DataDisplay />
 
         <Modal
           isOpen={isUncontrolledModalOpen}
