@@ -50,9 +50,12 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
       gender: rawData.gender as FormValues['gender'],
       country: countryValue,
       agreeToTerms: rawData.agreeToTerms === 'on',
-      profilePicture: rawData.profilePicture
-        ? (rawData.profilePicture as File)
-        : undefined,
+      profilePicture:
+        rawData.profilePicture &&
+        rawData.profilePicture !== '' &&
+        typeof rawData.profilePicture !== 'string'
+          ? (rawData.profilePicture as File)
+          : undefined,
     };
 
     try {
@@ -87,7 +90,12 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
   };
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className={styles.form}>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      className={styles.form}
+      data-testid="uncontrolled-form"
+    >
       <div className={styles['form-group']}>
         <label htmlFor="name">Name *</label>
         <input

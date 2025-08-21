@@ -34,7 +34,7 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
     setError,
     reset,
   } = useForm<FormValues>({
@@ -318,7 +318,7 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
         </button>
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isValid}
           className={styles['submit-button']}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}

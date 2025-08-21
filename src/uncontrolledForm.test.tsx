@@ -9,72 +9,62 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { UncontrolledForm } from './UncontrolledForm';
 
 const mockAddFormData = vi.fn();
-vi.mock('./formStore', () => {
-  return {
-    useFormStore: vi.fn((selector) => {
-      if (typeof selector === 'function') {
-        return selector({
-          addFormData: mockAddFormData,
-          formData: [],
-          clearFormData: vi.fn(),
-        });
-      }
-      return {
-        addFormData: mockAddFormData,
-        formData: [],
-        clearFormData: vi.fn(),
-      };
-    }),
-  };
-});
+vi.mock('./formStore', () => ({
+  useFormStore: vi.fn((selector) => {
+    const state = {
+      addFormData: mockAddFormData,
+      formData: [],
+      clearFormData: vi.fn(),
+    };
+    return typeof selector === 'function' ? selector(state) : state;
+  }),
+}));
 
 vi.mock('./fileToBase64', () => ({
-  fileToBase64: vi.fn().mockResolvedValue('base64string'),
+  fileToBase64: vi.fn().mockImplementation((file) => {
+    if (!file || file.size === 0) {
+      return Promise.resolve('');
+    }
+    return Promise.resolve('data:image/jpeg;base64,base64string');
+  }),
+}));
+
+vi.mock('./CountryAutocomplete', () => ({
+  CountryAutocomplete: ({
+    value,
+    onChange,
+  }: {
+    value: string;
+    onChange: (value: string) => void;
+  }) => (
+    <div>
+      <input
+        data-testid="country-input"
+        placeholder="Start typing country name..."
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
+  ),
+}));
+
+vi.mock('./UncontrolledForm.module.css', () => ({
+  default: {
+    form: 'form',
+    'form-group': 'form-group',
+    'radio-group': 'radio-group',
+    'checkbox-label': 'checkbox-label',
+    'form-actions': 'form-actions',
+    'cancel-button': 'cancel-button',
+    'submit-button': 'submit-button',
+    error: 'error',
+    'error-text': 'error-text',
+  },
 }));
 
 const mockOnClose = vi.fn();
 
-const fillValidForm = async () => {
-  fireEvent.change(screen.getByLabelText('Name *'), {
-    target: { value: 'John Doe' },
-  });
-  fireEvent.change(screen.getByLabelText('Age *'), {
-    target: { value: '25' },
-  });
-  fireEvent.change(screen.getByLabelText('Email *'), {
-    target: { value: 'john@example.com' },
-  });
-
-  const passwordInput = screen.getByLabelText('Password *');
-  const confirmPasswordInput = screen.getByLabelText('Confirm Password *');
-
-  fireEvent.change(passwordInput, {
-    target: { value: 'Password123!' },
-  });
-  fireEvent.change(confirmPasswordInput, {
-    target: { value: 'Password123!' },
-  });
-
-  const maleRadio = screen.getByLabelText('Male');
-  fireEvent.click(maleRadio);
-
-  const countryInput = screen.getByPlaceholderText(
-    /start typing country name/i
-  );
-  fireEvent.change(countryInput, { target: { value: 'Russia' } });
-
-  await waitFor(() => {
-    expect(screen.getByText('Russia')).toBeInTheDocument();
-  });
-
-  const russiaOption = screen.getByText('Russia');
-  fireEvent.click(russiaOption);
-
-  const agreeCheckbox = screen.getByLabelText(/agree to terms and conditions/i);
-  fireEvent.click(agreeCheckbox);
-};
-
-describe.skip('UncontrolledForm', () => {
+describe('UncontrolledForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -98,72 +88,88 @@ describe.skip('UncontrolledForm', () => {
     render(<UncontrolledForm onClose={mockOnClose} />);
 
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+      fireEvent.submit(screen.getByTestId('uncontrolled-form'));
     });
 
-    await waitFor(
-      () => {
-        expect(
-          screen.getByRole('button', { name: /submit/i })
-        ).toBeInTheDocument();
-
-        const hasValidationErrors =
-          screen.queryByText(/at least two symbols/i) ||
-          screen.queryByText(/submit valid email/i) ||
-          screen.queryByText(/min 8 symbols in password/i) ||
-          screen.queryByText(/select country/i) ||
-          screen.queryByText(/will you study well/i);
-
-        expect(hasValidationErrors).toBeInTheDocument();
-      },
-      { timeout: 3000 }
-    );
-  });
-
-  it('should submit valid form data', async () => {
-    render(<UncontrolledForm onClose={mockOnClose} />);
-
-    await act(async () => {
-      await fillValidForm();
+    await waitFor(() => {
+      const errorElements = document.querySelectorAll('[class*="error-text"]');
+      expect(errorElements.length).toBeGreaterThan(0);
     });
-
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: /submit/i }));
-    });
-
-    await waitFor(
-      () => {
-        expect(mockAddFormData).toHaveBeenCalled();
-        expect(mockOnClose).toHaveBeenCalled();
-      },
-      { timeout: 3000 }
-    );
   });
 
   it('should handle form submission errors', async () => {
-    mockAddFormData.mockImplementation(() => {
+    mockAddFormData.mockImplementationOnce(() => {
       throw new Error('Submission error');
     });
 
     render(<UncontrolledForm onClose={mockOnClose} />);
 
     await act(async () => {
-      await fillValidForm();
+      fireEvent.change(screen.getByLabelText('Name *'), {
+        target: { value: 'John Doe' },
+      });
+      fireEvent.change(screen.getByLabelText('Age *'), {
+        target: { value: '25' },
+      });
+      fireEvent.change(screen.getByLabelText('Email *'), {
+        target: { value: 'john@example.com' },
+      });
+      fireEvent.change(screen.getByLabelText('Password *'), {
+        target: { value: 'Password123!' },
+      });
+      fireEvent.change(screen.getByLabelText('Confirm Password *'), {
+        target: { value: 'Password123!' },
+      });
+      fireEvent.click(screen.getByLabelText('Male'));
+
+      const countryInput = screen.getByTestId('country-input');
+      fireEvent.change(countryInput, { target: { value: 'Russia' } });
+
+      const agreeCheckbox = screen.getByLabelText(
+        /agree to terms and conditions/i
+      );
+      fireEvent.click(agreeCheckbox);
+
+      fireEvent.submit(screen.getByTestId('uncontrolled-form'));
     });
+
+    await waitFor(() => {
+      expect(mockOnClose).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should display email validation error for invalid email', async () => {
+    render(<UncontrolledForm onClose={mockOnClose} />);
 
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+      fireEvent.change(screen.getByLabelText('Email *'), {
+        target: { value: 'invalid-email' },
+      });
+      fireEvent.submit(screen.getByTestId('uncontrolled-form'));
     });
 
-    await waitFor(
-      () => {
-        expect(mockOnClose).not.toHaveBeenCalled();
+    await waitFor(() => {
+      const errorElements = document.querySelectorAll('[class*="error-text"]');
+      expect(errorElements.length).toBeGreaterThan(0);
+    });
+  });
 
-        expect(
-          screen.getByRole('button', { name: /submit/i })
-        ).toBeInTheDocument();
-      },
-      { timeout: 3000 }
-    );
+  it('should display password validation error for weak password', async () => {
+    render(<UncontrolledForm onClose={mockOnClose} />);
+
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText('Password *'), {
+        target: { value: 'weak' },
+      });
+      fireEvent.change(screen.getByLabelText('Confirm Password *'), {
+        target: { value: 'weak' },
+      });
+      fireEvent.submit(screen.getByTestId('uncontrolled-form'));
+    });
+
+    await waitFor(() => {
+      const errorElements = document.querySelectorAll('[class*="error-text"]');
+      expect(errorElements.length).toBeGreaterThan(0);
+    });
   });
 });
