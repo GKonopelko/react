@@ -16,7 +16,7 @@ export default defineConfig({
         'src/**/*.test.{ts,tsx}',
         'src/**/*.spec.{ts,tsx}',
         'src/index.{ts,tsx}',
-        'src/setupTests.ts',
+        'tests/setupTests.ts',
         'src/**/*.d.ts',
         'src/assets/**/*',
       ],
