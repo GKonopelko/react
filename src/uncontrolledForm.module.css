@@ -158,3 +158,18 @@
 .suggestion-item:hover {
   background-color: #f5f5f5;
 }
+
+.form-group.error input,
+.form-group.error select {
+  border-color: #ff4d4f;
+}
+
+.form-group.error .radio-group {
+  border: 1px solid #ff4d4f;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.form-group.error .checkbox-label {
+  color: #ff4d4f;
+}

@@ -79,26 +79,22 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.name ? styles.error : ''}`}
+      >
         <label htmlFor="name">Name *</label>
         <Controller
           name="name"
           control={control}
-          render={({ field }) => (
-            <input
-              type="text"
-              id="name"
-              {...field}
-              className={errors.name ? styles.error : ''}
-            />
-          )}
+          render={({ field }) => <input type="text" id="name" {...field} />}
         />
         {errors.name && (
           <span className={styles['error-text']}>{errors.name.message}</span>
         )}
       </div>
-
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.age ? styles.error : ''}`}
+      >
         <label htmlFor="age">Age *</label>
         <Controller
           name="age"
@@ -110,7 +106,6 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
               {...field}
               value={field.value || ''}
               onChange={(e) => field.onChange(e.target.valueAsNumber)}
-              className={errors.age ? styles.error : ''}
             />
           )}
         />
@@ -118,27 +113,22 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
           <span className={styles['error-text']}>{errors.age.message}</span>
         )}
       </div>
-
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.email ? styles.error : ''}`}
+      >
         <label htmlFor="email">Email *</label>
         <Controller
           name="email"
           control={control}
-          render={({ field }) => (
-            <input
-              type="email"
-              id="email"
-              {...field}
-              className={errors.email ? styles.error : ''}
-            />
-          )}
+          render={({ field }) => <input type="email" id="email" {...field} />}
         />
         {errors.email && (
           <span className={styles['error-text']}>{errors.email.message}</span>
         )}
       </div>
-
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.password ? styles.error : ''}`}
+      >
         <label htmlFor="password">Password *</label>
         <Controller
           name="password"
@@ -148,7 +138,6 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
               type="password"
               id="password"
               {...field}
-              className={errors.password ? styles.error : ''}
               onChange={(e) => {
                 field.onChange(e);
                 checkPasswordCriteria(e.target.value);
@@ -198,19 +187,15 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
           </span>
         )}
       </div>
-
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.confirmPassword ? styles.error : ''}`}
+      >
         <label htmlFor="confirmPassword">Confirm Password *</label>
         <Controller
           name="confirmPassword"
           control={control}
           render={({ field }) => (
-            <input
-              type="password"
-              id="confirmPassword"
-              {...field}
-              className={errors.confirmPassword ? styles.error : ''}
-            />
+            <input type="password" id="confirmPassword" {...field} />
           )}
         />
         {errors.confirmPassword && (
@@ -219,8 +204,9 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
           </span>
         )}
       </div>
-
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.gender ? styles.error : ''}`}
+      >
         <label>Gender *</label>
         <Controller
           name="gender"
@@ -253,7 +239,9 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
         )}
       </div>
 
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.country ? styles.error : ''}`}
+      >
         <label htmlFor="country">Country *</label>
         <Controller
           name="country"
@@ -262,7 +250,6 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
             <CountryAutocomplete
               value={field.value}
               onChange={field.onChange}
-              error={errors.country?.message}
             />
           )}
         />
@@ -270,8 +257,9 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
           <span className={styles['error-text']}>{errors.country.message}</span>
         )}
       </div>
-
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.profilePicture ? styles.error : ''}`}
+      >
         <label htmlFor="profilePicture">Profile Picture</label>
         <Controller
           name="profilePicture"
@@ -294,8 +282,9 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
           </span>
         )}
       </div>
-
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.agreeToTerms ? styles.error : ''}`}
+      >
         <Controller
           name="agreeToTerms"
           control={control}
@@ -316,11 +305,9 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
           </span>
         )}
       </div>
-
       {errors.root && (
         <div className={styles['error-text']}>{errors.root.message}</div>
       )}
-
       <div className={styles['form-actions']}>
         <button
           type="button"

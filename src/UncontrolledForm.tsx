@@ -97,7 +97,6 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           <span className={styles['error-text']}>{errors.name}</span>
         )}
       </div>
-
       <div className={styles['form-group']}>
         <label htmlFor="age">Age *</label>
         <input
@@ -113,7 +112,6 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           <span className={styles['error-text']}>{errors.age}</span>
         )}
       </div>
-
       <div className={styles['form-group']}>
         <label htmlFor="email">Email *</label>
         <input
@@ -127,7 +125,6 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           <span className={styles['error-text']}>{errors.email}</span>
         )}
       </div>
-
       <div className={styles['form-group']}>
         <label htmlFor="password">Password *</label>
         <input
@@ -141,7 +138,6 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           <span className={styles['error-text']}>{errors.password}</span>
         )}
       </div>
-
       <div className={styles['form-group']}>
         <label htmlFor="confirmPassword">Confirm Password *</label>
         <input
@@ -155,7 +151,6 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           <span className={styles['error-text']}>{errors.confirmPassword}</span>
         )}
       </div>
-
       <div className={styles['form-group']}>
         <label>Gender *</label>
         <div className={styles['radio-group']}>
@@ -173,15 +168,15 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
         )}
       </div>
 
-      <div className={styles['form-group']}>
+      <div
+        className={`${styles['form-group']} ${errors.country ? styles.error : ''}`}
+      >
         <label htmlFor="country">Country *</label>
-        <CountryAutocomplete
-          value={countryValue}
-          onChange={setCountryValue}
-          error={errors.country}
-        />
+        <CountryAutocomplete value={countryValue} onChange={setCountryValue} />
+        {errors.country && (
+          <span className={styles['error-text']}>{errors.country}</span>
+        )}
       </div>
-
       <div className={styles['form-group']}>
         <label htmlFor="profilePicture">Profile Picture</label>
         <input
@@ -194,7 +189,6 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           <span className={styles['error-text']}>{errors.profilePicture}</span>
         )}
       </div>
-
       <div className={styles['form-group']}>
         <label className={styles['checkbox-label']}>
           <input type="checkbox" name="agreeToTerms" />
@@ -204,7 +198,6 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           <span className={styles['error-text']}>{errors.agreeToTerms}</span>
         )}
       </div>
-
       <div className={styles['form-actions']}>
         <button
           type="button"

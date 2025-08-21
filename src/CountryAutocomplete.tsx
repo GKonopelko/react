@@ -5,13 +5,11 @@ import styles from './uncontrolledForm.module.css';
 interface CountryAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
-  error?: string;
 }
 
 export const CountryAutocomplete = ({
   value,
   onChange,
-  error,
 }: CountryAutocompleteProps) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -48,7 +46,6 @@ export const CountryAutocomplete = ({
         onChange={handleInputChange}
         onFocus={() => value.length > 0 && setShowSuggestions(true)}
         onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-        className={error ? styles.error : ''}
         placeholder="Start typing country name..."
       />
       {showSuggestions && suggestions.length > 0 && (
@@ -64,7 +61,6 @@ export const CountryAutocomplete = ({
           ))}
         </ul>
       )}
-      {error && <span className={styles['error-text']}>{error}</span>}
     </div>
   );
 };

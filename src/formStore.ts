@@ -3,6 +3,7 @@ import type { FormValues } from './formSchema';
 
 interface FormData extends Omit<FormValues, 'profilePicture'> {
   profilePicture?: string;
+  agreeToTerms: boolean;
   submittedAt: Date;
 }
 
