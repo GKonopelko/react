@@ -1,55 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DataDisplay } from './DisplayFormData';
-
-interface FormData {
-  name: string;
-  age: number;
-  email: string;
-  gender: 'male' | 'female';
-  country: string;
-  agreeToTerms: boolean;
-  submittedAt: Date;
-  profilePicture?: string;
-}
-
-const mockEmptyFormData: FormData[] = [];
-
-const mockFormData: FormData[] = [
-  {
-    name: 'John Smith',
-    age: 25,
-    email: 'john@example.com',
-    gender: 'male',
-    country: 'Russia',
-    agreeToTerms: true,
-    submittedAt: new Date('2023-01-01T10:00:00'),
-    profilePicture: undefined,
-  },
-  {
-    name: 'Anna Johnson',
-    age: 28,
-    email: 'anna@example.com',
-    gender: 'female',
-    country: 'Belarus',
-    agreeToTerms: true,
-    submittedAt: new Date('2023-01-02T12:00:00'),
-    profilePicture: undefined,
-  },
-];
-
-const mockFormDataWithImage: FormData[] = [
-  {
-    name: 'Maria Brown',
-    age: 22,
-    email: 'maria@example.com',
-    gender: 'female',
-    country: 'Russia',
-    agreeToTerms: true,
-    submittedAt: new Date('2023-01-04T16:00:00'),
-    profilePicture: 'data:image/jpeg;base64,test-image-data',
-  },
-];
+import {
+  mockEmptyFormData,
+  mockFormData,
+  mockFormDataWithImage,
+} from '../tests/mocks';
 
 const mockUseFormStore = vi.fn();
 

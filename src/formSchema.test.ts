@@ -1,16 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { formSchema } from './formSchema';
+import { mockFormData } from '../tests/mocks';
 
 describe('formSchema', () => {
   const validData = {
-    name: 'John Doe',
-    age: 25,
-    email: 'john@example.com',
-    password: 'Password123!',
-    confirmPassword: 'Password123!',
-    gender: 'male' as const,
-    country: 'Russia',
-    agreeToTerms: true,
+    name: mockFormData[0].name,
+    age: mockFormData[0].age,
+    email: mockFormData[0].email,
+    password: mockFormData[0].password,
+    confirmPassword: mockFormData[0].confirmPassword,
+    gender: mockFormData[0].gender,
+    country: mockFormData[0].country,
+    agreeToTerms: mockFormData[0].agreeToTerms,
   };
 
   it('should validate correct data', async () => {

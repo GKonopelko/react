@@ -71,37 +71,30 @@ describe('ControlledForm', () => {
   it('should show validation errors for empty required fields', async () => {
     render(<ControlledForm onClose={mockOnClose} />);
 
-    // Submit the form directly to trigger validation
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: /submit/i }));
     });
 
-    // Wait a bit longer for async validation to complete
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    // Check if any error elements exist
     const errorElements = document.querySelectorAll('.error-text');
 
     if (errorElements.length === 0) {
-      // If no errors found, try interacting with fields first
       const nameInput = screen.getByLabelText('Name *');
       const ageInput = screen.getByLabelText('Age *');
 
       await act(async () => {
-        fireEvent.change(nameInput, { target: { value: 'a' } }); // Too short
+        fireEvent.change(nameInput, { target: { value: 'a' } });
         fireEvent.change(ageInput, { target: { value: '' } });
       });
 
-      // Submit again
       await act(async () => {
         fireEvent.click(screen.getByRole('button', { name: /submit/i }));
       });
 
-      // Wait again
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
-    // Final check for errors
     await waitFor(() => {
       const finalErrorElements = document.querySelectorAll('.error-text');
       expect(finalErrorElements.length).toBeGreaterThan(0);
