@@ -19,6 +19,10 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
   const [countryValue, setCountryValue] = useState('');
   const addFormData = useFormStore((state) => state.addFormData);
 
+  const handleCountryChange = (value: string) => {
+    setCountryValue(value);
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -172,7 +176,11 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
         className={`${styles['form-group']} ${errors.country ? styles.error : ''}`}
       >
         <label htmlFor="country">Country *</label>
-        <CountryAutocomplete value={countryValue} onChange={setCountryValue} />
+        <CountryAutocomplete
+          value={countryValue}
+          onChange={handleCountryChange}
+        />
+        <input type="hidden" name="country" value={countryValue} />
         {errors.country && (
           <span className={styles['error-text']}>{errors.country}</span>
         )}
