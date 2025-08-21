@@ -5,6 +5,7 @@ import { countries } from './countries';
 import { fileToBase64 } from './fileToBase64';
 import { type FormValues, formSchema } from './formSchema';
 import { useFormStore } from './formStore';
+import { useState } from 'react';
 
 interface ControlledFormProps {
   onClose: () => void;
@@ -12,6 +13,23 @@ interface ControlledFormProps {
 
 export const ControlledForm = ({ onClose }: ControlledFormProps) => {
   const addFormData = useFormStore((state) => state.addFormData);
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    symbol: false,
+  });
+
+  const checkPasswordCriteria = (password: string) => {
+    setPasswordCriteria({
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      symbol: /[!@#$%^&*()_+=[\]{};':"\\|,.<>/?]/.test(password),
+    });
+  };
 
   const {
     control,
@@ -131,9 +149,49 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
               id="password"
               {...field}
               className={errors.password ? styles.error : ''}
+              onChange={(e) => {
+                field.onChange(e);
+                checkPasswordCriteria(e.target.value);
+              }}
             />
           )}
         />
+
+        <div className={styles['password-criteria']}>
+          <div className={styles['criteria-item']}>
+            <div
+              className={`${styles['criteria-indicator']} ${passwordCriteria.length ? styles.valid : ''}`}
+            ></div>
+            <span className={styles['criteria-label']}>
+              Length (min 8 chars)
+            </span>
+          </div>
+          <div className={styles['criteria-item']}>
+            <div
+              className={`${styles['criteria-indicator']} ${passwordCriteria.uppercase ? styles.valid : ''}`}
+            ></div>
+            <span className={styles['criteria-label']}>Uppercase letter</span>
+          </div>
+          <div className={styles['criteria-item']}>
+            <div
+              className={`${styles['criteria-indicator']} ${passwordCriteria.lowercase ? styles.valid : ''}`}
+            ></div>
+            <span className={styles['criteria-label']}>Lowercase letter</span>
+          </div>
+          <div className={styles['criteria-item']}>
+            <div
+              className={`${styles['criteria-indicator']} ${passwordCriteria.number ? styles.valid : ''}`}
+            ></div>
+            <span className={styles['criteria-label']}>Number</span>
+          </div>
+          <div className={styles['criteria-item']}>
+            <div
+              className={`${styles['criteria-indicator']} ${passwordCriteria.symbol ? styles.valid : ''}`}
+            ></div>
+            <span className={styles['criteria-label']}>Special symbol</span>
+          </div>
+        </div>
+
         {errors.password && (
           <span className={styles['error-text']}>
             {errors.password.message}

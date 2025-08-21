@@ -99,3 +99,32 @@
 .submit-button:hover:not(:disabled) {
   background-color: #747bff;
 }
+
+.password-criteria {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.criteria-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.criteria-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff4d4f;
+}
+
+.criteria-indicator.valid {
+  background-color: #52c41a;
+}
+
+.criteria-label {
+  color: #666;
+}
