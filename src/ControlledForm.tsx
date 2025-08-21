@@ -1,11 +1,11 @@
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import styles from './uncontrolledForm.module.css';
-import { countries } from './countries';
 import { fileToBase64 } from './fileToBase64';
 import { type FormValues, formSchema } from './formSchema';
 import { useFormStore } from './formStore';
 import { useState } from 'react';
+import { CountryAutocomplete } from './CountryAutocomplete';
 
 interface ControlledFormProps {
   onClose: () => void;
@@ -259,18 +259,11 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
           name="country"
           control={control}
           render={({ field }) => (
-            <select
-              id="country"
-              {...field}
-              className={errors.country ? styles.error : ''}
-            >
-              <option value="">Select country</option>
-              {countries.map((country) => (
-                <option key={country} value={country}>
-                  {country}
-                </option>
-              ))}
-            </select>
+            <CountryAutocomplete
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.country?.message}
+            />
           )}
         />
         {errors.country && (

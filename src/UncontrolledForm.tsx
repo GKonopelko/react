@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 import { ZodError } from 'zod';
 import styles from './UncontrolledForm.module.css';
-import { countries } from './countries';
 import { fileToBase64 } from './fileToBase64';
 import { type FormValues, formSchema } from './formSchema';
 import { useFormStore } from './formStore';
+import { CountryAutocomplete } from './CountryAutocomplete';
 
 interface UncontrolledFormProps {
   onClose: () => void;
@@ -16,6 +16,7 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
     Partial<Record<keyof FormValues, string>>
   >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [countryValue, setCountryValue] = useState('');
   const addFormData = useFormStore((state) => state.addFormData);
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -43,7 +44,7 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
       password: rawData.password as string,
       confirmPassword: rawData.confirmPassword as string,
       gender: rawData.gender as FormValues['gender'],
-      country: rawData.country as string,
+      country: countryValue,
       agreeToTerms: rawData.agreeToTerms === 'on',
       profilePicture: rawData.profilePicture
         ? (rawData.profilePicture as File)
@@ -174,22 +175,11 @@ export const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
 
       <div className={styles['form-group']}>
         <label htmlFor="country">Country *</label>
-        <select
-          id="country"
-          name="country"
-          required
-          className={errors.country ? styles.error : ''}
-        >
-          <option value="">Select country</option>
-          {countries.map((country) => (
-            <option key={country} value={country}>
-              {country}
-            </option>
-          ))}
-        </select>
-        {errors.country && (
-          <span className={styles['error-text']}>{errors.country}</span>
-        )}
+        <CountryAutocomplete
+          value={countryValue}
+          onChange={setCountryValue}
+          error={errors.country}
+        />
       </div>
 
       <div className={styles['form-group']}>

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { countries } from './countries';
 
 export const isStrongPassword = (password: string): boolean => {
   const strongPasswordRegex =
@@ -27,7 +28,13 @@ export const formSchema = z
 
     gender: z.enum(['male', 'female']),
 
-    country: z.string().min(1, 'Select country'),
+    country: z
+      .string()
+      .min(1, 'Select country')
+      .refine(
+        (val) => countries.includes(val),
+        'Please select a valid country'
+      ),
 
     agreeToTerms: z
       .boolean()
