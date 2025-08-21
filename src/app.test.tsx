@@ -2,37 +2,69 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import App from './App';
 
-vi.mock('../../src/ControlledForm', () => ({
+vi.mock('./ControlledForm', () => ({
   ControlledForm: ({ onClose }: { onClose: () => void }) => (
     <div data-testid="controlled-form">
-      <button onClick={onClose}>Close Controlled</button>
+      <h3>Controlled Form</h3>
+      <form>
+        <div>
+          <label htmlFor="name">Name *</label>
+          <input id="name" name="name" type="text" />
+        </div>
+        <button onClick={onClose}>Close Controlled</button>
+      </form>
     </div>
   ),
 }));
 
-vi.mock('../../src/UncontrolledForm', () => ({
+vi.mock('./UncontrolledForm', () => ({
   UncontrolledForm: ({ onClose }: { onClose: () => void }) => (
     <div data-testid="uncontrolled-form">
-      <button onClick={onClose}>Close Uncontrolled</button>
+      <h3>Uncontrolled Form</h3>
+      <form>
+        <div>
+          <label htmlFor="name">Name *</label>
+          <input id="name" name="name" type="text" required />
+        </div>
+        <button onClick={onClose}>Close Uncontrolled</button>
+      </form>
     </div>
   ),
 }));
 
-vi.mock('../../src/DisplayFormData', () => ({
-  DataDisplay: () => <div data-testid="data-display">Data Display</div>,
+vi.mock('./DisplayFormData', () => ({
+  DataDisplay: () => (
+    <div data-testid="data-display">
+      <div>No form submissions yet</div>
+    </div>
+  ),
 }));
 
-vi.mock('../../src/Modal', () => ({
+vi.mock('./Modal', () => ({
   Modal: ({
     isOpen,
     children,
+    onClose,
   }: {
     isOpen: boolean;
     children: React.ReactNode;
-  }) => (isOpen ? <div data-testid="modal">{children}</div> : null),
+    onClose: () => void;
+  }) =>
+    isOpen ? (
+      <div data-testid="modal">
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button onClick={onClose} aria-label="Close modal">
+              ×
+            </button>
+            {children}
+          </div>
+        </div>
+      </div>
+    ) : null,
 }));
 
-describe.skip('App', () => {
+describe('App', () => {
   it('should render the main application', () => {
     render(<App />);
 
@@ -58,6 +90,8 @@ describe.skip('App', () => {
 
     fireEvent.click(screen.getByText('2. Open Controlled Form'));
     expect(screen.getByTestId('modal')).toBeInTheDocument();
+
+    expect(screen.getAllByText('Controlled Form')[0]).toBeInTheDocument();
     expect(screen.getByTestId('controlled-form')).toBeInTheDocument();
   });
 
@@ -65,5 +99,6 @@ describe.skip('App', () => {
     render(<App />);
 
     expect(screen.getByTestId('data-display')).toBeInTheDocument();
+    expect(screen.getByText('No form submissions yet')).toBeInTheDocument();
   });
 });

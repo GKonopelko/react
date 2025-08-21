@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { FormValues } from './formSchema';
 
-interface FormData extends Omit<FormValues, 'profilePicture'> {
+export interface FormData extends Omit<FormValues, 'profilePicture'> {
   profilePicture?: string;
   agreeToTerms: boolean;
   submittedAt: Date;

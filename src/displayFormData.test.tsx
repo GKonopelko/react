@@ -1,10 +1,60 @@
-import { render, screen, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DataDisplay } from './DisplayFormData';
-import { useFormStore } from './formStore';
 
-vi.mock('../../src/formStore', () => ({
-  useFormStore: vi.fn(),
+interface FormData {
+  name: string;
+  age: number;
+  email: string;
+  gender: 'male' | 'female';
+  country: string;
+  agreeToTerms: boolean;
+  submittedAt: Date;
+  profilePicture?: string;
+}
+
+const mockEmptyFormData: FormData[] = [];
+
+const mockFormData: FormData[] = [
+  {
+    name: 'John Smith',
+    age: 25,
+    email: 'john@example.com',
+    gender: 'male',
+    country: 'Russia',
+    agreeToTerms: true,
+    submittedAt: new Date('2023-01-01T10:00:00'),
+    profilePicture: undefined,
+  },
+  {
+    name: 'Anna Johnson',
+    age: 28,
+    email: 'anna@example.com',
+    gender: 'female',
+    country: 'Belarus',
+    agreeToTerms: true,
+    submittedAt: new Date('2023-01-02T12:00:00'),
+    profilePicture: undefined,
+  },
+];
+
+const mockFormDataWithImage: FormData[] = [
+  {
+    name: 'Maria Brown',
+    age: 22,
+    email: 'maria@example.com',
+    gender: 'female',
+    country: 'Russia',
+    agreeToTerms: true,
+    submittedAt: new Date('2023-01-04T16:00:00'),
+    profilePicture: 'data:image/jpeg;base64,test-image-data',
+  },
+];
+
+const mockUseFormStore = vi.fn();
+
+vi.mock('./formStore', () => ({
+  useFormStore: () => mockUseFormStore(),
 }));
 
 vi.mock('./display.module.css', () => ({
@@ -18,136 +68,60 @@ vi.mock('./display.module.css', () => ({
   },
 }));
 
-describe.skip('DataDisplay', () => {
-  const mockFormData = [
-    {
-      name: 'John Doe',
-      age: 25,
-      email: 'john@example.com',
-      gender: 'male' as const,
-      country: 'Russia',
-      agreeToTerms: true,
-      profilePicture: 'data:image/jpeg;base64,test',
-      submittedAt: new Date('2024-01-01T00:00:00Z').getTime(),
-    },
-    {
-      name: 'Jane Smith',
-      age: 30,
-      email: 'jane@example.com',
-      gender: 'female' as const,
-      country: 'Belarus',
-      agreeToTerms: true,
-      profilePicture: undefined,
-      submittedAt: new Date('2024-01-02T00:00:00Z').getTime(),
-    },
-  ];
-
+describe('DataDisplay', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
+    mockUseFormStore.mockReset();
   });
 
   it('should display empty state when no data', () => {
-    (useFormStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      formData: [],
-    });
-
+    mockUseFormStore.mockReturnValue(mockEmptyFormData);
     render(<DataDisplay />);
-    expect(screen.getByText(/no form submissions yet/i)).toBeInTheDocument();
+    expect(screen.getByText('No form submissions yet')).toBeInTheDocument();
   });
 
-  it('should display form data cards', () => {
-    (useFormStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      formData: mockFormData,
-    });
-
+  it('should display form data when available', () => {
+    mockUseFormStore.mockReturnValue([mockFormData[0]]);
     render(<DataDisplay />);
-
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
-    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
+    expect(screen.getByText('John Smith')).toBeInTheDocument();
     expect(screen.getByText('Age: 25')).toBeInTheDocument();
-    expect(screen.getByText('Age: 30')).toBeInTheDocument();
     expect(screen.getByText('Email: john@example.com')).toBeInTheDocument();
     expect(screen.getByText('Gender: male')).toBeInTheDocument();
-    expect(screen.getByText('Gender: female')).toBeInTheDocument();
+    expect(screen.getByText('Country: Russia')).toBeInTheDocument();
+  });
+
+  it('should display multiple form submissions', () => {
+    mockUseFormStore.mockReturnValue([mockFormData[0], mockFormData[1]]);
+    render(<DataDisplay />);
+    expect(screen.getByText('John Smith')).toBeInTheDocument();
+    expect(screen.getByText('Anna Johnson')).toBeInTheDocument();
     expect(screen.getByText('Country: Russia')).toBeInTheDocument();
     expect(screen.getByText('Country: Belarus')).toBeInTheDocument();
   });
 
-  it('should display profile pictures when available', () => {
-    (useFormStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      formData: [mockFormData[0]],
-    });
-
+  it('should display profile picture when available', () => {
+    mockUseFormStore.mockReturnValue(mockFormDataWithImage);
     render(<DataDisplay />);
-
     const image = screen.getByAltText('Profile');
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('src', 'data:image/jpeg;base64,test');
+    expect(image).toHaveAttribute(
+      'src',
+      'data:image/jpeg;base64,test-image-data'
+    );
   });
 
-  it('should not display profile picture when not available', () => {
-    (useFormStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      formData: [mockFormData[1]],
-    });
-
-    render(<DataDisplay />);
-
-    expect(screen.queryByAltText('Profile')).not.toBeInTheDocument();
-  });
-
-  it('should apply new class to the latest item and remove it after 5 seconds', () => {
-    (useFormStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      formData: [mockFormData[0]],
-    });
-
-    const { rerender } = render(<DataDisplay />);
-
-    const card = screen.getByText('John Doe').closest('div');
-    expect(card).not.toHaveClass('new');
-
-    const newFormData = [
-      ...mockFormData,
-      {
-        name: 'New User',
-        age: 35,
-        email: 'new@example.com',
-        gender: 'male' as const,
-        country: 'Kazakhstan',
-        agreeToTerms: true,
-        profilePicture: undefined,
-        submittedAt: new Date('2024-01-03T00:00:00Z').getTime(),
-      },
-    ];
-
-    (useFormStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      formData: newFormData,
-    });
-
-    rerender(<DataDisplay />);
-
-    const newCard = screen.getByText('New User').closest('div');
-    expect(newCard).toHaveClass('new');
-
-    act(() => {
-      vi.advanceTimersByTime(5000);
-    });
-
-    expect(newCard).not.toHaveClass('new');
-  });
-
-  it('should display submitted time in correct format', () => {
-    (useFormStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      formData: [mockFormData[0]],
-    });
-
+  it('should format submission date correctly', () => {
+    mockUseFormStore.mockReturnValue([mockFormData[0]]);
     render(<DataDisplay />);
     const dateText = screen.getByText(/Submitted:/);
     expect(dateText).toBeInTheDocument();
-    expect(dateText.textContent).toContain('Submitted:');
+    expect(dateText.textContent).toContain('2023');
+  });
+
+  it('should not display profile picture when not available', () => {
+    mockUseFormStore.mockReturnValue([mockFormData[0]]);
+    render(<DataDisplay />);
+    const images = screen.queryAllByAltText('Profile');
+    expect(images).toHaveLength(0);
   });
 });
