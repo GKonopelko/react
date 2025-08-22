@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { ZodError } from 'zod';
-import styles from './UncontrolledForm.module.css';
+import styles from './uncontrolledForm.module.css';
 import { fileToBase64 } from './fileToBase64';
 import { type FormValues, formSchema } from './formSchema';
 import { useFormStore } from './formStore';
