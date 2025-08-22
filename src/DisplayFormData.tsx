@@ -1,27 +1,54 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useFormStore } from './formStore';
 import styles from './display.module.css';
 
 export const DataDisplay = () => {
   const formData = useFormStore((state) => state.formData);
   const [newItems, setNewItems] = useState<Set<string>>(new Set());
+  const timersRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
+  const formDataRef = useRef(formData);
+  const newItemsRef = useRef(newItems);
 
   useEffect(() => {
-    const newestId = formData[formData.length - 1]?.submittedAt.toString();
-    if (newestId && !newItems.has(newestId)) {
-      setNewItems((prev) => new Set(prev).add(newestId));
+    formDataRef.current = formData;
+    newItemsRef.current = newItems;
+  }, [formData, newItems]);
+
+  useEffect(() => {
+    if (formDataRef.current.length === 0) return;
+
+    const latestSubmission =
+      formDataRef.current[formDataRef.current.length - 1];
+    const latestId = latestSubmission.submittedAt.toString();
+
+    if (!newItemsRef.current.has(latestId)) {
+      setNewItems((prev) => new Set(prev).add(latestId));
+
+      const existingTimer = timersRef.current.get(latestId);
+      if (existingTimer) {
+        clearTimeout(existingTimer);
+      }
 
       const timer = setTimeout(() => {
         setNewItems((prev) => {
           const newSet = new Set(prev);
-          newSet.delete(newestId);
+          newSet.delete(latestId);
           return newSet;
         });
+        timersRef.current.delete(latestId);
       }, 5000);
 
-      return () => clearTimeout(timer);
+      timersRef.current.set(latestId, timer);
     }
-  }, [formData, newItems]);
+  }, [formData.length]);
+
+  useEffect(() => {
+    const currentTimers = timersRef.current;
+
+    return () => {
+      currentTimers.forEach((timer) => clearTimeout(timer));
+    };
+  }, []);
 
   if (formData.length === 0) {
     return <div className={styles.empty}>No form submissions yet</div>;
