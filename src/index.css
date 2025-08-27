@@ -1,17 +1,227 @@
+.app-header {
+  background: #f8f9fa;
+  color: #333;
+  padding: 1.5rem;
+  margin: -20px -20px 20px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.app-header p {
+  margin: 0.5rem 0 0;
+  color: #666;
+}
+
+.app-content {
+  display: flex;
+  gap: 20px;
+}
+
+.sidebar {
+  background: white;
+  border: 1px solid #dee2e6;
+  padding: 1rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  flex: 0 0 280px;
+}
+
+.main-content {
+  background: white;
+  border: 1px solid #dee2e6;
+  padding: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.country-list h2 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.country-list-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.country-item {
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.country-item.selected {
+  border-color: #007bff;
+  background-color: #e7f3ff;
+}
+
+.country-item h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.country-item p {
+  margin: 0.25rem 0;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.country-details h2 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.data-table {
+  margin-top: 1rem;
+}
+
+.data-table h3 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  text-align: left;
+  border: 1px solid #dee2e6;
+}
+
+th {
+  background-color: #f8f9fa;
+}
+
+@media (width <= 768px) {
+  .app-content {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex: none;
+    max-height: 250px;
+  }
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.column-selector-btn {
+  padding: 0.5rem 1rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 30%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 4px;
+  max-width: 400px;
+  width: 90%;
+  max-height: 70vh;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+}
+
+.modal-content h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+.columns-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.column-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.column-checkbox input[type='checkbox'] {
+  margin: 0;
+}
+
+.error button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  background: #f8f9fa;
+}
+
+.modal-actions button:last-child {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
 .loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  gap: 20px;
+  gap: 1rem;
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid white;
-  border-top: 5px solid green;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #007bff;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -32,54 +242,5 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  gap: 20px;
-}
-
-.error button {
-  padding: 10px 20px;
-  background-color: green;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.app {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.country-card {
-  border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 20px;
-  background-color: #f9f9f9;
-}
-
-.yearly-data {
-  margin-top: 15px;
-}
-
-.yearly-data table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.yearly-data th,
-.yearly-data td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.yearly-data th {
-  background-color: #f0f0f0;
-  font-weight: bold;
-}
-
-.yearly-data tr:nth-child(even) {
-  background-color: #f8f8f8;
+  gap: 1rem;
 }
