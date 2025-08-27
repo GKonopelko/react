@@ -244,3 +244,72 @@ th {
   height: 100vh;
   gap: 1rem;
 }
+
+.filter-controls {
+  background: white;
+  border: 1px solid #dee2e6;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 150px;
+}
+
+.filter-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+.filter-group input {
+  min-width: 200px;
+}
+
+.sort-order-btn {
+  padding: 0.5rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.sort-order-btn:hover {
+  background-color: #5a6268;
+}
+
+@media (width <= 768px) {
+  .filter-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filter-group {
+    min-width: 100%;
+  }
+
+  .filter-group input {
+    min-width: 100%;
+  }
+}

@@ -5,11 +5,13 @@ import ColumnSelector from './ColumnSelector';
 interface CountryDetailsProps {
   data: CountryData;
   selectedCountry: string | null;
+  selectedYear?: number;
 }
 
 export default function CountryDetails({
   data,
   selectedCountry,
+  selectedYear,
 }: CountryDetailsProps) {
   const [selectedColumns, setSelectedColumns] = useState<string[]>([
     'year',
@@ -36,7 +38,9 @@ export default function CountryDetails({
     );
   }
 
-  const tableData = countryData.data.slice(0, 10);
+  const tableData = selectedYear
+    ? countryData.data.filter((item) => item.year === selectedYear)
+    : countryData.data.slice(0, 10);
 
   return (
     <div className="country-details">
@@ -52,9 +56,14 @@ export default function CountryDetails({
 
       <p>ISO Code: {countryData.iso_code}</p>
       <p>Total years: {countryData.data.length}</p>
+      {selectedYear && <p>Showing data for: {selectedYear}</p>}
 
       <div className="data-table">
-        <h3>Yearly Data (first 10 years)</h3>
+        <h3>
+          {selectedYear
+            ? `Data for ${selectedYear}`
+            : 'Yearly Data (first 10 years)'}
+        </h3>
         <table>
           <thead>
             <tr>

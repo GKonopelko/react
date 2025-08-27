@@ -4,25 +4,133 @@ interface CountryListProps {
   data: CountryData;
   onCountrySelect: (countryName: string) => void;
   selectedCountry: string | null;
+  selectedYear: number;
+  searchQuery: string;
+  regionFilter: string;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+}
+
+interface CountryItem {
+  name: string;
+  isoCode: string;
+  population?: number;
+  co2?: number;
+  co2PerCapita?: number;
+  dataLength: number;
+  region: string;
 }
 
 export default function CountryList({
   data,
   onCountrySelect,
   selectedCountry,
+  selectedYear,
+  searchQuery,
+  regionFilter,
+  sortBy,
+  sortOrder,
 }: CountryListProps) {
-  const countries = Object.entries(data).map(([countryName, countryInfo]) => {
-    const latestData = countryInfo.data
-      .filter((item) => item.population !== undefined)
-      .sort((a, b) => b.year - a.year)[0];
+  const getRegion = (countryName: string): string => {
+    if (
+      countryName.includes('Africa') ||
+      countryName === 'South Africa' ||
+      countryName === 'Nigeria'
+    )
+      return 'Africa';
+    if (
+      countryName.includes('Asia') ||
+      countryName === 'China' ||
+      countryName === 'India' ||
+      countryName === 'Japan'
+    )
+      return 'Asia';
+    if (
+      countryName.includes('Europe') ||
+      countryName === 'Germany' ||
+      countryName === 'France' ||
+      countryName === 'United Kingdom'
+    )
+      return 'Europe';
+    if (
+      countryName.includes('America') ||
+      countryName === 'United States' ||
+      countryName === 'Canada' ||
+      countryName === 'Mexico'
+    )
+      return 'North America';
+    if (
+      countryName === 'Brazil' ||
+      countryName === 'Argentina' ||
+      countryName === 'Chile'
+    )
+      return 'South America';
+    if (countryName === 'Australia' || countryName === 'New Zealand')
+      return 'Oceania';
+    if (countryName === 'Antarctica') return 'Antarctica';
+    return 'Other';
+  };
 
-    return {
-      name: countryName,
-      isoCode: countryInfo.iso_code,
-      population: latestData?.population,
-      dataLength: countryInfo.data.length,
-    };
-  });
+  const countries = Object.entries(data)
+    .map(([countryName, countryInfo]) => {
+      const yearData = countryInfo.data.find(
+        (item) => item.year === selectedYear
+      );
+
+      return {
+        name: countryName,
+        isoCode: countryInfo.iso_code,
+        population: yearData?.population,
+        co2: yearData?.co2,
+        co2PerCapita: yearData?.co2_per_capita,
+        dataLength: countryInfo.data.length,
+        region: getRegion(countryName),
+      };
+    })
+    .filter((country) => {
+      const matchesSearch = country.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      const matchesRegion =
+        regionFilter === 'All' || country.region === regionFilter;
+
+      return matchesSearch && matchesRegion;
+    })
+    .sort((a, b) => {
+      let aValue: string | number | undefined;
+      let bValue: string | number | undefined;
+
+      if (sortBy === 'name') {
+        aValue = a.name;
+        bValue = b.name;
+      } else if (sortBy === 'population') {
+        aValue = a.population;
+        bValue = b.population;
+      } else if (sortBy === 'co2') {
+        aValue = a.co2;
+        bValue = b.co2;
+      } else if (sortBy === 'co2PerCapita') {
+        aValue = a.co2PerCapita;
+        bValue = b.co2PerCapita;
+      } else {
+        aValue = a[sortBy as keyof CountryItem] as string | number | undefined;
+        bValue = b[sortBy as keyof CountryItem] as string | number | undefined;
+      }
+
+      if (aValue === undefined || aValue === null) {
+        aValue = sortOrder === 'asc' ? Infinity : -Infinity;
+      }
+      if (bValue === undefined || bValue === null) {
+        bValue = sortOrder === 'asc' ? Infinity : -Infinity;
+      }
+
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
 
   return (
     <div className="country-list">
@@ -37,6 +145,7 @@ export default function CountryList({
             <h3>{country.name}</h3>
             <p>ISO: {country.isoCode || 'N/A'}</p>
             <p>Population: {country.population?.toLocaleString() || 'N/A'}</p>
+            <p>CO2: {country.co2?.toLocaleString() || 'N/A'}</p>
             <p>Years: {country.dataLength}</p>
           </div>
         ))}
