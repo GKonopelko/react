@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 interface ColumnSelectorProps {
   isOpen: boolean;
@@ -30,28 +30,32 @@ export default function ColumnSelector({
   const [tempSelectedColumns, setTempSelectedColumns] =
     useState<string[]>(selectedColumns);
 
-  const handleColumnToggle = (column: string) => {
+  const handleColumnToggle = useCallback((column: string) => {
     setTempSelectedColumns((prev) =>
       prev.includes(column)
         ? prev.filter((col) => col !== column)
         : [...prev, column]
     );
-  };
+  }, []);
 
-  const handleApply = () => {
+  const handleApply = useCallback(() => {
     onColumnsChange(tempSelectedColumns);
     onClose();
-  };
+  }, [onColumnsChange, onClose, tempSelectedColumns]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setTempSelectedColumns(['year', 'population', 'co2', 'co2_per_capita']);
-  };
+  }, []);
+
+  const handleModalClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
 
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={handleModalClick}>
         <h2>Select Columns to Display</h2>
 
         <div className="columns-list">

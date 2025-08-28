@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import CountryDetails from './CountryDetails';
 import CountryList from './CountryList';
 import FilterControls from './FilterControls';
@@ -18,36 +18,41 @@ function DataDisplay() {
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  const handleCountrySelect = (countryName: string) => {
+  const handleCountrySelect = useCallback((countryName: string) => {
     setSelectedCountry(countryName);
-  };
+  }, []);
 
-  const handleYearChange = (year: number) => {
+  const handleYearChange = useCallback((year: number) => {
     setSelectedYear(year);
-  };
+  }, []);
 
-  const handleRegionFilter = (region: string) => {
+  const handleRegionFilter = useCallback((region: string) => {
     setRegionFilter(region);
-  };
+  }, []);
 
-  const handleSearch = (query: string) => {
+  const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
-  };
+  }, []);
 
-  const handleSort = (sortBy: string, sortOrder: 'asc' | 'desc') => {
-    setSortBy(sortBy);
-    setSortOrder(sortOrder);
-  };
-
-  const latestYear = Math.max(
-    ...(Object.values(data)
-      .flatMap((country) => country.data.map((item) => item.year))
-      .filter((year) => year !== undefined) as number[])
+  const handleSort = useCallback(
+    (newSortBy: string, newSortOrder: 'asc' | 'desc') => {
+      setSortBy(newSortBy);
+      setSortOrder(newSortOrder);
+    },
+    []
   );
 
-  if (selectedYear === 2020) {
-    setSelectedYear(latestYear);
-  }
+  useEffect(() => {
+    const latestYear = Math.max(
+      ...(Object.values(data)
+        .flatMap((country) => country.data.map((item) => item.year))
+        .filter((year) => year !== undefined) as number[])
+    );
+
+    if (selectedYear === 2020) {
+      setSelectedYear(latestYear);
+    }
+  }, [data, selectedYear]);
 
   return (
     <div className="app">
@@ -80,7 +85,11 @@ function DataDisplay() {
         </div>
 
         <div className="main-content">
-          <CountryDetails data={data} selectedCountry={selectedCountry} />
+          <CountryDetails
+            data={data}
+            selectedCountry={selectedCountry}
+            selectedYear={selectedYear}
+          />
         </div>
       </div>
     </div>

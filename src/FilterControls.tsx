@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import type { CountryData } from './types';
 
 interface FilterControlsProps {
@@ -34,37 +34,55 @@ export default function FilterControls({
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  const availableYears = Array.from(
-    new Set(
-      Object.values(data)
-        .flatMap((country) => country.data.map((item) => item.year))
-        .filter((year) => year !== undefined)
-    )
-  ).sort((a, b) => b - a);
+  const availableYears = useMemo(() => {
+    return Array.from(
+      new Set(
+        Object.values(data)
+          .flatMap((country) => country.data.map((item) => item.year))
+          .filter((year) => year !== undefined)
+      )
+    ).sort((a, b) => b - a);
+  }, [data]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    onSearch(query);
-  };
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const query = e.target.value;
+      setSearchQuery(query);
+      onSearch(query);
+    },
+    [onSearch]
+  );
 
-  const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const region = e.target.value;
-    setSelectedRegion(region);
-    onRegionFilter(region);
-  };
+  const handleRegionChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const region = e.target.value;
+      setSelectedRegion(region);
+      onRegionFilter(region);
+    },
+    [onRegionFilter]
+  );
 
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSortBy = e.target.value;
-    setSortBy(newSortBy);
-    onSort(newSortBy, sortOrder);
-  };
+  const handleSortChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const newSortBy = e.target.value;
+      setSortBy(newSortBy);
+      onSort(newSortBy, sortOrder);
+    },
+    [onSort, sortOrder]
+  );
 
-  const handleSortOrderToggle = () => {
+  const handleSortOrderToggle = useCallback(() => {
     const newOrder = sortOrder === 'asc' ? 'desc' : 'asc';
     setSortOrder(newOrder);
     onSort(sortBy, newOrder);
-  };
+  }, [onSort, sortBy, sortOrder]);
+
+  const handleYearChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      onYearChange(Number(e.target.value));
+    },
+    [onYearChange]
+  );
 
   return (
     <div className="filter-controls">
@@ -74,7 +92,7 @@ export default function FilterControls({
           <select
             id="year-select"
             value={selectedYear}
-            onChange={(e) => onYearChange(Number(e.target.value))}
+            onChange={handleYearChange}
           >
             {availableYears.map((year) => (
               <option key={year} value={year}>
