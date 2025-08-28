@@ -40,7 +40,7 @@ export default function CountryDetails({
 
   const tableData = selectedYear
     ? countryData.data.filter((item) => item.year === selectedYear)
-    : countryData.data.slice(0, 10);
+    : countryData.data;
 
   return (
     <div className="country-details">
@@ -59,11 +59,7 @@ export default function CountryDetails({
       {selectedYear && <p>Showing data for: {selectedYear}</p>}
 
       <div className="data-table">
-        <h3>
-          {selectedYear
-            ? `Data for ${selectedYear}`
-            : 'Yearly Data (first 10 years)'}
-        </h3>
+        <h3>{selectedYear ? `Data for ${selectedYear}` : 'Yearly Data'}</h3>
         <table>
           <thead>
             <tr>
