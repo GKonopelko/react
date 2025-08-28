@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { CountryData } from './types';
 import ColumnSelector from './ColumnSelector';
 
@@ -21,6 +21,18 @@ export default function CountryDetails({
   ]);
   const [isColumnSelectorOpen, setIsColumnSelectorOpen] = useState(false);
 
+  const countryData = useMemo(() => {
+    if (!selectedCountry) return null;
+    return data[selectedCountry];
+  }, [data, selectedCountry]);
+
+  const tableData = useMemo(() => {
+    if (!countryData) return [];
+    return selectedYear
+      ? countryData.data.filter((item) => item.year === selectedYear)
+      : countryData.data;
+  }, [countryData, selectedYear]);
+
   if (!selectedCountry) {
     return (
       <div className="country-details">
@@ -29,7 +41,6 @@ export default function CountryDetails({
     );
   }
 
-  const countryData = data[selectedCountry];
   if (!countryData) {
     return (
       <div className="country-details">
@@ -37,10 +48,6 @@ export default function CountryDetails({
       </div>
     );
   }
-
-  const tableData = selectedYear
-    ? countryData.data.filter((item) => item.year === selectedYear)
-    : countryData.data;
 
   return (
     <div className="country-details">

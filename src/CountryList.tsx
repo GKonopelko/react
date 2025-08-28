@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { CountryData } from './types';
 
 interface CountryListProps {
@@ -71,66 +72,74 @@ export default function CountryList({
     return 'Other';
   };
 
-  const countries = Object.entries(data)
-    .map(([countryName, countryInfo]) => {
-      const yearData = countryInfo.data.find(
-        (item) => item.year === selectedYear
-      );
+  const countries = useMemo(() => {
+    return Object.entries(data)
+      .map(([countryName, countryInfo]) => {
+        const yearData = countryInfo.data.find(
+          (item) => item.year === selectedYear
+        );
 
-      return {
-        name: countryName,
-        isoCode: countryInfo.iso_code,
-        population: yearData?.population,
-        co2: yearData?.co2,
-        co2PerCapita: yearData?.co2_per_capita,
-        dataLength: countryInfo.data.length,
-        region: getRegion(countryName),
-      };
-    })
-    .filter((country) => {
-      const matchesSearch = country.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+        return {
+          name: countryName,
+          isoCode: countryInfo.iso_code,
+          population: yearData?.population,
+          co2: yearData?.co2,
+          co2PerCapita: yearData?.co2_per_capita,
+          dataLength: countryInfo.data.length,
+          region: getRegion(countryName),
+        };
+      })
+      .filter((country) => {
+        const matchesSearch = country.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
 
-      const matchesRegion =
-        regionFilter === 'All' || country.region === regionFilter;
+        const matchesRegion =
+          regionFilter === 'All' || country.region === regionFilter;
 
-      return matchesSearch && matchesRegion;
-    })
-    .sort((a, b) => {
-      let aValue: string | number | undefined;
-      let bValue: string | number | undefined;
+        return matchesSearch && matchesRegion;
+      })
+      .sort((a, b) => {
+        let aValue: string | number | undefined;
+        let bValue: string | number | undefined;
 
-      if (sortBy === 'name') {
-        aValue = a.name;
-        bValue = b.name;
-      } else if (sortBy === 'population') {
-        aValue = a.population;
-        bValue = b.population;
-      } else if (sortBy === 'co2') {
-        aValue = a.co2;
-        bValue = b.co2;
-      } else if (sortBy === 'co2PerCapita') {
-        aValue = a.co2PerCapita;
-        bValue = b.co2PerCapita;
-      } else {
-        aValue = a[sortBy as keyof CountryItem] as string | number | undefined;
-        bValue = b[sortBy as keyof CountryItem] as string | number | undefined;
-      }
+        if (sortBy === 'name') {
+          aValue = a.name;
+          bValue = b.name;
+        } else if (sortBy === 'population') {
+          aValue = a.population;
+          bValue = b.population;
+        } else if (sortBy === 'co2') {
+          aValue = a.co2;
+          bValue = b.co2;
+        } else if (sortBy === 'co2PerCapita') {
+          aValue = a.co2PerCapita;
+          bValue = b.co2PerCapita;
+        } else {
+          aValue = a[sortBy as keyof CountryItem] as
+            | string
+            | number
+            | undefined;
+          bValue = b[sortBy as keyof CountryItem] as
+            | string
+            | number
+            | undefined;
+        }
 
-      if (aValue === undefined || aValue === null) {
-        aValue = sortOrder === 'asc' ? Infinity : -Infinity;
-      }
-      if (bValue === undefined || bValue === null) {
-        bValue = sortOrder === 'asc' ? Infinity : -Infinity;
-      }
+        if (aValue === undefined || aValue === null) {
+          aValue = sortOrder === 'asc' ? Infinity : -Infinity;
+        }
+        if (bValue === undefined || bValue === null) {
+          bValue = sortOrder === 'asc' ? Infinity : -Infinity;
+        }
 
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
+        if (sortOrder === 'asc') {
+          return aValue > bValue ? 1 : -1;
+        } else {
+          return aValue < bValue ? 1 : -1;
+        }
+      });
+  }, [data, selectedYear, searchQuery, regionFilter, sortBy, sortOrder]);
 
   return (
     <div className="country-list">
