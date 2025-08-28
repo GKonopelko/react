@@ -85,11 +85,7 @@ function DataDisplay() {
         </div>
 
         <div className="main-content">
-          <CountryDetails
-            data={data}
-            selectedCountry={selectedCountry}
-            selectedYear={selectedYear}
-          />
+          <CountryDetails data={data} selectedCountry={selectedCountry} />
         </div>
       </div>
     </div>

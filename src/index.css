@@ -329,3 +329,75 @@ th {
     height: 90px;
   }
 }
+
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+}
+
+.country-info {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.country-info p {
+  margin: 0;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.details-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.country-list {
+  width: 100%;
+}
+
+.country-list-container {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.country-list-inner {
+  outline: none;
+}
+
+.country-list-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.country-list-inner::-webkit-scrollbar {
+  width: 8px;
+}
+
+.country-list-inner::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 0 4px 4px 0;
+}
+
+.country-list-inner::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.country-list-inner::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+@media (width <= 768px) {
+  .country-list-container {
+    border-radius: 6px;
+  }
+}

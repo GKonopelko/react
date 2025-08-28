@@ -23,6 +23,40 @@ interface CountryItem {
   region: string;
 }
 
+const Row = memo(
+  ({
+    data,
+    index,
+    style,
+  }: {
+    data: {
+      countries: CountryItem[];
+      onCountrySelect: (name: string) => void;
+      selectedCountry: string | null;
+    };
+    index: number;
+    style: React.CSSProperties;
+  }) => {
+    const country = data.countries[index];
+
+    return (
+      <div
+        style={style}
+        className={`country-item ${data.selectedCountry === country.name ? 'selected' : ''}`}
+        onClick={() => data.onCountrySelect(country.name)}
+      >
+        <h3>{country.name}</h3>
+        <p>ISO: {country.isoCode || 'N/A'}</p>
+        <p>Population: {country.population?.toLocaleString() || 'N/A'}</p>
+        <p>CO2: {country.co2?.toLocaleString() || 'N/A'}</p>
+        <p>Years: {country.dataLength}</p>
+      </div>
+    );
+  }
+);
+
+Row.displayName = 'CountryRow';
+
 function CountryListComponent({
   data,
   onCountrySelect,
@@ -142,45 +176,34 @@ function CountryListComponent({
       });
   }, [data, selectedYear, searchQuery, regionFilter, sortBy, sortOrder]);
 
-  const Row = ({
-    index,
-    style,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-  }) => {
-    const country = countries[index];
-    return (
-      <div style={style}>
-        <div
-          className={`country-item ${selectedCountry === country.name ? 'selected' : ''}`}
-          onClick={() => onCountrySelect(country.name)}
-        >
-          <h3>{country.name}</h3>
-          <p>ISO: {country.isoCode || 'N/A'}</p>
-          <p>Population: {country.population?.toLocaleString() || 'N/A'}</p>
-          <p>CO2: {country.co2?.toLocaleString() || 'N/A'}</p>
-          <p>Years: {country.dataLength}</p>
-        </div>
-      </div>
-    );
-  };
+  const itemData = useMemo(
+    () => ({
+      countries,
+      onCountrySelect,
+      selectedCountry,
+    }),
+    [countries, onCountrySelect, selectedCountry]
+  );
 
   return (
     <div className="country-list">
       <h2>Countries ({countries.length})</h2>
-      <div className="country-list-content">
+      <div className="country-list-container">
         {countries.length > 0 ? (
           <List
             height={400}
+            width="100%"
             itemCount={countries.length}
             itemSize={120}
-            width="100%"
+            itemData={itemData}
+            className="country-list-inner"
           >
             {Row}
           </List>
         ) : (
-          <p>No countries found matching your criteria.</p>
+          <div className="country-list-empty">
+            <p>No countries found matching your criteria.</p>
+          </div>
         )}
       </div>
     </div>

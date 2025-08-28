@@ -8,11 +8,7 @@ interface CountryDetailsProps {
   selectedYear?: number;
 }
 
-function CountryDetails({
-  data,
-  selectedCountry,
-  selectedYear,
-}: CountryDetailsProps) {
+function CountryDetails({ data, selectedCountry }: CountryDetailsProps) {
   const [selectedColumns, setSelectedColumns] = useState<string[]>([
     'year',
     'population',
@@ -28,10 +24,8 @@ function CountryDetails({
 
   const tableData = useMemo(() => {
     if (!countryData) return [];
-    return selectedYear
-      ? countryData.data.filter((item) => item.year === selectedYear)
-      : countryData.data;
-  }, [countryData, selectedYear]);
+    return countryData.data;
+  }, [countryData]);
 
   if (!selectedCountry) {
     return (
@@ -53,45 +47,50 @@ function CountryDetails({
     <div className="country-details">
       <div className="details-header">
         <h2>{selectedCountry}</h2>
-        <button
-          onClick={() => setIsColumnSelectorOpen(true)}
-          className="column-selector-btn"
-        >
-          Select Columns
-        </button>
+        <div className="details-controls">
+          <button
+            onClick={() => setIsColumnSelectorOpen(true)}
+            className="column-selector-btn"
+          >
+            Select Columns
+          </button>
+        </div>
       </div>
 
-      <p>ISO Code: {countryData.iso_code}</p>
-      <p>Total years: {countryData.data.length}</p>
-      {selectedYear && <p>Showing data for: {selectedYear}</p>}
+      <div className="country-info">
+        <p>ISO Code: {countryData.iso_code || 'N/A'}</p>
+        <p>Total years: {countryData.data.length}</p>
+      </div>
 
       <div className="data-table">
-        <h3>{selectedYear ? `Data for ${selectedYear}` : 'Yearly Data'}</h3>
-        <table>
-          <thead>
-            <tr>
-              {selectedColumns.map((column) => (
-                <th key={column}>{column.replace(/_/g, ' ')}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {tableData.map((yearData) => (
-              <tr key={yearData.year}>
+        <h3>Yearly Data</h3>
+        <div className="table-container">
+          <table>
+            <thead>
+              <tr>
                 {selectedColumns.map((column) => (
-                  <td key={column}>
-                    {typeof yearData[column as keyof typeof yearData] ===
-                    'number'
-                      ? yearData[
-                          column as keyof typeof yearData
-                        ]?.toLocaleString()
-                      : yearData[column as keyof typeof yearData] || 'N/A'}
-                  </td>
+                  <th key={column}>{column.replace(/_/g, ' ')}</th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {tableData.map((yearData) => (
+                <tr key={yearData.year}>
+                  {selectedColumns.map((column) => (
+                    <td key={column}>
+                      {typeof yearData[column as keyof typeof yearData] ===
+                      'number'
+                        ? yearData[
+                            column as keyof typeof yearData
+                          ]?.toLocaleString()
+                        : yearData[column as keyof typeof yearData] || 'N/A'}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <ColumnSelector
