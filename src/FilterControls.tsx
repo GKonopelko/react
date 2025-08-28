@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, memo } from 'react';
 import type { CountryData } from './types';
 
 interface FilterControlsProps {
@@ -21,7 +21,7 @@ const regions = [
   'Antarctica',
 ];
 
-export default function FilterControls({
+function FilterControls({
   data,
   selectedYear,
   onYearChange,
@@ -150,3 +150,5 @@ export default function FilterControls({
     </div>
   );
 }
+
+export default memo(FilterControls);

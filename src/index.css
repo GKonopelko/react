@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .app-header {
   background: #f8f9fa;
   color: #333;
@@ -47,6 +51,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  height: 400px;
 }
 
 .country-item {
@@ -54,6 +59,7 @@
   border: 1px solid #dee2e6;
   border-radius: 4px;
   cursor: pointer;
+  height: 100px;
 }
 
 .country-item.selected {
@@ -311,5 +317,15 @@ th {
 
   .filter-group input {
     min-width: 100%;
+  }
+}
+
+@media (width <= 768px) {
+  .country-list-content {
+    height: 300px;
+  }
+
+  .country-item {
+    height: 90px;
   }
 }

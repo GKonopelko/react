@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
+import { FixedSizeList as List } from 'react-window';
 import type { CountryData } from './types';
 
 interface CountryListProps {
@@ -22,7 +23,7 @@ interface CountryItem {
   region: string;
 }
 
-export default function CountryList({
+function CountryListComponent({
   data,
   onCountrySelect,
   selectedCountry,
@@ -141,24 +142,59 @@ export default function CountryList({
       });
   }, [data, selectedYear, searchQuery, regionFilter, sortBy, sortOrder]);
 
+  const Row = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
+    const country = countries[index];
+    return (
+      <div style={style}>
+        <div
+          className={`country-item ${selectedCountry === country.name ? 'selected' : ''}`}
+          onClick={() => onCountrySelect(country.name)}
+        >
+          <h3>{country.name}</h3>
+          <p>ISO: {country.isoCode || 'N/A'}</p>
+          <p>Population: {country.population?.toLocaleString() || 'N/A'}</p>
+          <p>CO2: {country.co2?.toLocaleString() || 'N/A'}</p>
+          <p>Years: {country.dataLength}</p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="country-list">
       <h2>Countries ({countries.length})</h2>
       <div className="country-list-content">
-        {countries.map((country) => (
-          <div
-            key={country.name}
-            className={`country-item ${selectedCountry === country.name ? 'selected' : ''}`}
-            onClick={() => onCountrySelect(country.name)}
+        {countries.length > 0 ? (
+          <List
+            height={400}
+            itemCount={countries.length}
+            itemSize={120}
+            width="100%"
           >
-            <h3>{country.name}</h3>
-            <p>ISO: {country.isoCode || 'N/A'}</p>
-            <p>Population: {country.population?.toLocaleString() || 'N/A'}</p>
-            <p>CO2: {country.co2?.toLocaleString() || 'N/A'}</p>
-            <p>Years: {country.dataLength}</p>
-          </div>
-        ))}
+            {Row}
+          </List>
+        ) : (
+          <p>No countries found matching your criteria.</p>
+        )}
       </div>
     </div>
   );
 }
+
+export default memo(CountryListComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.data === nextProps.data &&
+    prevProps.selectedCountry === nextProps.selectedCountry &&
+    prevProps.selectedYear === nextProps.selectedYear &&
+    prevProps.searchQuery === nextProps.searchQuery &&
+    prevProps.regionFilter === nextProps.regionFilter &&
+    prevProps.sortBy === nextProps.sortBy &&
+    prevProps.sortOrder === nextProps.sortOrder
+  );
+});

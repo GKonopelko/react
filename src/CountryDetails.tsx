@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import type { CountryData } from './types';
 import ColumnSelector from './ColumnSelector';
 
@@ -8,7 +8,7 @@ interface CountryDetailsProps {
   selectedYear?: number;
 }
 
-export default function CountryDetails({
+function CountryDetails({
   data,
   selectedCountry,
   selectedYear,
@@ -103,3 +103,5 @@ export default function CountryDetails({
     </div>
   );
 }
+
+export default memo(CountryDetails);
