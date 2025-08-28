@@ -12,3 +12,18 @@
 
 Ranked chart ![alt text](./src/assets/performance-screnshots/image.png)
 ![alt text](./src/assets/performance-screnshots/image-1.png)
+
+### After Optimization
+
+| Operation              | Duration after (before) optimisation | Screnshot                                                          |
+| ---------------------- | ------------------------------------ | ------------------------------------------------------------------ |
+| Sorting by population  | 154 (440) ms                         | ![alt text](./src/assets/performance-screnshots/after-image.png)   |
+| Searching a country    | 103 (271) ms                         | ![alt text](./src/assets/performance-screnshots/after-image-1.png) |
+| Selecting another year | 136 (173) ms                         | ![alt text](./src/assets/performance-screnshots/after-image-2.png) |
+| Removing columns       | 190 (229) ms                         | ![alt text](./src/assets/performance-screnshots/after-image-3.png) |
+| Adding columns         | 192 (383) ms                         | ![alt text](./src/assets/performance-screnshots/after-image-4.png) |
+| Filter by region       | 162 (375) ms                         | ![alt text](./src/assets/performance-screnshots/after-image-5.png) |
+| Change sort order      | 153 (625) ms                         | ![alt text](./src/assets/performance-screnshots/after-image-6.png) |
+
+Ranked chart ![alt text](./src/assets/performance-screnshots/after-image-7.png)
+![alt text](./src/assets/performance-screnshots/after-image-8.png)
