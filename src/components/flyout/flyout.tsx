@@ -2,17 +2,12 @@
 
 import styles from './styles.module.css';
 import { useStore } from '../../utils/store/store';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 export const Flyout = () => {
-  const [isMounted, setIsMounted] = useState(false);
   const downloadLinkRef = useRef<HTMLAnchorElement>(null);
   const { unselectAll, getSelectedCount, getSelectedItems } = useStore();
   const [isExporting, setIsExporting] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const count = getSelectedCount();
 
@@ -63,7 +58,7 @@ export const Flyout = () => {
     }
   };
 
-  if (!isMounted || count === 0) {
+  if (count === 0) {
     return null;
   }
 
