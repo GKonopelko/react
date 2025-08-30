@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { stringify } from 'csv-stringify/sync';
-import type { PokemonCsvItem } from '../../../pokemonTypes';
+import type { PokemonListItem } from '../../../pokemonTypes';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,8 +15,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const validatedItems: PokemonCsvItem[] = items.map(
-      (item: PokemonCsvItem) => {
+    const validatedItems: PokemonListItem[] = items.map(
+      (item: PokemonListItem) => {
         if (item.id === undefined || item.id === null) {
           throw new Error('Invalid item structure: id is required');
         }

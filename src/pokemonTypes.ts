@@ -1,11 +1,7 @@
 export interface PokemonListItem {
+  id: string | number;
   name: string;
-  url: string;
-}
-export interface PokemonCsvItem {
-  id: string;
-  name: string;
-  description: string;
+  description?: string;
 }
 
 export interface PokemonListResponse {

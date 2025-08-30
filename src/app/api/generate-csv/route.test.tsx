@@ -1,6 +1,23 @@
 import { POST } from './route';
 import { stringify } from 'csv-stringify/sync';
 import { describe, it, expect, vi } from 'vitest';
+import type { PokemonListItem } from '../../../pokemonTypes';
+
+const createTestRequest = (items: PokemonListItem | PokemonListItem[]) => {
+  return new Request('http://localhost:3000/api/generate-csv', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items }),
+  });
+};
+
+const createInvalidTestRequest = (invalidData: unknown) => {
+  return new Request('http://localhost:3000/api/generate-csv', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items: invalidData }),
+  });
+};
 
 vi.mock('csv-stringify/sync', () => ({
   stringify: vi.fn(),
@@ -15,11 +32,7 @@ describe('POST /api/csv-export', () => {
 
     vi.mocked(stringify).mockReturnValue('mocked,csv,content');
 
-    const request = new Request('http://localhost', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: mockItems }),
-    });
+    const request = createTestRequest(mockItems);
 
     const response = await POST(request);
 
@@ -32,12 +45,7 @@ describe('POST /api/csv-export', () => {
   });
 
   it('should return 400 for invalid input (not array)', async () => {
-    const request = new Request('http://localhost', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: 'not-an-array' }),
-    });
-
+    const request = createInvalidTestRequest('not-an-array');
     const response = await POST(request);
     const data = await response.json();
 
@@ -51,11 +59,7 @@ describe('POST /api/csv-export', () => {
       { id: {}, name: 'Invalid' },
     ];
 
-    const request = new Request('http://localhost', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: invalidItems }),
-    });
+    const request = createInvalidTestRequest(invalidItems);
 
     const response = await POST(request);
 
@@ -72,11 +76,7 @@ describe('POST /api/csv-export', () => {
       throw new Error('CSV generation failed');
     });
 
-    const request = new Request('http://localhost', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: mockItems }),
-    });
+    const request = createTestRequest(mockItems);
 
     const response = await POST(request);
     const data = await response.json();
