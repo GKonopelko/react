@@ -6,10 +6,3 @@
 .results-grid {
   flex: 1;
 }
-
-.details-panel {
-  width: 350px;
-  position: sticky;
-  top: 20px;
-  height: fit-content;
-}

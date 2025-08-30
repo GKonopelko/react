@@ -1,30 +1,26 @@
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+'use client';
+
 import { DetailsCard } from '../details-card/details-card';
 import styles from './styles.module.css';
-import { useFetchPokemonDetails } from '../api/api';
+import { useFetchPokemonDetails } from '../../utils/api';
 import { Loader } from '../loader/loader';
 import { ErrorMessage } from '../error-message/error-message';
 
-export const PokemonDetailsPage = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const location = useLocation();
+interface PokemonDetailsPageProps {
+  id: string;
+  onClose: () => void;
+}
 
+export const PokemonDetailsPage = ({
+  id,
+  onClose,
+}: PokemonDetailsPageProps) => {
   const {
     data: pokemon,
     isLoading,
     isError,
     error,
-  } = useFetchPokemonDetails(id || '');
-
-  const handleClose = () => {
-    navigate({
-      pathname: '/',
-      search: location.search,
-    });
-  };
-
-  if (!id) return null;
+  } = useFetchPokemonDetails(id);
 
   if (isLoading) return <Loader />;
 
@@ -33,7 +29,7 @@ export const PokemonDetailsPage = () => {
       <div className={styles['details-panel']}>
         <ErrorMessage
           error={error?.message || 'Failed to load Pokemon details'}
-          onDismiss={handleClose}
+          onDismiss={onClose}
         />
       </div>
     );
@@ -42,14 +38,14 @@ export const PokemonDetailsPage = () => {
   if (!pokemon) {
     return (
       <div className={styles['details-panel']}>
-        <ErrorMessage error="Pokemon not found" onDismiss={handleClose} />
+        <ErrorMessage error="Pokemon not found" onDismiss={onClose} />
       </div>
     );
   }
 
   return (
     <div className={styles['details-panel']}>
-      <DetailsCard pokemon={pokemon} onClose={handleClose} />
+      <DetailsCard pokemon={pokemon} onClose={onClose} />
     </div>
   );
 };

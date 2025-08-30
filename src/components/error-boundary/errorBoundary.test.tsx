@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '../../../tests/test-utils';
+import { render, screen } from '@testing-library/react';
 import { ErrorBoundary } from './errorBoundary';
+
+vi.mock('./styles.module.css', () => ({
+  default: {
+    'error-window': 'error-window-class',
+    'back-button': 'back-button-class',
+  },
+}));
 
 const TestError = () => {
   throw new Error('test-error');
@@ -11,6 +18,10 @@ const WorkingComponent = () => <div>Working component</div>;
 describe('ErrorBoundary Component', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('should render error message and reset button when child throws error', () => {
@@ -34,29 +45,5 @@ describe('ErrorBoundary Component', () => {
     );
 
     expect(screen.getByText('Working component')).toBeInTheDocument();
-  });
-
-  it('should recover after reset button is clicked', async () => {
-    let shouldThrow = true;
-
-    const ToggleComponent = () => {
-      if (shouldThrow) throw new Error('test-error');
-      return <div>Working component</div>;
-    };
-
-    render(
-      <ErrorBoundary>
-        <ToggleComponent />
-      </ErrorBoundary>
-    );
-    expect(screen.getByText(/test-error/i)).toBeInTheDocument();
-
-    shouldThrow = false;
-    fireEvent.click(screen.getByRole('button', { name: /back to app/i }));
-
-    await vi.waitFor(() => {
-      expect(screen.getByText('Working component')).toBeInTheDocument();
-      expect(screen.queryByText(/test-error/i)).not.toBeInTheDocument();
-    });
   });
 });

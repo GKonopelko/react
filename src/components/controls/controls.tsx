@@ -1,15 +1,13 @@
+'use client';
+
 import { Search } from './search';
 import styles from './styles.module.css';
 
-interface ControlsProps {
-  onSearch: (query: string) => Promise<void>;
-}
-
-export const Controls = ({ onSearch }: ControlsProps) => {
+export const Controls = () => {
   return (
     <div className={styles.controls}>
       <div className={styles['controls-content']}>
-        <Search onSearch={onSearch} />
+        <Search />
       </div>
     </div>
   );

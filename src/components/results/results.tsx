@@ -1,156 +1,144 @@
+'use client';
+
 import { useMemo } from 'react';
 import styles from './styles.module.css';
-import { PokemonCard } from '../pokemon-card/pokemonCard';
-import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import type { PokemonListItem } from '../../pokemonTypes';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchPokemonDetailsByUrl } from '../api/api';
-import { Loader } from '../loader/loader';
+import Image from 'next/image';
+import { PokemonDetailsPage } from '../details-page/details-page';
 
 interface ResultsProps {
-  resultPokemons: PokemonDetails | PokemonListItem[] | null;
+  resultPokemons: PokemonListItem[];
+  currentPage: number;
   cardsPerPage?: number;
-  onPokemonSelect?: () => void;
-  currentQuery?: string;
 }
 
 const CARDS_PER_PAGE = 10;
 
 export const Results = ({
   resultPokemons,
+  currentPage = 1,
   cardsPerPage = CARDS_PER_PAGE,
-  onPokemonSelect,
-  currentQuery = '',
 }: ResultsProps) => {
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const queryClient = useQueryClient();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const query = searchParams.get('search') || '';
+  const detailsId = searchParams.get('details');
 
-  const currentPage = useMemo(() => {
-    const page = Number(searchParams.get('page'));
-    return isNaN(page) || page < 1 ? 1 : page;
-  }, [searchParams]);
+  const displayData = useMemo(() => {
+    if (!query) return resultPokemons;
 
-  const isPaginated = Array.isArray(resultPokemons);
+    const filtered = resultPokemons.filter(
+      (pokemon) =>
+        pokemon.name.toLowerCase().includes(query.toLowerCase()) ||
+        pokemon.url.split('/').slice(-2, -1)[0] === query
+    );
 
-  const { data: pokemonDetails, isLoading } = useQuery({
-    queryKey: ['pokemonDetails', currentPage, resultPokemons],
-    queryFn: async () => {
-      if (!isPaginated || !resultPokemons) return [];
+    return filtered.length > 0 ? filtered : resultPokemons;
+  }, [resultPokemons, query]);
 
-      const start = (currentPage - 1) * cardsPerPage;
-      const end = start + cardsPerPage;
-      const pagePokemons = resultPokemons.slice(start, end);
+  const paginatedResults = useMemo(() => {
+    const start = (currentPage - 1) * cardsPerPage;
+    const end = start + cardsPerPage;
+    return displayData.slice(start, end);
+  }, [displayData, currentPage, cardsPerPage]);
 
-      const details = await Promise.all(
-        pagePokemons.map((pokemon) => fetchPokemonDetailsByUrl(pokemon.url))
-      );
-
-      return details.filter(Boolean) as PokemonDetails[];
-    },
-    enabled: isPaginated,
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const totalPages = useMemo(() => {
-    return isPaginated && resultPokemons
-      ? Math.max(1, Math.ceil(resultPokemons.length / cardsPerPage))
-      : 1;
-  }, [resultPokemons, isPaginated, cardsPerPage]);
-
-  const handlePokemonClick = (id: string) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('page', String(currentPage));
-    navigate(`details/${id}?${newSearchParams.toString()}`);
-    onPokemonSelect?.();
-  };
+  const totalPages = Math.max(1, Math.ceil(displayData.length / cardsPerPage));
 
   const handlePageChange = (page: number) => {
-    if (!isPaginated) return;
-
-    const validatedPage = Math.max(1, Math.min(page, totalPages));
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('page', String(validatedPage));
-    setSearchParams(newSearchParams);
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('page', String(page));
+    router.push(`${pathname}?${newSearchParams.toString()}`);
   };
 
-  const cacheState = currentQuery
-    ? queryClient.getQueryState(['pokemon', currentQuery])
-    : null;
-  const cacheTime = cacheState?.dataUpdatedAt;
-  const cacheMessage = cacheTime
-    ? `Data loaded from cache (${new Date(cacheTime).toLocaleTimeString()})`
-    : 'Data loaded from network';
+  const handlePokemonClick = (id: string) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set('details', id);
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+  };
 
-  if (!resultPokemons) {
-    return <div className={styles.results}>No Pokemons found</div>;
-  }
+  const handleCloseDetails = () => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.delete('details');
+    router.push(`${pathname}?${newSearchParams.toString()}`);
+  };
 
-  if (isLoading) {
+  if (query && displayData.length === 0) {
     return (
-      <div className={styles.results}>
-        <Loader />
-      </div>
-    );
-  }
-
-  if (!isPaginated) {
-    return (
-      <div className={styles['results-list']}>
-        <div
-          className={styles['card-link']}
-          onClick={() => handlePokemonClick(resultPokemons.id.toString())}
-        >
-          <PokemonCard pokemon={resultPokemons} />
-        </div>
+      <div className={styles['no-results']}>
+        <p>No pokemons found for &quot;{query}&quot;</p>
       </div>
     );
   }
 
   return (
-    <div className={styles.wrapper}>
-      {totalPages > 1 && (
-        <div className={styles.pagination}>
-          <CheckboxWrapper
-            id="pagination"
-            name="pagination"
-            description="pages pagination"
-          >
-            <button
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
+    <div
+      className={`${styles.wrapper} ${detailsId ? styles['wrapper-with-details'] : ''}`}
+    >
+      <div className={styles['results-container']}>
+        {totalPages > 1 && (
+          <div className={styles.pagination}>
+            <CheckboxWrapper
+              id="pagination"
+              name="pagination"
+              description="pages pagination"
             >
-              Previous
-            </button>
-            <span>
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              Next
-            </button>
-          </CheckboxWrapper>
-        </div>
-      )}
-
-      <div className={styles.dataSource}>{cacheMessage}</div>
-      {pokemonDetails?.length ? (
+              <button
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                Next
+              </button>
+            </CheckboxWrapper>
+          </div>
+        )}
         <div className={styles['results-list']}>
-          {pokemonDetails.map((pokemon) => (
-            <div
-              key={pokemon.id}
-              className={styles['card-link']}
-              onClick={() => handlePokemonClick(pokemon.id.toString())}
-            >
-              <PokemonCard pokemon={pokemon} />
-            </div>
-          ))}
+          {paginatedResults.map((pokemon) => {
+            const pokemonId = pokemon.url.split('/').slice(-2, -1)[0];
+
+            return (
+              <CheckboxWrapper
+                key={pokemon.name}
+                id={pokemon.name}
+                name={pokemon.name}
+                description={`Pokemon ${pokemon.name}`}
+              >
+                <div
+                  className={styles['pokemon-item']}
+                  onClick={() => handlePokemonClick(pokemonId)}
+                >
+                  <div className={styles['image-container']}>
+                    <Image
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`}
+                      alt={pokemon.name}
+                      width={96}
+                      height={96}
+                    />
+                  </div>
+                  <h3>{pokemon.name}</h3>
+                  <p>ID: {pokemonId}</p>
+                </div>
+              </CheckboxWrapper>
+            );
+          })}
         </div>
-      ) : (
-        <div className={styles.results}>No pokemons on this page</div>
+      </div>
+
+      {detailsId && (
+        <div className={styles['details-panel']}>
+          <PokemonDetailsPage id={detailsId} onClose={handleCloseDetails} />
+        </div>
       )}
     </div>
   );

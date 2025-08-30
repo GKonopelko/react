@@ -1,19 +1,21 @@
-import { type ChangeEvent, type FormEvent } from 'react';
+'use client';
+
+import { type ChangeEvent, type FormEvent, useState, useEffect } from 'react';
 import styles from './styles.module.css';
-import { useLocalStorage } from '../ls-hook/ls-hook';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
+import { useSearchPokemon } from '../../utils/api';
 
-export interface SearchProps {
-  onSearch: (query: string) => Promise<void>;
-}
+export const Search = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [queryContent, setQueryContent] = useState('');
+  const { mutate: searchPokemon } = useSearchPokemon();
 
-export const Search = ({ onSearch }: SearchProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [queryContent, setQueryContent] = useLocalStorage(
-    'poke-monReactQueryContent',
-    ''
-  );
+  useEffect(() => {
+    const query = searchParams.get('search') || '';
+    setQueryContent(query);
+  }, [searchParams]);
 
   const handleFormInput = (event: ChangeEvent<HTMLInputElement>) => {
     setQueryContent(event.target.value);
@@ -23,16 +25,18 @@ export const Search = ({ onSearch }: SearchProps) => {
     event.preventDefault();
     const query = queryContent.trim();
 
-    if (!query) {
-      await onSearch('');
-      return;
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (query) {
+      newParams.set('search', query);
+    } else {
+      newParams.delete('search');
     }
-
-    const newParams = new URLSearchParams(searchParams);
     newParams.set('page', '1');
-    setSearchParams(newParams);
+    router.push(`?${newParams.toString()}`);
 
-    await onSearch(query);
+    if (query) {
+      searchPokemon(query);
+    }
   };
 
   return (
@@ -46,6 +50,19 @@ export const Search = ({ onSearch }: SearchProps) => {
           onChange={handleFormInput}
         />
         <button type="submit">Search pokemon</button>
+        {queryContent && (
+          <button
+            type="button"
+            onClick={() => {
+              setQueryContent('');
+              const newParams = new URLSearchParams(searchParams.toString());
+              newParams.delete('search');
+              router.push(`?${newParams.toString()}`);
+            }}
+          >
+            Clear
+          </button>
+        )}
       </CheckboxWrapper>
     </form>
   );

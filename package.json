@@ -4,29 +4,31 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "next dev",
+    "build": "next build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "stylelint": "npx stylelint '**/*.css'",
     "prettier": "prettier --write",
-    "preview": "vite preview",
     "prepare": "husky",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "start": "next start"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.84.1",
     "@tanstack/react-query-devtools": "^5.84.1",
+    "csv-stringify": "^6.6.0",
+    "next": "^15.4.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.7.0",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
+    "@svgr/webpack": "^8.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^24.0.14",

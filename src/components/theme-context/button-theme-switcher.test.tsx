@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '../../../tests/test-utils';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeSwitcher } from './button-theme-switcher';
 import { vi } from 'vitest';
 import { useTheme } from './use-theme';
@@ -11,11 +11,13 @@ vi.mock('./use-theme', () => ({
 }));
 
 vi.mock('../../assets/icons/sun.svg', () => ({
-  default: '/sun-icon.svg',
+  ReactComponent: () => <svg data-testid="sun-icon" />,
+  default: () => <svg data-testid="sun-icon" />,
 }));
 
 vi.mock('../../assets/icons/moon.svg', () => ({
-  default: '/moon-icon.svg',
+  ReactComponent: () => <svg data-testid="moon-icon" />,
+  default: () => <svg data-testid="moon-icon" />,
 }));
 
 describe('ThemeSwitcher Component', () => {
@@ -37,9 +39,7 @@ describe('ThemeSwitcher Component', () => {
 
     const button = screen.getByRole('button', { name: /switch to dark mode/i });
     expect(button).toBeInTheDocument();
-
-    const icon = screen.getByAltText('Theme icon');
-    expect(icon).toHaveAttribute('src', '/moon-icon.svg');
+    expect(screen.getByTestId('moon-icon')).toBeInTheDocument();
   });
 
   it('renders correctly with dark theme', () => {
@@ -54,9 +54,7 @@ describe('ThemeSwitcher Component', () => {
       name: /switch to light mode/i,
     });
     expect(button).toBeInTheDocument();
-
-    const icon = screen.getByAltText('Theme icon');
-    expect(icon).toHaveAttribute('src', '/sun-icon.svg');
+    expect(screen.getByTestId('sun-icon')).toBeInTheDocument();
   });
 
   it('calls toggleTheme when clicked', () => {

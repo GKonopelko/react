@@ -1,10 +1,14 @@
+'use client';
+
 import styles from './styles.module.css';
-import rssLogo from '../../assets/icons/rss-logo.svg';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
+import Image from 'next/image';
+import { Flyout } from '../flyout/flyout';
 
 export function Footer() {
   return (
     <footer className={styles.footer}>
+      <Flyout />
       <CheckboxWrapper
         id="pagination"
         name="pagination"
@@ -21,14 +25,24 @@ export function Footer() {
           </a>
           <span> 2025 </span>
 
-          <a
-            href="https://rs.school/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles['footer-link']}
-          >
-            <img src={rssLogo} alt="RS School" className={styles['rss-logo']} />
-          </a>
+          <div className={styles.logoContainer}>
+            <a
+              href="https://rs.school/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles['footer-link']}
+            >
+              <Image
+                src="/assets/icons/rss-logo.svg"
+                alt="RS School Logo"
+                width={80}
+                height={30}
+                className={styles['rss-logo']}
+                style={{ width: 'auto', height: 'auto' }}
+                unoptimized
+              />
+            </a>
+          </div>
         </div>
       </CheckboxWrapper>
     </footer>

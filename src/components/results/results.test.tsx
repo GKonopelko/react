@@ -1,318 +1,242 @@
-import { vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { Results } from './results';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { ReadonlyURLSearchParams } from 'next/navigation';
 
-vi.mock('react-router-dom', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('react-router-dom')>();
+vi.mock('next/navigation', () => {
+  const actual = vi.importActual('next/navigation');
   return {
     ...actual,
-    useNavigate: vi.fn(),
-    useSearchParams: vi.fn(() => [new URLSearchParams('page=1'), vi.fn()]),
+    useRouter: vi.fn(() => ({
+      push: vi.fn(),
+      back: vi.fn(),
+      forward: vi.fn(),
+      refresh: vi.fn(),
+      replace: vi.fn(),
+      prefetch: vi.fn(),
+    })),
+    usePathname: vi.fn(() => '/'),
+    useSearchParams: vi.fn(() => {
+      const params = new URLSearchParams();
+      return {
+        get: (key: string) => params.get(key),
+        toString: () => params.toString(),
+        has: (key: string) => params.has(key),
+        entries: () => params.entries(),
+        forEach: (callback: (value: string, key: string) => void) =>
+          params.forEach(callback),
+        keys: () => params.keys(),
+        values: () => params.values(),
+        size: params.size,
+        getAll: (name: string) => params.getAll(name),
+        append: (name: string, value: string) => params.append(name, value),
+        delete: (name: string) => params.delete(name),
+        set: (name: string, value: string) => params.set(name, value),
+        sort: () => params.sort(),
+        [Symbol.iterator]: () => params[Symbol.iterator](),
+      } as ReadonlyURLSearchParams;
+    }),
   };
 });
 
-vi.mock('../loader/loader', () => ({
-  Loader: () => <div>Pokemons coming soon...</div>,
+vi.mock('../details-page/details-page', () => ({
+  PokemonDetailsPage: ({
+    id,
+    onClose,
+  }: {
+    id: string;
+    onClose: () => void;
+  }) => (
+    <div data-testid="details-panel" onClick={onClose}>
+      Details Panel {id}
+    </div>
+  ),
 }));
 
-vi.mock('@tanstack/react-query', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@tanstack/react-query')>();
-  return {
-    ...actual,
-    useQuery: vi.fn(),
-  };
-});
+vi.mock('../checkbox-wrapper/checkbox-wrapper', () => ({
+  CheckboxWrapper: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+}));
 
-import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '../../../tests/test-utils';
-import { Results } from './results';
-import {
-  createPokemonDetails,
-  createPokemonList,
-  mockQueryResult,
-} from '../../../tests/mocks';
-import type { PokemonDetails, PokemonListItem } from '../../pokemonTypes';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-
-const mockResponse = (data: unknown) =>
-  ({
-    ok: true,
-    json: () => Promise.resolve(data),
-    text: () => Promise.resolve(JSON.stringify(data)),
-  }) as Response;
+vi.mock('next/image', () => ({
+  __esModule: true,
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    <img {...props} />
+  ),
+}));
 
 describe('Results Component', () => {
-  const mockPokemonDetails: PokemonDetails = {
-    ...createPokemonDetails(1),
-    name: 'bulbasaur',
-    abilities: [],
-  };
+  const mockPokemons = [
+    { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
+    { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
+  ];
 
-  const mockPokemonItem: PokemonListItem = {
-    name: 'bulbasaur',
-    url: 'https://pokeapi.co/api/v2/pokemon/1/',
+  const createMockSearchParams = (
+    params?: Record<string, string>
+  ): ReadonlyURLSearchParams => {
+    const searchParams = new URLSearchParams(params);
+    return {
+      get: (key: string) => searchParams.get(key),
+      toString: () => searchParams.toString(),
+      has: (key: string) => searchParams.has(key),
+      entries: () => searchParams.entries(),
+      forEach: (callback: (value: string, key: string) => void) =>
+        searchParams.forEach(callback),
+      keys: () => searchParams.keys(),
+      values: () => searchParams.values(),
+      size: searchParams.size,
+      getAll: (name: string) => searchParams.getAll(name),
+      append: (name: string, value: string) => searchParams.append(name, value),
+      delete: (name: string) => searchParams.delete(name),
+      set: (name: string, value: string) => searchParams.set(name, value),
+      sort: () => searchParams.sort(),
+      [Symbol.iterator]: () => searchParams[Symbol.iterator](),
+    } as ReadonlyURLSearchParams;
   };
 
   beforeEach(() => {
-    const mockScrollTo = vi.fn();
-    Element.prototype.scrollTo = mockScrollTo;
-
-    global.fetch = vi.fn((url) => {
-      const urlString = url.toString();
-      return Promise.resolve(
-        urlString.includes('pokemon/1')
-          ? mockResponse(mockPokemonDetails)
-          : mockResponse(createPokemonList(10))
-      );
+    vi.mocked(usePathname).mockReturnValue('/');
+    vi.mocked(useRouter).mockReturnValue({
+      push: vi.fn(),
+      back: vi.fn(),
+      forward: vi.fn(),
+      refresh: vi.fn(),
+      replace: vi.fn(),
+      prefetch: vi.fn(),
     });
-
-    vi.mocked(useNavigate).mockReturnValue(vi.fn());
-    vi.mocked(useSearchParams).mockReturnValue([
-      new URLSearchParams('page=1'),
-      vi.fn(),
-    ]);
+    vi.mocked(useSearchParams).mockReturnValue(createMockSearchParams());
   });
 
-  it('renders single pokemon details', () => {
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        data: undefined,
-        isSuccess: true,
-      })
-    );
-    render(<Results resultPokemons={mockPokemonDetails} />);
+  it('renders pokemon list', () => {
+    render(<Results resultPokemons={mockPokemons} currentPage={1} />);
     expect(screen.getByText('bulbasaur')).toBeInTheDocument();
+    expect(screen.getByText('ivysaur')).toBeInTheDocument();
   });
 
-  it('shows pagination for multiple pages', async () => {
-    const mockList = Array.from({ length: 15 }, (_, i) => ({
+  it('shows "No Pokemons found" when search returns no results', () => {
+    vi.mocked(useSearchParams).mockReturnValue(
+      createMockSearchParams({ search: 'pikachu' })
+    );
+
+    render(<Results resultPokemons={[]} currentPage={1} />);
+    expect(screen.getByText(/No Pokemons found/i)).toBeInTheDocument();
+    expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
+  });
+
+  it('renders pagination when multiple pages', () => {
+    const longList = Array.from({ length: 15 }, (_, i) => ({
       name: `pokemon-${i}`,
       url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
     }));
-
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        data: mockList.slice(0, 5).map((_, i) => createPokemonDetails(i + 1)),
-        isSuccess: true,
-      })
-    );
-
-    render(<Results resultPokemons={mockList} cardsPerPage={5} />);
-
-    await waitFor(() => {
-      expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
-    });
-  });
-
-  it('navigates on pokemon click', async () => {
-    const navigate = vi.fn();
-    vi.mocked(useNavigate).mockReturnValue(navigate);
-
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        data: [mockPokemonDetails],
-        isSuccess: true,
-      })
-    );
-
-    render(<Results resultPokemons={[mockPokemonItem]} />);
-
-    fireEvent.click(screen.getByText('bulbasaur'));
-    expect(navigate).toHaveBeenCalled();
-  });
-
-  it('changes page correctly', async () => {
-    const setSearchParams = vi.fn();
-    vi.mocked(useSearchParams).mockReturnValue([
-      new URLSearchParams('page=1'),
-      setSearchParams,
-    ]);
-
-    const mockList = Array.from({ length: 15 }, (_, i) => ({
-      name: `pokemon-${i}`,
-      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
-    }));
-
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        data: mockList.slice(0, 5).map((_, i) => createPokemonDetails(i + 1)),
-        isSuccess: true,
-      })
-    );
-
-    render(<Results resultPokemons={mockList} cardsPerPage={5} />);
-    fireEvent.click(screen.getByText('Next'));
-    expect(setSearchParams).toHaveBeenCalledWith(new URLSearchParams('page=2'));
-  });
-
-  it('responds to page changes in URL', async () => {
-    vi.mocked(useSearchParams).mockReturnValue([
-      new URLSearchParams('page=2'),
-      vi.fn(),
-    ]);
-
-    const mockList = Array.from({ length: 15 }, (_, i) => ({
-      name: `pokemon-${i}`,
-      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
-    }));
-
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        data: mockList.slice(5, 10).map((_, i) => createPokemonDetails(i + 6)),
-        isSuccess: true,
-      })
-    );
-
-    render(<Results resultPokemons={mockList} cardsPerPage={5} />);
-
-    await waitFor(() => {
-      expect(screen.getByText('Page 2 of 3')).toBeInTheDocument();
-    });
-  });
-
-  it('handles null resultPokemons correctly', () => {
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        data: undefined,
-        isSuccess: false,
-      })
-    );
-    render(<Results resultPokemons={null} />);
-    expect(screen.getByText('No Pokemons found')).toBeInTheDocument();
-  });
-
-  it('handles failed HTTP responses', async () => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 404,
-      json: () => Promise.resolve({ error: 'Not found' }),
-    });
-
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        data: undefined,
-        isSuccess: false,
-      })
-    );
-
-    render(<Results resultPokemons={[mockPokemonItem]} />);
-
-    await waitFor(() => {
-      expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument();
-    });
-  });
-
-  it.skip('renders "No Pokemons found" when resultPokemons is null', () => {
-    render(<Results resultPokemons={null} />);
-    expect(screen.getByText('No Pokemons found')).toBeInTheDocument();
-  });
-
-  it.skip('shows loading state and renders pokemon list', async () => {
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        isLoading: true,
-        isPending: true,
-      })
-    );
-
-    render(<Results resultPokemons={[mockPokemonItem]} />);
-    expect(screen.getByText('Pokemons coming soon...')).toBeInTheDocument();
-
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        data: [mockPokemonDetails],
-        isSuccess: true,
-      })
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('bulbasaur')).toBeInTheDocument();
-    });
-  });
-
-  it.skip('handles fetch errors properly', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        isError: true,
-        error: new Error('Fetch error'),
-      })
-    );
-
-    render(<Results resultPokemons={[mockPokemonItem]} />);
-
-    await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalled();
-    });
-
-    consoleErrorSpy.mockRestore();
-  });
-
-  it.skip('loads initial data correctly', async () => {
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        data: [mockPokemonDetails],
-        isSuccess: true,
-      })
-    );
-
-    render(<Results resultPokemons={[mockPokemonItem]} />);
-
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(mockPokemonItem.url);
-      expect(screen.getByText('bulbasaur')).toBeInTheDocument();
-    });
-  });
-
-  it.skip('logs error when page data loading fails', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        isError: true,
-        error: new Error('Test error'),
-      })
-    );
 
     render(
-      <Results
-        resultPokemons={[
-          { name: 'pokemon-1', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
-          { name: 'pokemon-2', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
-        ]}
-        cardsPerPage={2}
-      />
+      <Results resultPokemons={longList} currentPage={1} cardsPerPage={5} />
     );
-
-    await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalled();
-    });
-
-    consoleErrorSpy.mockRestore();
+    expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
   });
 
-  it.skip('logs error when main loading fails', async () => {
-    const consoleErrorSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    vi.mocked(useQuery).mockReturnValue(
-      mockQueryResult({
-        isError: true,
-        error: new Error('Main loading error'),
-      })
-    );
-
-    render(<Results resultPokemons={[mockPokemonItem]} />);
-
-    await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalled();
+  it('calls router.push when pokemon is clicked', () => {
+    const pushMock = vi.fn();
+    vi.mocked(useRouter).mockReturnValue({
+      ...vi.mocked(useRouter)(),
+      push: pushMock,
     });
 
-    consoleErrorSpy.mockRestore();
+    render(<Results resultPokemons={mockPokemons} currentPage={1} />);
+    fireEvent.click(screen.getByText('bulbasaur'));
+    expect(pushMock).toHaveBeenCalled();
+  });
+
+  it('disables Previous button on first page', () => {
+    const longList = Array.from({ length: 15 }, (_, i) => ({
+      name: `pokemon-${i}`,
+      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
+    }));
+
+    render(
+      <Results resultPokemons={longList} currentPage={1} cardsPerPage={5} />
+    );
+    expect(screen.getByText('Previous')).toBeDisabled();
+  });
+
+  it('disables Next button on last page', () => {
+    const longList = Array.from({ length: 15 }, (_, i) => ({
+      name: `pokemon-${i}`,
+      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
+    }));
+
+    render(
+      <Results resultPokemons={longList} currentPage={3} cardsPerPage={5} />
+    );
+    expect(screen.getByText('Next')).toBeDisabled();
+  });
+
+  it('calls handlePageChange when pagination buttons are clicked', () => {
+    const pushMock = vi.fn();
+    vi.mocked(useRouter).mockReturnValue({
+      ...vi.mocked(useRouter)(),
+      push: pushMock,
+    });
+
+    const longList = Array.from({ length: 15 }, (_, i) => ({
+      name: `pokemon-${i}`,
+      url: `https://pokeapi.co/api/v2/pokemon/${i + 1}/`,
+    }));
+
+    render(
+      <Results resultPokemons={longList} currentPage={2} cardsPerPage={5} />
+    );
+
+    fireEvent.click(screen.getByText('Previous'));
+    expect(pushMock).toHaveBeenCalledWith(expect.stringContaining('page=1'));
+
+    fireEvent.click(screen.getByText('Next'));
+    expect(pushMock).toHaveBeenCalledWith(expect.stringContaining('page=3'));
+  });
+
+  it('renders PokemonDetailsPage when detailsId is present', () => {
+    vi.mocked(useSearchParams).mockReturnValue(
+      createMockSearchParams({ details: '1' })
+    );
+
+    render(<Results resultPokemons={mockPokemons} currentPage={1} />);
+    expect(screen.getByTestId('details-panel')).toBeInTheDocument();
+  });
+
+  it('filters pokemons based on search query', () => {
+    vi.mocked(useSearchParams).mockReturnValue(
+      createMockSearchParams({ search: 'bulba' })
+    );
+
+    render(<Results resultPokemons={mockPokemons} currentPage={1} />);
+    expect(screen.getByText('bulbasaur')).toBeInTheDocument();
+    expect(screen.queryByText('ivysaur')).not.toBeInTheDocument();
+  });
+
+  it('renders pokemon images with correct src', () => {
+    render(<Results resultPokemons={mockPokemons} currentPage={1} />);
+    const images = screen.getAllByRole('img');
+    expect(images[0]).toHaveAttribute(
+      'src',
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png'
+    );
+    expect(images[1]).toHaveAttribute(
+      'src',
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png'
+    );
+  });
+
+  it('applies wrapper-with-details class when details panel is open', () => {
+    vi.mocked(useSearchParams).mockReturnValue(
+      createMockSearchParams({ details: '1' })
+    );
+
+    const { container } = render(
+      <Results resultPokemons={mockPokemons} currentPage={1} />
+    );
+    const wrapperDiv = container.querySelector('div');
+    expect(wrapperDiv?.className).toMatch(/wrapper-with-details/);
   });
 });

@@ -1,10 +1,9 @@
-import { render, screen, fireEvent } from '../../../tests/test-utils';
-import { createPokemonDetails } from '../../../tests/mocks';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { Flyout } from './flyout';
-import { useStore } from '../store/store';
+import { useStore } from '../../utils/store/store';
 import { vi } from 'vitest';
 
-vi.mock('../store/store');
+vi.mock('../../utils/store/store');
 
 describe('Flyout', () => {
   const mockUnselectAll = vi.fn();
@@ -33,7 +32,7 @@ describe('Flyout', () => {
 
     expect(screen.getByText('3 items selected')).toBeInTheDocument();
     expect(screen.getByText('Unselect all')).toBeInTheDocument();
-    expect(screen.getByText('Download')).toBeInTheDocument();
+    expect(screen.getByText('Download CSV')).toBeInTheDocument();
   });
 
   it('should call unselectAll when "Unselect all" button is clicked', () => {
@@ -42,35 +41,5 @@ describe('Flyout', () => {
 
     fireEvent.click(screen.getByText('Unselect all'));
     expect(mockUnselectAll).toHaveBeenCalled();
-  });
-
-  it.skip('should generate correct CSV content', () => {
-    mockGetSelectedItems.mockReturnValue([
-      {
-        ...createPokemonDetails(25),
-        description: 'Electric mouse',
-        name: 'Pikachu',
-        id: '25',
-      },
-    ]);
-
-    const originalCreateObjectURL = global.URL.createObjectURL;
-    const originalRevokeObjectURL = global.URL.revokeObjectURL;
-
-    global.URL.createObjectURL = vi.fn(() => 'mock-url');
-    global.URL.revokeObjectURL = vi.fn();
-
-    render(<Flyout />);
-
-    fireEvent.click(screen.getByRole('button', { name: 'Download' }));
-
-    expect(global.URL.createObjectURL).toHaveBeenCalled();
-    const blob = (global.URL.createObjectURL as jest.Mock).mock.calls[0][0];
-    expect(blob.type).toBe('text/csv');
-
-    expect(global.URL.revokeObjectURL).toHaveBeenCalledWith('mock-url');
-
-    global.URL.createObjectURL = originalCreateObjectURL;
-    global.URL.revokeObjectURL = originalRevokeObjectURL;
   });
 });

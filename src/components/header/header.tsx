@@ -1,9 +1,11 @@
+'use client';
+
 import styles from './styles.module.css';
-import reactLogo from '../../assets/icons/react.svg';
-import { Link } from 'react-router-dom';
+import Image from 'next/image';
+import Link from 'next/link';
 import { ThemeSwitcher } from '../theme-context/button-theme-switcher';
 import { CheckboxWrapper } from '../checkbox-wrapper/checkbox-wrapper';
-import type { CacheStatus } from '../hooks/useCacheStatus';
+import type { CacheStatus } from '../../utils/useCacheStatus';
 
 interface HeaderProps {
   onRefresh?: () => void;
@@ -16,16 +18,28 @@ export const Header = ({ onRefresh, cacheStatus }: HeaderProps) => {
       <CheckboxWrapper id="header" name="header" description="app header">
         <div className={styles.container}>
           <a href="https://react.dev" target="_blank" rel="noreferrer">
-            <img src={reactLogo} className={styles.logo} alt="React logo" />
+            <div className={styles.logoContainer}>
+              <Image
+                src="/assets/icons/react.svg"
+                alt="React Logo"
+                width={40}
+                height={40}
+                className={styles.logo}
+                style={{ width: 'auto', height: 'auto' }}
+                unoptimized
+                priority
+                aria-hidden="true"
+              />
+            </div>
           </a>
           <h1>Poke-monReact</h1>
           <ThemeSwitcher />
         </div>
         <nav className={styles.nav}>
-          <Link to="/" className={styles.link}>
+          <Link href="/" className={styles.link}>
             Home
           </Link>
-          <Link to="/about" className={styles.link}>
+          <Link href="/about" className={styles.link}>
             About
           </Link>
         </nav>

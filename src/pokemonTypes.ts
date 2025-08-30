@@ -1,6 +1,7 @@
 export interface PokemonListItem {
+  id: string | number;
   name: string;
-  url: string;
+  description?: string;
 }
 
 export interface PokemonListResponse {

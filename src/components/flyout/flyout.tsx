@@ -1,47 +1,81 @@
+'use client';
+
 import styles from './styles.module.css';
-import { useStore } from '../store/store';
-import { useEffect, useState, useRef } from 'react';
+import { useStore } from '../../utils/store/store';
+import { useState, useRef } from 'react';
 
 export const Flyout = () => {
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const downloadLinkRef = useRef<HTMLAnchorElement>(null);
   const { unselectAll, getSelectedCount, getSelectedItems } = useStore();
+  const [isExporting, setIsExporting] = useState(false);
+
   const count = getSelectedCount();
 
-  const handleExport = () => {
-    const items = getSelectedItems();
-    if (items.length === 0) return;
+  const handleExport = async () => {
+    const selectedItems = getSelectedItems();
+    if (selectedItems.length === 0) return;
 
-    const headers = 'ID,Name,Description\n';
-    const csvContent = items
-      .map(({ id, name, description }) => `"${id}","${name}","${description}"`)
-      .join('\n');
+    setIsExporting(true);
+    try {
+      const response = await fetch('/api/generate-csv', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: selectedItems.map((item) => ({
+            id: item.id,
+            name: item.name,
+            description: item.description || '',
+          })),
+        }),
+      });
 
-    const blob = new Blob([headers + csvContent], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    setDownloadUrl(url);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error ||
+            errorData.message ||
+            `Export failed with status ${response.status}`
+        );
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      if (downloadLinkRef.current) {
+        downloadLinkRef.current.href = url;
+        downloadLinkRef.current.download = `pokemon_${selectedItems.length}_items.csv`;
+        downloadLinkRef.current.click();
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+        }, 100);
+      }
+    } catch (error) {
+      console.error('Export failed:', error);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
-  useEffect(() => {
-    if (downloadUrl && downloadLinkRef.current) {
-      downloadLinkRef.current.click();
-      URL.revokeObjectURL(downloadUrl);
-      setDownloadUrl(null);
-    }
-  }, [downloadUrl]);
-
-  if (count === 0) return null;
+  if (count === 0) {
+    return null;
+  }
 
   return (
-    <div className={styles.flyout}>
+    <div className={styles.flyout} data-testid="flyout-component">
       <div className={styles.flyoutcontent}>
         <span>{count} items selected</span>
         <button onClick={unselectAll}>Unselect all</button>
-        <button onClick={handleExport}>Download</button>
+        <button
+          onClick={handleExport}
+          disabled={isExporting}
+          aria-busy={isExporting}
+        >
+          {isExporting ? 'Exporting...' : 'Download CSV'}
+        </button>
         <a
           ref={downloadLinkRef}
-          href={downloadUrl || undefined}
-          download={`${count}_items.csv`}
           style={{ display: 'none' }}
           aria-hidden="true"
         />

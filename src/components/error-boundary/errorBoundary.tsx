@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import styles from './styles.module.css';
-import { useRouteError } from 'react-router-dom';
+import { useRouteError } from 'next/link';
 import { NotFound } from '../404-page/404-page';
 
 interface ErrorBoundaryProps {

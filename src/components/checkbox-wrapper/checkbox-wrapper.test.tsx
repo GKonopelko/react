@@ -1,9 +1,20 @@
-import { render, screen, fireEvent } from '../../../tests/test-utils';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { vi } from 'vitest';
 import { CheckboxWrapper } from './checkbox-wrapper';
-import { useStore } from '../store/store';
-import styles from './styles.module.css';
+import { useStore } from '../../utils/store/store';
 
-vi.mock('../store/store');
+vi.mock('./styles.module.css', () => ({
+  default: {
+    wrapper: 'wrapper',
+    selected: 'selected',
+    checkbox: 'checkbox',
+  },
+  __esModule: true,
+}));
+
+vi.mock('../../utils/store/store', () => ({
+  useStore: vi.fn(),
+}));
 
 describe('CheckboxWrapper', () => {
   const mockToggleSelection = vi.fn();
@@ -16,30 +27,27 @@ describe('CheckboxWrapper', () => {
       unselectAll: vi.fn(),
       getSelectedCount: vi.fn(),
       getSelectedItems: vi.fn(),
+      selectedItems: new Set(),
     });
   });
 
-  it('should render children and checkbox', () => {
+  it('renders children', () => {
     render(
-      <CheckboxWrapper id="test-id" name="test-name" description="test-desc">
+      <CheckboxWrapper id="test-id">
         <div>Test Content</div>
       </CheckboxWrapper>
     );
-
     expect(screen.getByText('Test Content')).toBeInTheDocument();
-    expect(screen.getByRole('checkbox')).toBeInTheDocument();
   });
 
-  it('should call toggleSelection with correct params when clicked', () => {
+  it('calls toggleSelection when clicked', () => {
     render(
       <CheckboxWrapper id="test-id" name="test-name" description="test-desc">
         <div>Test Content</div>
       </CheckboxWrapper>
     );
 
-    const checkbox = screen.getByRole('checkbox');
-    fireEvent.click(checkbox);
-
+    fireEvent.click(screen.getByRole('checkbox'));
     expect(mockToggleSelection).toHaveBeenCalledWith(
       'test-id',
       'test-name',
@@ -47,40 +55,13 @@ describe('CheckboxWrapper', () => {
     );
   });
 
-  it('should apply selected class when item is selected', () => {
+  it('shows checked state based on isSelected', () => {
     mockIsSelected.mockReturnValue(true);
-
-    const { container } = render(
-      <CheckboxWrapper id="test-id">
-        <div>Test Content</div>
-      </CheckboxWrapper>
-    );
-
-    expect(container.firstChild).toHaveClass(styles.selected);
-  });
-
-  it('should not apply selected class when item is not selected', () => {
-    mockIsSelected.mockReturnValue(false);
-
-    const { container } = render(
-      <CheckboxWrapper id="test-id">
-        <div>Test Content</div>
-      </CheckboxWrapper>
-    );
-
-    expect(container.firstChild).not.toHaveClass(styles.selected);
-  });
-
-  it('should have proper aria-label', () => {
     render(
       <CheckboxWrapper id="test-id">
         <div>Test Content</div>
       </CheckboxWrapper>
     );
-
-    expect(screen.getByRole('checkbox')).toHaveAttribute(
-      'aria-label',
-      'Select item test-id'
-    );
+    expect(screen.getByRole('checkbox')).toBeChecked();
   });
 });

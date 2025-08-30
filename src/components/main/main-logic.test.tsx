@@ -1,85 +1,65 @@
-import { render, screen } from '../../../tests/test-utils';
+import { render, screen } from '@testing-library/react';
 import { Main } from './main-logic';
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('../loader/loader', () => ({
-  Loader: () => <div data-testid="loader">Pokemons coming soon...</div>,
-}));
-
-vi.mock('../error-message/error-message', () => ({
-  ErrorMessage: ({
-    error,
-    onDismiss,
-  }: {
-    error: string;
-    onDismiss: () => void;
-  }) => (
-    <div data-testid="error-message">
-      {error}
-      <button onClick={onDismiss}>Hide error</button>
-    </div>
-  ),
-}));
-
 vi.mock('../header/header', () => ({
-  Header: () => <header data-testid="header">Header</header>,
+  Header: () => <div>Header</div>,
 }));
 
 vi.mock('../controls/controls', () => ({
-  Controls: ({ onSearch }: { onSearch: () => Promise<void> }) => (
-    <div data-testid="controls">
-      <button onClick={() => onSearch()}>Search</button>
-    </div>
-  ),
+  Controls: () => <div>Controls</div>,
 }));
 
 vi.mock('../results/results', () => ({
-  Results: () => <div data-testid="results">Results</div>,
+  Results: () => <div>Results</div>,
 }));
 
 vi.mock('../footer/footer', () => ({
-  Footer: () => <footer data-testid="footer">Footer</footer>,
+  Footer: () => <div>Footer</div>,
+}));
+
+vi.mock('../loader/loader', () => ({
+  Loader: () => <div>Loading...</div>,
+}));
+
+vi.mock('../error-message/error-message', () => ({
+  ErrorMessage: () => <div>Error Message</div>,
 }));
 
 describe('Main Component', () => {
-  const renderMain = (props = {}) => {
-    const defaultProps = {
-      searchResults: null,
-      loading: false,
-      error: null,
-      onSearch: vi.fn().mockResolvedValue(undefined),
-      onDismissError: vi.fn(),
-    };
-    return render(<Main {...defaultProps} {...props} />);
+  const defaultProps = {
+    searchResults: null,
+    loading: false,
+    error: null,
+    onSearch: vi.fn(),
+    onDismissError: vi.fn(),
   };
 
-  it('should render layout', () => {
-    renderMain();
-    expect(screen.getByTestId('header')).toBeInTheDocument();
-    expect(screen.getByTestId('controls')).toBeInTheDocument();
-    expect(screen.getByTestId('footer')).toBeInTheDocument();
+  it('renders basic layout', () => {
+    render(<Main {...defaultProps} />);
+
+    expect(screen.getByText('Header')).toBeInTheDocument();
+    expect(screen.getByText('Controls')).toBeInTheDocument();
+    expect(screen.getByText('Results')).toBeInTheDocument();
+    expect(screen.getByText('Footer')).toBeInTheDocument();
   });
 
-  it('should render Loader when loading is true', () => {
-    renderMain({ loading: true });
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
-    expect(screen.getByText('Pokemons coming soon...')).toBeInTheDocument();
+  it('shows loader when loading', () => {
+    render(<Main {...defaultProps} loading={true} />);
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.queryByText('Results')).not.toBeInTheDocument();
   });
 
-  it('should render ErrorMessage when error exists', () => {
-    const testError = 'Test error message';
-    renderMain({ error: testError });
-
-    const errorMessage = screen.getByTestId('error-message');
-    expect(errorMessage).toBeInTheDocument();
-    expect(errorMessage).toHaveTextContent(testError);
-    expect(
-      screen.getByRole('button', { name: 'Hide error' })
-    ).toBeInTheDocument();
+  it('shows error when error exists', () => {
+    render(<Main {...defaultProps} error="Test error" />);
+    expect(screen.getByText('Error Message')).toBeInTheDocument();
+    expect(screen.queryByText('Results')).not.toBeInTheDocument();
   });
 
-  it('should render Results when not loading and no error', () => {
-    renderMain();
-    expect(screen.getByTestId('results')).toBeInTheDocument();
+  it('shows results when not loading and no error', () => {
+    render(<Main {...defaultProps} />);
+    expect(screen.getByText('Results')).toBeInTheDocument();
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    expect(screen.queryByText('Error Message')).not.toBeInTheDocument();
   });
 });
