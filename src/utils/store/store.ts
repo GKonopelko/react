@@ -1,21 +1,13 @@
 import { create } from 'zustand';
-
-interface PokemonItem {
-  name: string;
-  description: string;
-}
+import type { PokemonCsvItem } from '../../pokemonTypes';
 
 interface SelectionState {
-  selectedItems: Map<string, PokemonItem>;
+  selectedItems: Map<string, Omit<PokemonCsvItem, 'id'>>;
   toggleSelection: (id: string, name?: string, description?: string) => void;
   unselectAll: () => void;
   isSelected: (id: string) => boolean;
   getSelectedCount: () => number;
-  getSelectedItems: () => Array<{
-    id: string;
-    name: string;
-    description: string;
-  }>;
+  getSelectedItems: () => PokemonCsvItem[];
 }
 
 export const useStore = create<SelectionState>((set, get) => ({
@@ -33,16 +25,14 @@ export const useStore = create<SelectionState>((set, get) => ({
   },
   unselectAll: () => set({ selectedItems: new Map() }),
   isSelected: (id) => get().selectedItems.has(id),
-  getSelectedCount: () => {
-    const size = get().selectedItems.size;
-    return size;
-  },
+  getSelectedCount: () => get().selectedItems.size,
   getSelectedItems: () =>
     Array.from(get().selectedItems.entries()).map(
-      ([id, { name, description }]) => ({
-        id,
-        name,
-        description,
-      })
+      ([id, { name, description }]) =>
+        ({
+          id,
+          name,
+          description,
+        }) as PokemonCsvItem
     ),
 }));

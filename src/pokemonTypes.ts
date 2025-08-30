@@ -2,6 +2,11 @@ export interface PokemonListItem {
   name: string;
   url: string;
 }
+export interface PokemonCsvItem {
+  id: string;
+  name: string;
+  description: string;
+}
 
 export interface PokemonListResponse {
   count: number;

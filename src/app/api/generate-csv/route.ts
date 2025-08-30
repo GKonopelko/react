@@ -1,13 +1,8 @@
 import { NextResponse } from 'next/server';
 import { stringify } from 'csv-stringify/sync';
+import type { PokemonCsvItem } from '../../../pokemonTypes';
 
 export const dynamic = 'force-dynamic';
-
-interface PokemonCsvItem {
-  id: string;
-  name: string;
-  description: string;
-}
 
 export async function POST(request: Request) {
   try {
@@ -20,23 +15,25 @@ export async function POST(request: Request) {
       );
     }
 
-    const validatedItems = items.map(
-      (item: { id: unknown; name: unknown; description?: unknown }) => {
+    const validatedItems: PokemonCsvItem[] = items.map(
+      (item: PokemonCsvItem) => {
+        if (item.id === undefined || item.id === null) {
+          throw new Error('Invalid item structure: id is required');
+        }
+        if (item.name === undefined || item.name === null) {
+          throw new Error('Invalid item structure: name is required');
+        }
         if (typeof item.id !== 'string' && typeof item.id !== 'number') {
           throw new Error(
             'Invalid item structure: id must be string or number'
           );
         }
-        if (typeof item.name !== 'string') {
-          throw new Error('Invalid item structure: name must be string');
-        }
 
         return {
           id: item.id.toString(),
           name: item.name,
-          description:
-            typeof item.description === 'string' ? item.description : '',
-        } satisfies PokemonCsvItem;
+          description: item.description || '',
+        };
       }
     );
 
