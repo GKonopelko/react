@@ -11,6 +11,32 @@ interface ControlledFormProps {
   onClose: () => void;
 }
 
+interface FormFieldProps {
+  error?: { message?: string };
+  label: string;
+  htmlFor?: string;
+  children: React.ReactNode;
+  required?: boolean;
+}
+
+export const FormField = ({
+  error,
+  label,
+  htmlFor,
+  children,
+  required = false,
+}: FormFieldProps) => {
+  return (
+    <div className={`${styles['form-group']} ${error ? styles.error : ''}`}>
+      <label htmlFor={htmlFor}>
+        {label} {required && '*'}
+      </label>
+      {children}
+      {error && <span className={styles['error-text']}>{error.message}</span>}
+    </div>
+  );
+};
+
 export const ControlledForm = ({ onClose }: ControlledFormProps) => {
   const addFormData = useFormStore((state) => state.addFormData);
   const [passwordCriteria, setPasswordCriteria] = useState({
@@ -79,23 +105,14 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      <div
-        className={`${styles['form-group']} ${errors.name ? styles.error : ''}`}
-      >
-        <label htmlFor="name">Name *</label>
+      <FormField error={errors.name} label="Name" htmlFor="name" required>
         <Controller
           name="name"
           control={control}
           render={({ field }) => <input type="text" id="name" {...field} />}
         />
-        {errors.name && (
-          <span className={styles['error-text']}>{errors.name.message}</span>
-        )}
-      </div>
-      <div
-        className={`${styles['form-group']} ${errors.age ? styles.error : ''}`}
-      >
-        <label htmlFor="age">Age *</label>
+      </FormField>
+      <FormField error={errors.age} label="Age" htmlFor="age" required>
         <Controller
           name="age"
           control={control}
@@ -109,27 +126,21 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
             />
           )}
         />
-        {errors.age && (
-          <span className={styles['error-text']}>{errors.age.message}</span>
-        )}
-      </div>
-      <div
-        className={`${styles['form-group']} ${errors.email ? styles.error : ''}`}
-      >
-        <label htmlFor="email">Email *</label>
+      </FormField>
+      <FormField error={errors.email} label="Email" htmlFor="email" required>
         <Controller
           name="email"
           control={control}
           render={({ field }) => <input type="email" id="email" {...field} />}
         />
-        {errors.email && (
-          <span className={styles['error-text']}>{errors.email.message}</span>
-        )}
-      </div>
-      <div
-        className={`${styles['form-group']} ${errors.password ? styles.error : ''}`}
+      </FormField>
+
+      <FormField
+        error={errors.password}
+        label="Password"
+        htmlFor="password"
+        required
       >
-        <label htmlFor="password">Password *</label>
         <Controller
           name="password"
           control={control}
@@ -145,7 +156,6 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
             />
           )}
         />
-
         <div className={styles['password-criteria']}>
           <div className={styles['criteria-item']}>
             <div
@@ -180,17 +190,14 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
             <span className={styles['criteria-label']}>Special symbol</span>
           </div>
         </div>
+      </FormField>
 
-        {errors.password && (
-          <span className={styles['error-text']}>
-            {errors.password.message}
-          </span>
-        )}
-      </div>
-      <div
-        className={`${styles['form-group']} ${errors.confirmPassword ? styles.error : ''}`}
+      <FormField
+        error={errors.confirmPassword}
+        label="Confirm Password"
+        htmlFor="confirmPassword"
+        required
       >
-        <label htmlFor="confirmPassword">Confirm Password *</label>
         <Controller
           name="confirmPassword"
           control={control}
@@ -198,16 +205,9 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
             <input type="password" id="confirmPassword" {...field} />
           )}
         />
-        {errors.confirmPassword && (
-          <span className={styles['error-text']}>
-            {errors.confirmPassword.message}
-          </span>
-        )}
-      </div>
-      <div
-        className={`${styles['form-group']} ${errors.gender ? styles.error : ''}`}
-      >
-        <label>Gender *</label>
+      </FormField>
+
+      <FormField error={errors.gender} label="Gender" htmlFor="gender" required>
         <Controller
           name="gender"
           control={control}
@@ -234,15 +234,14 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
             </div>
           )}
         />
-        {errors.gender && (
-          <span className={styles['error-text']}>{errors.gender.message}</span>
-        )}
-      </div>
+      </FormField>
 
-      <div
-        className={`${styles['form-group']} ${errors.country ? styles.error : ''}`}
+      <FormField
+        error={errors.country}
+        label="Country"
+        htmlFor="country"
+        required
       >
-        <label htmlFor="country">Country *</label>
         <Controller
           name="country"
           control={control}
@@ -253,14 +252,13 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
             />
           )}
         />
-        {errors.country && (
-          <span className={styles['error-text']}>{errors.country.message}</span>
-        )}
-      </div>
-      <div
-        className={`${styles['form-group']} ${errors.profilePicture ? styles.error : ''}`}
+      </FormField>
+
+      <FormField
+        error={errors.profilePicture}
+        label="Profile Picture"
+        htmlFor="profilePicture"
       >
-        <label htmlFor="profilePicture">Profile Picture</label>
         <Controller
           name="profilePicture"
           control={control}
@@ -276,14 +274,13 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
             />
           )}
         />
-        {errors.profilePicture && (
-          <span className={styles['error-text']}>
-            {errors.profilePicture.message}
-          </span>
-        )}
-      </div>
-      <div
-        className={`${styles['form-group']} ${errors.agreeToTerms ? styles.error : ''}`}
+      </FormField>
+
+      <FormField
+        error={errors.agreeToTerms}
+        label="Agree to terms and conditions"
+        htmlFor="agreeToTerms"
+        required
       >
         <Controller
           name="agreeToTerms"
@@ -299,12 +296,8 @@ export const ControlledForm = ({ onClose }: ControlledFormProps) => {
             </label>
           )}
         />
-        {errors.agreeToTerms && (
-          <span className={styles['error-text']}>
-            {errors.agreeToTerms.message}
-          </span>
-        )}
-      </div>
+      </FormField>
+
       {errors.root && (
         <div className={styles['error-text']}>{errors.root.message}</div>
       )}

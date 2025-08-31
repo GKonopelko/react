@@ -20,7 +20,7 @@ function App() {
           <h2>2. Form Created Using React Hook Form</h2>
         </section>
 
-        <div className="form-buttons" style={{ display: 'flex', gap: '1rem' }}>
+        <div className="form-buttons">
           <button
             onClick={() => setIsUncontrolledModalOpen(true)}
             className="primary-button"

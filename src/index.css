@@ -141,3 +141,8 @@ section h2 {
   justify-content: center;
   gap: 1rem;
 }
+
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+}
