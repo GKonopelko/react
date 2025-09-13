@@ -43,13 +43,12 @@ function DataDisplay() {
   );
 
   useEffect(() => {
-    const latestYear = Math.max(
-      ...(Object.values(data)
-        .flatMap((country) => country.data.map((item) => item.year))
-        .filter((year) => year !== undefined) as number[])
-    );
-
     if (selectedYear === 2020) {
+      const latestYear = Math.max(
+        ...(Object.values(data)
+          .flatMap((country) => country.data.map((item) => item.year))
+          .filter((year) => year !== undefined) as number[])
+      );
       setSelectedYear(latestYear);
     }
   }, [data, selectedYear]);

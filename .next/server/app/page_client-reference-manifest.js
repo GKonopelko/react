@@ -1,0 +1,859 @@
+globalThis.__RSC_MANIFEST = globalThis.__RSC_MANIFEST || {};
+globalThis.__RSC_MANIFEST['/page'] = {
+  moduleLoading: { prefix: '/_next/' },
+  ssrModuleMapping: {
+    '(app-pages-browser)/./src/app/client-providers.tsx': {
+      '*': {
+        id: '(ssr)/./src/app/client-providers.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/components/footer/footer.tsx': {
+      '*': {
+        id: '(ssr)/./src/components/footer/footer.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/components/header/header.tsx': {
+      '*': {
+        id: '(ssr)/./src/components/header/header.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./node_modules/next/dist/client/app-dir/link.js': {
+      '*': {
+        id: '(ssr)/./node_modules/next/dist/client/app-dir/link.js',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/HydrationBoundary.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/HydrationBoundary.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/IsRestoringProvider.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/IsRestoringProvider.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/QueryErrorResetBoundary.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/QueryErrorResetBoundary.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useInfiniteQuery.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/useInfiniteQuery.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useIsFetching.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/useIsFetching.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useMutation.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/useMutation.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useMutationState.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/useMutationState.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useQueries.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/useQueries.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useQuery.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/useQuery.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useSuspenseInfiniteQuery.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/useSuspenseInfiniteQuery.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQueries.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQueries.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQuery.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQuery.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./src/app/page-client.tsx': {
+      '*': {
+        id: '(ssr)/./src/app/page-client.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/components/controls/controls.tsx': {
+      '*': {
+        id: '(ssr)/./src/components/controls/controls.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/components/loader/loader.tsx': {
+      '*': {
+        id: '(ssr)/./src/components/loader/loader.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/builtin/global-error.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/client/components/builtin/global-error.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/client-page.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/client/components/client-page.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/client-segment.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/client/components/client-segment.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/http-access-fallback/error-boundary.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/client/components/http-access-fallback/error-boundary.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/client/components/layout-router.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/metadata/async-metadata.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/client/components/metadata/async-metadata.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/client/components/render-from-template-context.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/lib/framework/boundary-components.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/lib/framework/boundary-components.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/lib/metadata/generate/icon-mark.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/lib/metadata/generate/icon-mark.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js':
+      {
+        '*': {
+          id: '(ssr)/./node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+  },
+  edgeSSRModuleMapping: {},
+  clientModules: {
+    'D:\\repos\\rs-react-app\\src\\app\\client-providers.tsx': {
+      id: '(app-pages-browser)/./src/app/client-providers.tsx',
+      name: '*',
+      chunks: ['app/layout', 'static/chunks/app/layout.js'],
+      async: false,
+    },
+    'D:\\repos\\rs-react-app\\src\\app\\global.css': {
+      id: '(app-pages-browser)/./src/app/global.css',
+      name: '*',
+      chunks: ['app/layout', 'static/chunks/app/layout.js'],
+      async: false,
+    },
+    'D:\\repos\\rs-react-app\\src\\components\\footer\\footer.tsx': {
+      id: '(app-pages-browser)/./src/components/footer/footer.tsx',
+      name: '*',
+      chunks: ['app/layout', 'static/chunks/app/layout.js'],
+      async: false,
+    },
+    'D:\\repos\\rs-react-app\\src\\components\\header\\header.tsx': {
+      id: '(app-pages-browser)/./src/components/header/header.tsx',
+      name: '*',
+      chunks: ['app/layout', 'static/chunks/app/layout.js'],
+      async: false,
+    },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\client\\app-dir\\link.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/app-dir/link.js',
+        name: '*',
+        chunks: ['app/not-found', 'static/chunks/app/not-found.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\client\\app-dir\\link.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/app-dir/link.js',
+        name: '*',
+        chunks: ['app/not-found', 'static/chunks/app/not-found.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\src\\components\\404-page\\styles.module.css': {
+      id: '(app-pages-browser)/./src/components/404-page/styles.module.css',
+      name: '*',
+      chunks: ['app/not-found', 'static/chunks/app/not-found.js'],
+      async: false,
+    },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\HydrationBoundary.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/HydrationBoundary.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\IsRestoringProvider.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/IsRestoringProvider.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\QueryClientProvider.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\QueryErrorResetBoundary.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/QueryErrorResetBoundary.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\useInfiniteQuery.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useInfiniteQuery.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\useIsFetching.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useIsFetching.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\useMutation.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useMutation.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\useMutationState.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useMutationState.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\useQueries.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useQueries.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\useQuery.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useQuery.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\useSuspenseInfiniteQuery.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useSuspenseInfiniteQuery.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\useSuspenseQueries.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQueries.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\@tanstack\\react-query\\build\\modern\\useSuspenseQuery.js':
+      {
+        id: '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQuery.js',
+        name: '*',
+        chunks: ['app/page', 'static/chunks/app/page.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\src\\app\\page-client.tsx': {
+      id: '(app-pages-browser)/./src/app/page-client.tsx',
+      name: '*',
+      chunks: ['app/page', 'static/chunks/app/page.js'],
+      async: false,
+    },
+    'D:\\repos\\rs-react-app\\src\\components\\controls\\controls.tsx': {
+      id: '(app-pages-browser)/./src/components/controls/controls.tsx',
+      name: '*',
+      chunks: ['app/page', 'static/chunks/app/page.js'],
+      async: false,
+    },
+    'D:\\repos\\rs-react-app\\src\\components\\loader\\loader.tsx': {
+      id: '(app-pages-browser)/./src/components/loader/loader.tsx',
+      name: '*',
+      chunks: ['app/page', 'static/chunks/app/page.js'],
+      async: false,
+    },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\client\\components\\builtin\\global-error.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/builtin/global-error.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\client\\components\\builtin\\global-error.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/builtin/global-error.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\client\\components\\client-page.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/client-page.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\client\\components\\client-page.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/client-page.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\client\\components\\client-segment.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/client-segment.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\client\\components\\client-segment.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/client-segment.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\client\\components\\http-access-fallback\\error-boundary.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/http-access-fallback/error-boundary.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\client\\components\\http-access-fallback\\error-boundary.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/http-access-fallback/error-boundary.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\client\\components\\layout-router.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\client\\components\\layout-router.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\client\\components\\metadata\\async-metadata.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/metadata/async-metadata.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\client\\components\\metadata\\async-metadata.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/metadata/async-metadata.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\client\\components\\render-from-template-context.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\client\\components\\render-from-template-context.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\lib\\framework\\boundary-components.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/lib/framework/boundary-components.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\lib\\framework\\boundary-components.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/lib/framework/boundary-components.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\lib\\metadata\\generate\\icon-mark.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/lib/metadata/generate/icon-mark.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\lib\\metadata\\generate\\icon-mark.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/lib/metadata/generate/icon-mark.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\next-devtools\\userspace\\app\\segment-explorer-node.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+    'D:\\repos\\rs-react-app\\node_modules\\next\\dist\\esm\\next-devtools\\userspace\\app\\segment-explorer-node.js':
+      {
+        id: '(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js',
+        name: '*',
+        chunks: ['app-pages-internals', 'static/chunks/app-pages-internals.js'],
+        async: false,
+      },
+  },
+  entryCSSFiles: {
+    'D:\\repos\\rs-react-app\\src\\': [],
+    'D:\\repos\\rs-react-app\\src\\app\\layout': [
+      { inlined: false, path: 'static/css/app/layout.css' },
+    ],
+    'D:\\repos\\rs-react-app\\src\\app\\not-found': [
+      { inlined: false, path: 'static/css/app/not-found.css' },
+    ],
+    'D:\\repos\\rs-react-app\\src\\app\\page': [
+      { inlined: false, path: 'static/css/app/page.css' },
+    ],
+  },
+  rscModuleMapping: {
+    '(app-pages-browser)/./src/app/client-providers.tsx': {
+      '*': {
+        id: '(rsc)/./src/app/client-providers.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/app/global.css': {
+      '*': {
+        id: '(rsc)/./src/app/global.css',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/components/footer/footer.tsx': {
+      '*': {
+        id: '(rsc)/./src/components/footer/footer.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/components/header/header.tsx': {
+      '*': {
+        id: '(rsc)/./src/components/header/header.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./node_modules/next/dist/client/app-dir/link.js': {
+      '*': {
+        id: '(rsc)/./node_modules/next/dist/client/app-dir/link.js',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/components/404-page/styles.module.css': {
+      '*': {
+        id: '(rsc)/./src/components/404-page/styles.module.css',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/HydrationBoundary.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/HydrationBoundary.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/IsRestoringProvider.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/IsRestoringProvider.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/QueryErrorResetBoundary.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/QueryErrorResetBoundary.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useInfiniteQuery.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/useInfiniteQuery.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useIsFetching.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/useIsFetching.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useMutation.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/useMutation.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useMutationState.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/useMutationState.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useQueries.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/useQueries.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useQuery.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/useQuery.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useSuspenseInfiniteQuery.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/useSuspenseInfiniteQuery.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQueries.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQueries.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQuery.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/@tanstack/react-query/build/modern/useSuspenseQuery.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./src/app/page-client.tsx': {
+      '*': {
+        id: '(rsc)/./src/app/page-client.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/components/controls/controls.tsx': {
+      '*': {
+        id: '(rsc)/./src/components/controls/controls.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./src/components/loader/loader.tsx': {
+      '*': {
+        id: '(rsc)/./src/components/loader/loader.tsx',
+        name: '*',
+        chunks: [],
+        async: false,
+      },
+    },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/builtin/global-error.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/client/components/builtin/global-error.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/client-page.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/client/components/client-page.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/client-segment.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/client/components/client-segment.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/http-access-fallback/error-boundary.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/client/components/http-access-fallback/error-boundary.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/client/components/layout-router.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/metadata/async-metadata.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/client/components/metadata/async-metadata.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/client/components/render-from-template-context.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/lib/framework/boundary-components.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/lib/framework/boundary-components.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/lib/metadata/generate/icon-mark.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/lib/metadata/generate/icon-mark.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+    '(app-pages-browser)/./node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js':
+      {
+        '*': {
+          id: '(rsc)/./node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js',
+          name: '*',
+          chunks: [],
+          async: false,
+        },
+      },
+  },
+  edgeRscModuleMapping: {},
+};
