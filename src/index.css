@@ -1,0 +1,403 @@
+* {
+  box-sizing: border-box;
+}
+
+.app-header {
+  background: #f8f9fa;
+  color: #333;
+  padding: 1.5rem;
+  margin: -20px -20px 20px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.app-header p {
+  margin: 0.5rem 0 0;
+  color: #666;
+}
+
+.app-content {
+  display: flex;
+  gap: 20px;
+}
+
+.sidebar {
+  background: white;
+  border: 1px solid #dee2e6;
+  padding: 1rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  flex: 0 0 280px;
+}
+
+.main-content {
+  background: white;
+  border: 1px solid #dee2e6;
+  padding: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.country-list h2 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.country-list-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 400px;
+}
+
+.country-item {
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  height: 100px;
+}
+
+.country-item.selected {
+  border-color: #007bff;
+  background-color: #e7f3ff;
+}
+
+.country-item h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.country-item p {
+  margin: 0.25rem 0;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.country-details h2 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.data-table {
+  margin-top: 1rem;
+}
+
+.data-table h3 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  text-align: left;
+  border: 1px solid #dee2e6;
+}
+
+th {
+  background-color: #f8f9fa;
+}
+
+@media (width <= 768px) {
+  .app-content {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    flex: none;
+    max-height: 250px;
+  }
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.column-selector-btn {
+  padding: 0.5rem 1rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 30%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 4px;
+  max-width: 400px;
+  width: 90%;
+  max-height: 70vh;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+}
+
+.modal-content h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+}
+
+.columns-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.column-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.column-checkbox input[type='checkbox'] {
+  margin: 0;
+}
+
+.error button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  background: #f8f9fa;
+}
+
+.modal-actions button:last-child {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 1rem;
+}
+
+.filter-controls {
+  background: white;
+  border: 1px solid #dee2e6;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 150px;
+}
+
+.filter-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+.filter-group input {
+  min-width: 200px;
+}
+
+.sort-order-btn {
+  padding: 0.5rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.sort-order-btn:hover {
+  background-color: #5a6268;
+}
+
+@media (width <= 768px) {
+  .filter-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filter-group {
+    min-width: 100%;
+  }
+
+  .filter-group input {
+    min-width: 100%;
+  }
+}
+
+@media (width <= 768px) {
+  .country-list-content {
+    height: 300px;
+  }
+
+  .country-item {
+    height: 90px;
+  }
+}
+
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+}
+
+.country-info {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.country-info p {
+  margin: 0;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.details-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.country-list {
+  width: 100%;
+}
+
+.country-list-container {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.country-list-inner {
+  outline: none;
+}
+
+.country-list-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.country-list-inner::-webkit-scrollbar {
+  width: 8px;
+}
+
+.country-list-inner::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 0 4px 4px 0;
+}
+
+.country-list-inner::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.country-list-inner::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+@media (width <= 768px) {
+  .country-list-container {
+    border-radius: 6px;
+  }
+}
